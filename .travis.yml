@@ -13,7 +13,6 @@ before_script:
 - brew install ios-deploy
 - git clone https://github.com/flutter/flutter.git -b beta --depth 1
 script:
-- flutter/bin/flutter doctor -v
 - flutter/bin/flutter build ios --debug --no-codesign
 cache:
   directories:
