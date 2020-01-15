@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/routes/home.dart';
-import 'package:humanaty/routes/login.dart';
-import 'package:humanaty/routes/map.dart';
-import 'package:humanaty/routes/settings.dart';
-import 'package:humanaty/routes/events.dart';
+
+import 'package:humanaty/routes/routes.dart' as Routes;
 
 void main() => runApp(Main());
 
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
       title: "Humanaty",
       /*
@@ -20,11 +16,11 @@ class Main extends StatelessWidget {
       */
       initialRoute: '/',
       routes: {
-        '/': (context) => Home(),
-        '/login': (context) => Login(),
-        '/map': (context) => Map(),
-        '/settings': (context) => Settings(),
-        '/events': (context) => Events()
+        '/': (context) => Routes.Home(),
+        '/login': (context) => Routes.Login(),
+        '/map': (context) => Routes.Map(),
+        '/settings': (context) => Routes.Settings(),
+        '/events': (context) => Routes.Events()
       },
     );
   }
