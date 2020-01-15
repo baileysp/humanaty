@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Login extends StatelessWidget {
+class Events extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,7 +8,7 @@ class Login extends StatelessWidget {
         title: Text("Hooah"),
       ),
       body: Center(
-        child: Text("Login coming soon"),
+        child: Text("My events coming soon"),
       ),
     );
   }

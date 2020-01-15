@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Login extends StatelessWidget {
+class Map extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Hooah"),
-      ),
+      //TODO: Implement Map Page
       body: Center(
-        child: Text("Login coming soon"),
+        child: Text("Map coming soon"),
       ),
     );
   }
