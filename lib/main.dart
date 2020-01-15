@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:humanaty/routes/routes.dart' as Routes;
+import 'package:humanaty/routes/_router.dart';
 
 void main() => runApp(Main());
 
@@ -16,11 +16,12 @@ class Main extends StatelessWidget {
       */
       initialRoute: '/',
       routes: {
-        '/': (context) => Routes.Home(),
-        '/login': (context) => Routes.Login(),
-        '/map': (context) => Routes.Map(),
-        '/settings': (context) => Routes.Settings(),
-        '/events': (context) => Routes.Events()
+        '/': (context) => Home(),
+        '/login': (context) => Login(),
+        '/map': (context) => Map(),
+        '/settings': (context) => Settings(),
+        '/events': (context) => Events(),
+        '/registration': (context) => Register()
       },
     );
   }
