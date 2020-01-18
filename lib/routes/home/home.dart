@@ -31,7 +31,7 @@ class Home extends StatelessWidget {
             ),
             FloatingActionButton(
               heroTag: "events",
-              child: Icon(Icons.book),
+              child: Icon(Icons.ac_unit),
               onPressed: () {
                 Navigator.pushNamed(context, '/events');
               },
