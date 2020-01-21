@@ -1,1 +1,1 @@
-export 'widgets/humanatyDrawer.dart';
+export 'widgets/humanatyDrawer/humanatyDrawer.dart';
