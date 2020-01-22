@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Design {
+class Pallete {
   ///Example color palette, delete when we have ours
   static Color blueSky = Color(0xFF068FFA);
   static Color greenLand = Color(0xFF89ED91);
