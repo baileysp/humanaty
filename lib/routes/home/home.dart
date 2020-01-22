@@ -36,6 +36,12 @@ class HomeState extends State<Home> {
       currentIndex: navIndex,
       selectedItemColor: Colors.amber[800],
       onTap: selectNav,
+      ),
+      body: Center(
+        child: Text("Home Page"),
+      ),
+    );
+  }
   void selectNav(int index) {
     setState(() {
       navIndex = index;
