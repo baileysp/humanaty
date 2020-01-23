@@ -8,6 +8,7 @@ class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Humanaty",
       theme: ThemeData(
         //primaryColor: 
@@ -29,7 +30,7 @@ class Main extends StatelessWidget {
         '/map': (context) => Map(),
         '/settings': (context) => Settings(),
         '/events': (context) => Events(),
-        '/registration': (context) => Register()
+        '/registration': (context) => RegisterPage()
       },
     );
   }
