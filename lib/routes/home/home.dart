@@ -47,12 +47,9 @@ class HomeState extends State<Home> {
 
     );
   }
-
   void selectNav(int index) {
     setState(() {
       navIndex = index;
     });
   }
-
-
 }
