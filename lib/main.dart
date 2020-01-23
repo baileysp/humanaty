@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(Main());
+void main() => {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.white, //top bar color
+      statusBarIconBrightness: Brightness.dark, //top bar icons
+      systemNavigationBarColor: Colors.white, //bottom bar color
+      systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
+    )
+  ),
+  runApp(Main())
+};
 
 class Main extends StatelessWidget {
   @override
@@ -23,7 +34,7 @@ class Main extends StatelessWidget {
       Check to see if there is an account logged in to decide whether to navigate to
       Home or Login
       */
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
         '/': (context) => Home(),
         '/login': (context) => LoginPage(),
