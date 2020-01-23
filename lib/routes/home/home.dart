@@ -9,11 +9,19 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   int navIndex = 0;
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final _navigationOptions = [
+    Text("Home", style: navStyle,),
+    Text("Settings", style: navStyle,),
+    Text("Map", style: navStyle,),
+    Text("Map2", style: navStyle,),
+  ];
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: navIndex,
+        onTap: selectNav,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
@@ -33,13 +41,10 @@ class HomeState extends State<Home> {
             title: Text("Map")
         ),
       ],
-      currentIndex: navIndex,
       selectedItemColor: Colors.amber[800],
-      onTap: selectNav,
       ),
-      body: Center(
-        child: Text("Home Page"),
-      ),
+      body: _navigationOptions[navIndex],
+
     );
   }
 
