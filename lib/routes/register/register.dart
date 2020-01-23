@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:humanaty/common/widgets/constants.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key key}) : super(key: key);
@@ -61,22 +62,28 @@ class _RegisterPageState extends State<RegisterPage>{
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: TextFormField(
-         decoration: InputDecoration(
-         hintText: "Full Name"
-        )
+         decoration: textInputDecoration.copyWith(
+           hintText: "Name",
+           prefixIcon: Icon(Icons.person_outline, color: Colors.grey))
       )
     );
   }
 
   Widget emailField(){
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
       child: TextFormField(
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-         hintText: "Email"
-        )
+        decoration: textInputDecoration.copyWith(
+          hintText: "Email",
+          prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
+        //move validator logic elsewhere
+        validator: (email){
+          var emailValid = !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email) ?
+                            "Please enter a valid email address" : null;
+          return emailValid;
+        },
       )
     );
   }
@@ -87,12 +94,13 @@ class _RegisterPageState extends State<RegisterPage>{
       child: TextFormField(
         controller: _passwordController,
         obscureText: true,
-        decoration: InputDecoration(
+        decoration: textInputDecoration.copyWith(
           hintText: "Password",
+          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)
         ),
         validator: (password){
-          var result = password.length < 9 ? "Password should be at least 8 characters" : null;
-          return result;
+          var passValid = password.length < 9 ? "Your password must have at least 8 characters" : null;
+          return passValid;
         }
       )
     );
@@ -103,8 +111,9 @@ class _RegisterPageState extends State<RegisterPage>{
       padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
       child: TextFormField(
         obscureText: _passwordObscured,
-        decoration: InputDecoration(
+        decoration: textInputDecoration.copyWith(
           hintText: "Confirm Password",
+          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)
         ),
         validator: (confirmation){
           String password = _passwordController.text;
@@ -122,8 +131,11 @@ class _RegisterPageState extends State<RegisterPage>{
         onPressed: () async {
           if(_registrationFormKey.currentState.validate()){
             String password = _passwordController.text;
-            String email = _emailController.text;
-            _auth.registerWithEmailAndPassword(email.trim(), password);                
+            String email = _emailController.text.trim();
+            dynamic result = _auth.registerWithEmailAndPassword(email, password);               
+            if(result != null){
+              Navigator.pushReplacementNamed(context, '/');
+            }
             //Navigator.pushNamed(context, '/registration');
           }
         } ,

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:humanaty/models/user.dart';
+import 'package:humanaty/services/auth.dart';
+import 'package:provider/provider.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/routes/_router.dart';
 
 void main() => runApp(Main());
+
+//return StreamProvider<User>.value
 
 class Main extends StatelessWidget {
   @override
@@ -10,22 +15,12 @@ class Main extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Humanaty",
-      theme: ThemeData(
-        //primaryColor: 
-      ),
       
-      
-      
-      
-      
-      /*
-      TODO:
-      Check to see if there is an account logged in to decide whether to navigate to
-      Home or Login
-      */
+      //home:  ,
       initialRoute: '/login',
       routes: {
-        '/': (context) => Home(),
+        //'/' : (context) => ,
+        '/home': (context) => Home(),
         '/login': (context) => LoginPage(),
         '/map': (context) => Map(),
         '/settings': (context) => Settings(),
