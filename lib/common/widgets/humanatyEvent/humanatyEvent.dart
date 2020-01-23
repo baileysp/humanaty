@@ -16,8 +16,11 @@ class HumanatyEvent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(16.0),
+      margin: EdgeInsets.fromLTRB(24, 8, 24, 8),
+      child: new InkWell(
+        onTap: () {
 
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Row(
@@ -45,7 +48,8 @@ class HumanatyEvent extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
+      )
     );
   }
 }
