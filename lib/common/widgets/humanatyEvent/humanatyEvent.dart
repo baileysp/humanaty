@@ -5,13 +5,15 @@ class HumanatyEvent extends StatelessWidget {
     {
       this.eventName,
       this.eventDate,
-      this.eventDescription
+      this.eventDescription,
+      this.cardClicked
     }
   );
 
   final String eventName;
   final String eventDate;
   final String eventDescription;
+  final VoidCallback cardClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class HumanatyEvent extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(24, 8, 24, 8),
       child: new InkWell(
         onTap: () {
-
+          cardClicked();
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
