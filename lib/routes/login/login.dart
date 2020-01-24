@@ -9,7 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage>{
-  final _signInFormKey = new GlobalKey<FormState>();
+  final _signInFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
 
   @override 
@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage>{
   Widget build(BuildContext context){
     return new Scaffold(
       body: Container(
-        child:loginForm()
+        child: loginForm()
       )
     );
   }
@@ -38,7 +38,9 @@ class _LoginPageState extends State<LoginPage>{
           children: <Widget>[
             usernameField(),
             passwordField(),
-            loginButton()
+            loginButton(),
+            googleSignIn(),
+            newUser()
           ],
         )
       )
@@ -81,14 +83,67 @@ class _LoginPageState extends State<LoginPage>{
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 35.0, 0, 0),
       child: FlatButton(
-        color: Colors.lightGreen,
-        
+        color: Pallete.humanGreen,
+        onPressed: (){
+          setState(() {
+            _passwordObscured = !_passwordObscured;
+          });
+        } ,
         child: Text(
-          "Login"
+          "Login",
+          style: TextStyle(color: Colors.white)
         )
       )
     );
   }
+
+  Widget googleSignIn(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: FlatButton(
+        color: Pallete.humanGreenLight,
+        onPressed: (){
+          //move to forgot password page
+        },
+        child: Text(
+          "Google Sign In",
+          style: TextStyle(color: Colors.white)
+        )
+      )
+    );
+  }
+
+  Widget newUser(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: FlatButton(
+        onPressed: (){
+          Navigator.pushNamed(context, '/registration');
+        },
+        child: Text(
+          "Don't have an account? Sign up"
+        )
+      )
+    );
+  }
+  
+  
+  
+  Widget forgotPassword(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: FlatButton(
+        onPressed: (){
+          //move to forgot password page
+        },
+        child: Text(
+          "Forgot Password?"
+        )
+      )
+    );
+  }
+
+
 
 
 
