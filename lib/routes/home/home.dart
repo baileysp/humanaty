@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:loader_search_bar/loader_search_bar.dart';
+/**
+ * Current TODOs:
+ * 1. Reuseable event card widget
+ * 2. Reuseable list of events widget
+ * 3. SearchBar functionality – what kind of key terms do users enter, what are results
+ */
 
 //Screen/Widget that is displayed for the Home page is the 'Current' class
 class Current extends StatelessWidget {
@@ -8,31 +15,55 @@ class Current extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: HumanatyDrawer(),
-      body: Stack(
+      body: Column(
         children: <Widget>[
-          // Container(
-          //   decoration: BoxDecoration(
-          //     image: DecorationImage(
-          //       image: NetworkImage('https://images.unsplash.com/photo-1517030330234-94c4fb948ebc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1275&q=80'),
-          //       fit: BoxFit.cover
-          //     )
-          //   ),
-          // )
-          Padding(
-            padding: EdgeInsets.all(60),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Text(
-                "Humanaty",
-                style: TextStyle(fontSize: 30),
-              ),
-            )
-          )
+          mainSearch,
+          title,
+          HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ", cardClicked:() {
+            print("Clicked");
+          }),
+          HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ",),
+          HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ",),
         ],
       )
     );
   }
 }
+
+Widget title = Container(
+  padding: const EdgeInsets.fromLTRB(0, 30, 0, 22),
+  child: Align(
+    alignment: Alignment.topCenter,
+    child: Text(
+      "Humanaty",
+      style: TextStyle(fontSize: 34),
+    ),
+  )
+);
+
+//TODO: Build searchbar widget, no existing searchbar
+Widget searchBar = Container(
+  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+  child: Text(
+    "[Searchbar goes here]",
+    style: TextStyle(fontSize: 16)
+  )
+);
+
+//Temp Use
+Widget mainSearch = SearchBar(
+  
+  defaultBar: AppBar(
+    title: Text("Find places meals you!"),
+  ),
+);
+
+//Display upcoming events user is registered for
+Widget events = Column(
+  children: <Widget>[
+
+  ],
+);
 
 class Home extends StatefulWidget {
   HomeState createState() => HomeState();
