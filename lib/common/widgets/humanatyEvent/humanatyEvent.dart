@@ -42,7 +42,7 @@ class HumanatyEvent extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(eventName),
+                    Text(eventName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     Text(eventDate),
                     Text(eventDescription),
                   ],
@@ -54,4 +54,5 @@ class HumanatyEvent extends StatelessWidget {
       )
     );
   }
+
 }
