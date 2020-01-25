@@ -17,60 +17,79 @@ List<HumanatyEvent> testEvents = [
     print("Clicked");
   }),
   HumanatyEvent(eventName: "DINNER TIME", eventDate: "1/14/23", eventDescription: "scrumptuous dinner with corona virus",),
+  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ", cardClicked:() {
+    print("Clicked");
+  }),
+  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ", cardClicked:() {
+    print("Clicked");
+  }),
   HumanatyEvent(eventName: "Delicious Dinner", eventDate: "1/17/24", eventDescription: "It's actually not delicious",),
 ];
 
-  var test = HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ",);
-class Current extends StatelessWidget {
+List<HumanatyEvent> displayedEvents = testEvents;
+
+class Current extends StatefulWidget {
+  CurrentState createState() => CurrentState();
+}
+class CurrentState extends State<Current> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: HumanatyDrawer(),
-      body: Column(
-        children: <Widget>[
-          mainSearch,
-          title,
-          HumanatyEventList(events: testEvents),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            // mainSearch,
+            title,
+            searchBar,
+            // HumanatyEventList(events: testEvents),
+            ListView.builder(
+              padding: EdgeInsets.all(0),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: testEvents.length,
+              itemBuilder: (context, index) {
+                return testEvents[index];
+              },
+            )
+          ],
+        )
       )
     );
   }
+
+  Widget title = Container(
+    padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+    child: Align(
+      alignment: Alignment.topCenter,
+      child: Text(
+        "Humanaty",
+        style: TextStyle(fontSize: 34),
+      ),
+    )
+  );
+
+  //TODO: Build searchbar widget, no existing searchbar
+  Widget searchBar = Container(
+    padding: const EdgeInsets.fromLTRB(36, 20, 36, 10),
+    child: TextField(
+      decoration: InputDecoration(
+        hintText: "City name here..."
+      ),
+      onChanged: (text) {
+        text = text.toLowerCase();
+        // setState(() {
+        //   displayedEvents = testEvents.where((event) {
+        //     var title = event.eventName.toLowerCase();
+        //     return title.contains(title);
+        //   }).toList();
+        // });
+      },
+    )
+  );
+
 }
-
-Widget title = Container(
-  padding: const EdgeInsets.fromLTRB(0, 30, 0, 22),
-  child: Align(
-    alignment: Alignment.topCenter,
-    child: Text(
-      "Humanaty",
-      style: TextStyle(fontSize: 34),
-    ),
-  )
-);
-
-//TODO: Build searchbar widget, no existing searchbar
-Widget searchBar = Container(
-  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-  child: Text(
-    "[Searchbar goes here]",
-    style: TextStyle(fontSize: 16)
-  )
-);
-
-//Temp Use
-Widget mainSearch = SearchBar(
-  
-  defaultBar: AppBar(
-    title: Text("Organic meals near you!"),
-  ),
-);
-
-//Display upcoming events user is registered for
-Widget events = Column(
-  children: <Widget>[
-
-  ],
-);
 
 class Home extends StatefulWidget {
   HomeState createState() => HomeState();
@@ -112,7 +131,7 @@ class HomeState extends State<Home> {
             title: Text("Map")
         ),
       ],
-      selectedItemColor: Colors.amber[800],
+      selectedItemColor: Colors.blue,
       ),
       body: _navigationOptions[navIndex],
 
