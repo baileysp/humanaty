@@ -97,6 +97,7 @@ class _LoginPageState extends State<LoginPage>{
         child: Text(
           "Login",
           style: TextStyle(color: Colors.white)
+
         )
       )
     );
@@ -107,13 +108,20 @@ class _LoginPageState extends State<LoginPage>{
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: FlatButton(
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(Icons.nfc),
             Text("Google Sign in")
+
+
           ],
         ),
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(0.0),
+              side: BorderSide(color: Colors.blue),
+          ),
         onPressed: (){
           
         }
