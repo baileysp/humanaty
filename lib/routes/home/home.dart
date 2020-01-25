@@ -7,6 +7,7 @@ import 'package:loader_search_bar/loader_search_bar.dart';
  * 1. Reuseable event card widget
  * 2. Reuseable list of events widget
  * 3. SearchBar functionality – what kind of key terms do users enter, what are results
+ * 4. Event details page
  */
 
 //Screen/Widget that is displayed for the Home page is the 'Current' class
@@ -54,7 +55,7 @@ Widget searchBar = Container(
 Widget mainSearch = SearchBar(
   
   defaultBar: AppBar(
-    title: Text("Find places meals you!"),
+    title: Text("Organic meals near you!"),
   ),
 );
 
