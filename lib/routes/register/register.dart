@@ -78,12 +78,7 @@ class _RegisterPageState extends State<RegisterPage>{
         decoration: textInputDecoration.copyWith(
           hintText: "Email",
           prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
-        //move validator logic elsewhere
-        validator: (email){
-          var emailValid = !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email) ?
-                            "Please enter a valid email address" : null;
-          return emailValid;
-        },
+        validator: emailValidator
       )
     );
   }
@@ -98,10 +93,7 @@ class _RegisterPageState extends State<RegisterPage>{
           hintText: "Password",
           prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)
         ),
-        validator: (password){
-          var passValid = password.length < 9 ? "Your password must have at least 8 characters" : null;
-          return passValid;
-        }
+        validator: passwordValidator
       )
     );
   }
@@ -134,7 +126,7 @@ class _RegisterPageState extends State<RegisterPage>{
             String email = _emailController.text.trim();
             dynamic result = _auth.registerWithEmailAndPassword(email, password);               
             if(result != null){
-              Navigator.pushReplacementNamed(context, '/');
+              Navigator.pushReplacementNamed(context, '/home');
             }
             //Navigator.pushNamed(context, '/registration');
           }

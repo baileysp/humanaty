@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets/constants.dart';
+import 'package:humanaty/services/auth.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -10,6 +11,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage>{
+  final AuthService _auth = AuthService();
+  
+  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  
   final _signInFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
 
@@ -53,11 +59,13 @@ class _LoginPageState extends State<LoginPage>{
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
       child: TextFormField(
+        controller: _emailController,
         keyboardType: TextInputType.emailAddress,
         decoration: textInputDecoration.copyWith(
           hintText: "Username",
           prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)
-        )
+        ),
+        validator: emailValidator,
       )
     );
   }
@@ -66,6 +74,7 @@ class _LoginPageState extends State<LoginPage>{
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
       child: TextFormField(
+        controller: _passwordController,
         obscureText: _passwordObscured,
         decoration: textInputDecoration.copyWith(
           hintText: "Password",
@@ -79,7 +88,8 @@ class _LoginPageState extends State<LoginPage>{
               });
             },
           )
-        )
+        ),
+        validator: passwordValidator,
       )
     );
   }
@@ -90,9 +100,12 @@ class _LoginPageState extends State<LoginPage>{
       child: FlatButton(
         color: Pallete.humanGreen,
         onPressed: (){
-          setState(() {
-            _passwordObscured = !_passwordObscured;
-          });
+          String password = _passwordController.text;
+            String email = _emailController.text.trim();
+            dynamic result = _auth.registerWithEmailAndPassword(email, password);               
+            if(result != null){
+              Navigator.pushReplacementNamed(context, '/home');
+            }
         } ,
         child: Text(
           "Login",
@@ -113,7 +126,7 @@ class _LoginPageState extends State<LoginPage>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(Icons.nfc),
-            Text("Google Sign in")
+            Text("Sign in with Google")
 
 
           ],
@@ -123,7 +136,7 @@ class _LoginPageState extends State<LoginPage>{
               side: BorderSide(color: Colors.blue),
           ),
         onPressed: (){
-          
+          _auth.signinwithGoogle();
         }
       )
     );

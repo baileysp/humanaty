@@ -1,40 +1,48 @@
 {
-    "project_info": {
-      "project_number": "129035646582",
-      "firebase_url": "https://humanaty-gatech.firebaseio.com",
-      "project_id": "humanaty-gatech",
-      "storage_bucket": "humanaty-gatech.appspot.com"
-    },
-    "client": [
-      {
-        "client_info": {
-          "mobilesdk_app_id": "1:129035646582:android:c5cbecd7462422976a9157",
-          "android_client_info": {
-            "package_name": "com.gatech.humanaty" 
+  "project_info": {
+    "project_number": "129035646582",
+    "firebase_url": "https://humanaty-gatech.firebaseio.com",
+    "project_id": "humanaty-gatech",
+    "storage_bucket": "humanaty-gatech.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129035646582:android:c5cbecd7462422976a9157",
+        "android_client_info": {
+          "package_name": "com.gatech.humanaty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129035646582-uenevt4ktlsi8k5u3e02inc1f7h001rd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gatech.humanaty",
+            "certificate_hash": "fa616e519967fe4a935d9e1122a9048d65e7fb5c"
           }
         },
-        "oauth_client": [
-          {
-            "client_id": "129035646582-a4ttt51j5jt7iqfur98kdr214cmc5p1r.apps.googleusercontent.com",
-            "client_type": 3
-          }
-        ],
-        "api_key": [
-          {
-            "current_key": "AIzaSyD56-s1CZFMTTj9fH-buXL7SQMYEPkZfKo"
-          }
-        ],
-        "services": {
-          "appinvite_service": {
-            "other_platform_oauth_client": [
-              {
-                "client_id": "129035646582-a4ttt51j5jt7iqfur98kdr214cmc5p1r.apps.googleusercontent.com",
-                "client_type": 3
-              }
-            ]
-          }
+        {
+          "client_id": "129035646582-a4ttt51j5jt7iqfur98kdr214cmc5p1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD56-s1CZFMTTj9fH-buXL7SQMYEPkZfKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129035646582-a4ttt51j5jt7iqfur98kdr214cmc5p1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
-    ],
-    "configuration_version": "1"
-  }
+    }
+  ],
+  "configuration_version": "1"
+}
