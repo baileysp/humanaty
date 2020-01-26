@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/_router.dart';
-import 'package:humanaty/common/widgets/googleMapsWidget/maps.dart';
-import 'package:loader_search_bar/loader_search_bar.dart';
+// import 'package:loader_search_bar/loader_search_bar.dart';
 /**
  * Current TODOs:
  * 1. Reuseable event card widget
@@ -14,11 +13,11 @@ import 'package:loader_search_bar/loader_search_bar.dart';
 //Screen/Widget that is displayed for the Home page is the 'Current' class
 
 List<HumanatyEvent> testEvents = [
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "DINNER TIME", eventDate: "1/14/23", eventDescription: "scrumptuous dinner with corona virus",),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "Delicious Dinner", eventDate: "1/17/24", eventDescription: "It's actually not delicious",),
+  HumanatyEvent(eventName: "Test Event Widget 1", eventDate: "1/11/23", eventDescription: "Meal description as well as cultural information go here."),
+  HumanatyEvent(eventName: "Authentic Chinese Food Experience", eventDate: "1/14/23", eventDescription: "Come enjoy our home cooked meal with a east asian emphasis."),
+  HumanatyEvent(eventName: "Spice it up and join us for some Indian food!", eventDate: "1/11/23", eventDescription: "Eat with us in our fantastic home, we will be making ... "),
+  HumanatyEvent(eventName: "American BBQ", eventDate: "1/11/23", eventDescription: "Burgers, Beers, hot dogs, and best of all ribs mmmmmm."),
+  HumanatyEvent(eventName: "Delicious Dinner", eventDate: "1/17/24", eventDescription: "It's actually not delicious"),
 ];
 
 List<HumanatyEvent> displayedEvents = testEvents;
@@ -47,25 +46,14 @@ class CurrentState extends State<Current> {
               itemBuilder: (context, index) {
                 return testEvents[index];
               },
-            ),
-            mapContainer
+            )
           ],
         )
       )
     );
   }
 
-  final Padding mapContainer =     
-    Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Center(
-        child: SizedBox(
-          width: 300.0,
-          height: 200.0,
-          child: MapsWidget()
-        )
-      )
-    );
+  
 
   Widget title = Container(
     padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
@@ -106,11 +94,9 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   int navIndex = 0;
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [
+  final realNavOptions = [
     Current(),
     Settings(),
-    Settings(),
-    Map(),
     Map()
   ];
   
@@ -133,19 +119,17 @@ class HomeState extends State<Home> {
         BottomNavigationBarItem(
             icon: Icon(Icons.map),
             title: Text("Map")
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text("Map")
-        ),
+        )
       ],
       selectedItemColor: Colors.blue,
       ),
-      body: _navigationOptions[navIndex],
+      body: realNavOptions[navIndex],
 
     );
   }
   void selectNav(int index) {
+    print(index);
+    print(realNavOptions.toString());
     setState(() {
       navIndex = index;
     });
