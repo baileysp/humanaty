@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/models/user.dart';
-import 'package:humanaty/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/routes/_router.dart';
@@ -15,8 +13,9 @@ class Main extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Humanaty",
+      //theme: ThemeData(fontFamily: 'Nuninto_Sans'),
       
-      //home:  ,
+      //home: LandingPage(),
       initialRoute: '/login',
       routes: {
         '/home': (context) => Home(),

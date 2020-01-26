@@ -99,13 +99,20 @@ class _LoginPageState extends State<LoginPage>{
       padding: EdgeInsets.fromLTRB(0, 35.0, 0, 0),
       child: FlatButton(
         color: Pallete.humanGreen,
-        onPressed: (){
-          String password = _passwordController.text;
+        onPressed: () async {
+          if(_signInFormKey.currentState.validate()){
+            String password = _passwordController.text;
             String email = _emailController.text.trim();
-            dynamic result = _auth.registerWithEmailAndPassword(email, password);               
-            if(result != null){
-              Navigator.pushReplacementNamed(context, '/home');
-            }
+
+
+            _auth.signInWithEmailAndPassword(email, password).whenComplete((){
+              if (_auth.currentUser != null){
+                Navigator.pushReplacementNamed(context, '/home');
+              }else{
+                _signInFormKey.currentState.reset();
+              } 
+            }); 
+          }         
         } ,
         child: Text(
           "Login",
@@ -127,16 +134,16 @@ class _LoginPageState extends State<LoginPage>{
           children: <Widget>[
             Icon(Icons.nfc),
             Text("Sign in with Google")
-
-
           ],
         ),
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(0.0),
-              side: BorderSide(color: Colors.blue),
-          ),
         onPressed: (){
-          _auth.signinwithGoogle();
+          _auth.signInWithGoogle().whenComplete((){
+              if (_auth.currentUser != null){
+                Navigator.pushReplacementNamed(context, '/home');
+              }else{
+                _signInFormKey.currentState.reset();
+              } 
+            });             
         }
       )
     );

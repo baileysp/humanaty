@@ -124,11 +124,13 @@ class _RegisterPageState extends State<RegisterPage>{
           if(_registrationFormKey.currentState.validate()){
             String password = _passwordController.text;
             String email = _emailController.text.trim();
-            dynamic result = _auth.registerWithEmailAndPassword(email, password);               
-            if(result != null){
-              Navigator.pushReplacementNamed(context, '/home');
-            }
-            //Navigator.pushNamed(context, '/registration');
+            _auth.createUserWithEmailAndPassword(email, password).whenComplete((){
+              if (_auth.currentUser != null){
+                Navigator.pushReplacementNamed(context, '/home');
+              } 
+            });
+
+                         
           }
         } ,
         child: Text(
@@ -138,11 +140,4 @@ class _RegisterPageState extends State<RegisterPage>{
       )
     );
   }
-
-
-
-
-
-
-
 }
