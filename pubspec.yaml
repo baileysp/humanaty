@@ -19,6 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # SearchBar plugin
+  loader_search_bar: ^1.0.3+3
+
   # Add the dependency for the Firebase Core Flutter SDK
   firebase_core: ^0.4.0+9
 
@@ -32,6 +35,8 @@ dependencies:
 
   # Add the dependecies for Google SignIn, necessary for firebaseAuth plugin
   google_sign_in: ^4.1.1
+  # Google maps package dependency
+  google_maps_flutter: 0.5.21+15
 
   provider: ^4.0.2
 
