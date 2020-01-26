@@ -14,8 +14,8 @@ import 'package:humanaty/routes/_router.dart';
 
 List<HumanatyEvent> testEvents = [
   HumanatyEvent(eventName: "Test Event Widget 1", eventDate: "1/11/23", eventDescription: "Meal description as well as cultural information go here."),
-  HumanatyEvent(eventName: "Authentic Chinese Food Experience", eventDate: "1/14/23", eventDescription: "Come enjoy our home cooked meal with a east asian emphasis."),
-  HumanatyEvent(eventName: "Spice it up and join us for some Indian food!", eventDate: "1/11/23", eventDescription: "Eat with us in our fantastic home, we will be making ... "),
+  HumanatyEvent(eventName: "Real Chinese Food!", eventDate: "1/14/23", eventDescription: "Come enjoy our home cooked meal with a east asian emphasis."),
+  HumanatyEvent(eventName: "Spice it up: Indian food!", eventDate: "1/11/23", eventDescription: "Eat with us in our fantastic home, we will be making ... "),
   HumanatyEvent(eventName: "American BBQ", eventDate: "1/11/23", eventDescription: "Burgers, Beers, hot dogs, and best of all ribs mmmmmm."),
   HumanatyEvent(eventName: "Delicious Dinner", eventDate: "1/17/24", eventDescription: "It's actually not delicious"),
 ];

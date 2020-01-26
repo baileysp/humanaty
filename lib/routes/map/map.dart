@@ -21,7 +21,7 @@ class Map extends StatelessWidget {
       child: Center(
         child: SizedBox(
           width: 350.0,
-          height: 497.0,
+          height: 400.0,
           child: MapsWidget()
         )
       )
