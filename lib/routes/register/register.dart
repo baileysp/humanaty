@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage>{
 
   Widget nameField(){
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 70.0, 0, 0),
       child: TextFormField(
          decoration: textInputDecoration.copyWith(
            hintText: "Name",
