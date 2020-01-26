@@ -13,8 +13,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage>{
   final AuthService _auth = AuthService();
-  
-  
+   
   final _registrationFormKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
@@ -25,18 +24,37 @@ class _RegisterPageState extends State<RegisterPage>{
   void initState(){
     _passwordObscured = true;
     super.initState();
-    //pasword visibility false
   }
   
   
   @override
   Widget build(BuildContext context){
     return new Scaffold(
-      body: Container(
-        child: registrationForm()
+      body: ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.all(8.0),
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              backButton()
+            ],
+          )
+        ],
       )
     );
   }
+
+  Widget backButton(){
+    return IconButton(
+      onPressed: (){},
+      icon: Icon(
+        Icons.arrow_back,
+        color: Colors.grey
+      )
+    );
+  }
+
 
   Widget registrationForm(){
     return Container(

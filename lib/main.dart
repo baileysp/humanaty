@@ -13,7 +13,7 @@ class Main extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Humanaty",
-      //theme: ThemeData(fontFamily: 'Nuninto_Sans'),
+      theme: ThemeData(fontFamily: 'Nuninto_Sans'),
       
       //home: LandingPage(),
       initialRoute: '/login',

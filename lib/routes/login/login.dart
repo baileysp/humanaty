@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets/constants.dart';
 import 'package:humanaty/services/auth.dart';
+
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -29,85 +29,132 @@ class _LoginPageState extends State<LoginPage>{
 
   @override
   Widget build(BuildContext context){
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Color(0xFF408D78)));
-    
-    
-    return new Scaffold(
-      body: Container(
-         
+    return Scaffold(
+      body: ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.all(16.0),
+        children: <Widget>[
+          SizedBox(height: 80),
+          Text(
+            "Welcome Back,",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 30.0
+            ),
+          ),
+          Text(
+            "Sign in with humanaty",
+            style: TextStyle(
+              fontSize: 16
+            )
+          ),
+          SizedBox(height: 50),
+          Form(
+            key: _signInFormKey,
+            child: Column(
+              children: <Widget>[
+                usernameField(),
+                SizedBox(height: 0),
+                passwordField(),
+                SizedBox(height: 0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    forgotPassword()
+                  ],
+                ),
+                SizedBox(height: 80.0),
+                loginButton(),
+                SizedBox(height: 16.0),
+                googleSignIn(),
+                SizedBox(height: 40.0),
+                newUser()
+              ],
+            )
+          )
+          
+        ],
       )
     );
   }
 
   Widget usernameField(){
-    return TextFormField(
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      decoration: textInputDecoration.copyWith(
-        hintText: "Username",
-        prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)
+    return SizedBox(
+      height: 80.0,
+      child: TextFormField(
+        controller: _emailController,
+        keyboardType: TextInputType.emailAddress,
+        decoration: textInputDecoration.copyWith(
+          hintText: "Email",
+          prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)
+        ),
+        validator: emailValidator,
       ),
-      validator: emailValidator,
     );
   }
   
   Widget passwordField(){
-    return TextFormField(
-      controller: _passwordController,
-      obscureText: _passwordObscured,
-      decoration: textInputDecoration.copyWith(
-        hintText: "Password",
-        prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
-        suffixIcon: IconButton(
-          icon: Icon(_passwordObscured? Icons.visibility_off : Icons.visibility),
-          color: Colors.grey,
-          onPressed:(){
-            setState(() {
-              _passwordObscured = !_passwordObscured;
-            });
-          },
-        )
+    return SizedBox(
+      height: 80.0,
+      child: TextFormField(
+        controller: _passwordController,
+        obscureText: _passwordObscured,
+        decoration: textInputDecoration.copyWith(
+          hintText: "Password",
+          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
+          suffixIcon: IconButton(
+            icon: Icon(_passwordObscured? Icons.visibility_off : Icons.visibility),
+            color: Colors.grey,
+            onPressed:(){
+              setState(() {
+                _passwordObscured = !_passwordObscured;
+              });
+            },
+          )
+        ),
+        validator: passwordValidator,
       ),
-      validator: passwordValidator,
     );
   }
 
   Widget loginButton(){
-    return FlatButton(
-      color: Pallete.humanGreen,
-      onPressed: () async {
-        if(_signInFormKey.currentState.validate()){
-          String password = _passwordController.text;
-          String email = _emailController.text.trim();
-        }  
-      } ,
-      child: Text(
-        "Login",
-        style: TextStyle(color: Colors.white)
-
-      )
+    return Container(
+      width: double.infinity,
+      height: 50.0,
+      child: FlatButton(
+        color: Pallete.humanGreen,
+        onPressed: () async {
+          if(_signInFormKey.currentState.validate()){
+            String password = _passwordController.text;
+            String email = _emailController.text.trim();
+          }  
+        } ,
+        child: Text("Login",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0)
+        )
+      ),
     );
   }
   
   Widget googleSignIn(){
-    return FlatButton(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.nfc),
-          Text("Sign in with Google")
-        ],
+    return Container(
+      height: 50.0,
+      child: OutlineButton(
+        onPressed: (){},
+        borderSide: BorderSide(
+          width: 2.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("Sign in with Google",
+            style: TextStyle(
+              fontSize: 16.0
+            ))
+          ],
+        )
       ),
-      onPressed: (){
-        _auth.signInWithGoogle().whenComplete((){
-            if (_auth.currentUser != null){
-              Navigator.pushReplacementNamed(context, '/home');
-            }else{
-              _signInFormKey.currentState.reset();
-            } 
-          });             
-      }
     );
   }
 
@@ -124,8 +171,8 @@ class _LoginPageState extends State<LoginPage>{
   }
     
   Widget forgotPassword(){
-    return FlatButton(
-      onPressed: (){
+    return InkWell(
+      onTap: (){
         //move to forgot password page
       },
       child: Text(
