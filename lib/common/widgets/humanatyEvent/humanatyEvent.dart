@@ -6,14 +6,22 @@ class HumanatyEvent extends StatelessWidget {
       this.eventName,
       this.eventDate,
       this.eventDescription,
-      this.cardClicked
     }
   );
 
-  final String eventName;
-  final String eventDate;
-  final String eventDescription;
-  final VoidCallback cardClicked;
+  String eventName;
+  String eventDate;
+  String eventDescription;
+
+  HumanatyEvent.fromJson(Map<String, dynamic> json) {
+    eventName = json['eventName'];
+    eventDate = json['eventDate'];
+    eventDescription = json['eventDescription'];
+  }
+
+  String getName() {
+    return eventName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +29,7 @@ class HumanatyEvent extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(24, 8, 24, 8),
       child: new InkWell(
         onTap: () {
-          cardClicked();
+          print(eventName + " was clicked");
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -62,5 +70,6 @@ class HumanatyEvent extends StatelessWidget {
       )
     );
   }
+
 
 }

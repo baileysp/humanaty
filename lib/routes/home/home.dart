@@ -13,16 +13,10 @@ import 'package:loader_search_bar/loader_search_bar.dart';
 //Screen/Widget that is displayed for the Home page is the 'Current' class
 
 List<HumanatyEvent> testEvents = [
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ", cardClicked:() {
-    print("Clicked");
-  }),
+  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
   HumanatyEvent(eventName: "DINNER TIME", eventDate: "1/14/23", eventDescription: "scrumptuous dinner with corona virus",),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ", cardClicked:() {
-    print("Clicked");
-  }),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah ", cardClicked:() {
-    print("Clicked");
-  }),
+  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
+  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
   HumanatyEvent(eventName: "Delicious Dinner", eventDate: "1/17/24", eventDescription: "It's actually not delicious",),
 ];
 
