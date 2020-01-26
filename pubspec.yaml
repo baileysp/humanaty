@@ -35,6 +35,8 @@ dependencies:
 
   # Add the dependecies for Google SignIn, necessary for firebaseAuth plugin
   google_sign_in: ^4.1.1
+  # Google maps package dependency
+  google_maps_flutter: 0.5.21+15
 
 dev_dependencies:
   flutter_test:
