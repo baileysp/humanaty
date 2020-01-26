@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:humanaty/common/widgets/googleMapsWidget/maps.dart';
 import 'package:loader_search_bar/loader_search_bar.dart';
 /**
  * Current TODOs:
@@ -46,12 +47,25 @@ class CurrentState extends State<Current> {
               itemBuilder: (context, index) {
                 return testEvents[index];
               },
-            )
+            ),
+            mapContainer
           ],
         )
       )
     );
   }
+
+  final Padding mapContainer =     
+    Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Center(
+        child: SizedBox(
+          width: 300.0,
+          height: 200.0,
+          child: MapsWidget()
+        )
+      )
+    );
 
   Widget title = Container(
     padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
