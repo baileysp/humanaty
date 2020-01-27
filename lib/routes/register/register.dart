@@ -6,156 +6,128 @@ import 'package:humanaty/common/widgets/constants.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key key}) : super(key: key);
-  
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage>{
+class _RegisterPageState extends State<RegisterPage> {
   final AuthService _auth = AuthService();
-   
+
   final _registrationFormKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
   bool _passwordObscured;
 
-
-  @override 
-  void initState(){
+  @override
+  void initState() {
     _passwordObscured = true;
     super.initState();
   }
-  
-  
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new Scaffold(
-      body: ListView(
-        shrinkWrap: true,
-        padding: EdgeInsets.all(8.0),
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              backButton()
-            ],
-          )
-        ],
-      )
-    );
+        body: ListView(
+      shrinkWrap: true,
+      padding: EdgeInsets.all(8.0),
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[backButton()],
+        )
+      ],
+    ));
   }
 
-  Widget backButton(){
+  Widget backButton() {
     return IconButton(
-      onPressed: (){},
-      icon: Icon(
-        Icons.arrow_back,
-        color: Colors.grey
-      )
-    );
+        onPressed: () {}, icon: Icon(Icons.arrow_back, color: Colors.grey));
   }
 
-
-  Widget registrationForm(){
+  Widget registrationForm() {
     return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Form(
-        key: _registrationFormKey,
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            nameField(),
-            emailField(),
-            passwordField(),
-            confirmPasswordField(),
-            registerButton()
-            
-          ],
-        )
-      )
-    );
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+            key: _registrationFormKey,
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                nameField(),
+                emailField(),
+                passwordField(),
+                confirmPasswordField(),
+                registerButton()
+              ],
+            )));
   }
 
-  Widget nameField(){
+  Widget nameField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 70.0, 0, 0),
-      child: TextFormField(
-         decoration: textInputDecoration.copyWith(
-           hintText: "Name",
-           prefixIcon: Icon(Icons.person_outline, color: Colors.grey))
-      )
-    );
+        padding: const EdgeInsets.fromLTRB(0, 70.0, 0, 0),
+        child: TextFormField(
+            decoration: textInputDecoration.copyWith(
+                hintText: "Name",
+                prefixIcon: Icon(Icons.person_outline, color: Colors.grey))));
   }
 
-  Widget emailField(){
+  Widget emailField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-      child: TextFormField(
-        controller: _emailController,
-        keyboardType: TextInputType.emailAddress,
-        decoration: textInputDecoration.copyWith(
-          hintText: "Email",
-          prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
-        validator: emailValidator
-      )
-    );
+        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+        child: TextFormField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: textInputDecoration.copyWith(
+                hintText: "Email",
+                prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
+            validator: emailValidator));
   }
 
-  Widget passwordField(){
+  Widget passwordField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-      child: TextFormField(
-        controller: _passwordController,
-        obscureText: true,
-        decoration: textInputDecoration.copyWith(
-          hintText: "Password",
-          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)
-        ),
-        validator: passwordValidator
-      )
-    );
+        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+        child: TextFormField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: textInputDecoration.copyWith(
+                hintText: "Password",
+                prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)),
+            validator: passwordValidator));
   }
 
-  Widget confirmPasswordField(){
+  Widget confirmPasswordField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-      child: TextFormField(
-        obscureText: _passwordObscured,
-        decoration: textInputDecoration.copyWith(
-          hintText: "Confirm Password",
-          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)
-        ),
-        validator: (confirmation){
-          String password = _passwordController.text;
-          return confirmation == password ? null : "Passwords do not match";
-        },
-      )
-    );
-  }
-
-  Widget registerButton(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 35.0, 0, 0),
-      child: FlatButton(
-        color: Pallete.humanGreen,
-        onPressed: () async {
-          if(_registrationFormKey.currentState.validate()){
+        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+        child: TextFormField(
+          obscureText: _passwordObscured,
+          decoration: textInputDecoration.copyWith(
+              hintText: "Confirm Password",
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)),
+          validator: (confirmation) {
             String password = _passwordController.text;
-            String email = _emailController.text.trim();
-            _auth.createUserWithEmailAndPassword(email, password).whenComplete((){
-              if (_auth.currentUser != null){
-                Navigator.pushReplacementNamed(context, '/home');
-              } 
-            });
+            return confirmation == password ? null : "Passwords do not match";
+          },
+        ));
+  }
 
-                         
-          }
-        } ,
-        child: Text(
-          "Register",
-          style: TextStyle(color: Colors.white)
-        )
-      )
-    );
+  Widget registerButton() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0, 35.0, 0, 0),
+        child: FlatButton(
+            color: Pallete.humanGreen,
+            onPressed: () async {
+              if (_registrationFormKey.currentState.validate()) {
+                String password = _passwordController.text;
+                String email = _emailController.text.trim();
+                _auth
+                    .createUserWithEmailAndPassword(email, password)
+                    .whenComplete(() {
+                  if (_auth.currentUser != null) {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  }
+                });
+              }
+            },
+            child: Text("Register", style: TextStyle(color: Colors.white))));
   }
 }
