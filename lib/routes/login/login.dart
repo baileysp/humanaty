@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets/constants.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -11,10 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final AuthService _auth = AuthService();
-
-  final _passwordController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _password = TextEditingController();
+  final _email = TextEditingController();
 
   final _signInFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
@@ -27,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthService>(context);
     return Scaffold(
       body: ListView(
           shrinkWrap: true,
@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[forgotPassword()],
                     ),
                   SizedBox(height: 80.0),
-                  loginButton(),
+                  user.status == Status.Authenticating ? Center(child: CircularProgressIndicator()) : loginButton(user),
                   SizedBox(height: 16.0),
                   googleSignIn(),
                   SizedBox(height: 40.0),
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
-        controller: _emailController,
+        controller: _email,
         keyboardType: TextInputType.emailAddress,
         decoration: textInputDecoration.copyWith(
             hintText: "Email",
@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
-        controller: _passwordController,
+        controller: _password,
         obscureText: _passwordObscured,
         decoration: textInputDecoration.copyWith(
             hintText: "Password",
@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget loginButton() {
+  Widget loginButton(AuthService user) {
     return Container(
       width: double.infinity,
       height: 50.0,
@@ -111,8 +111,12 @@ class _LoginPageState extends State<LoginPage> {
           color: Pallete.humanGreen,
           onPressed: () async {
             if (_signInFormKey.currentState.validate()) {
-              String password = _passwordController.text;
-              String email = _emailController.text.trim();
+              String email = _email.text.trim();
+              String password = _password.text;
+                           
+              if(!await user.signInWithEmailAndPassword(email, password)){
+                print("something went wrong");
+              }
             }
           },
           child: Text("Login",

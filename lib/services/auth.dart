@@ -1,24 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService {
-  FirebaseUser currentUser;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
-  Future<FirebaseUser> signInWithEmailAndPassword(
-      String email, String password) async {
+class AuthService with ChangeNotifier{
+  FirebaseAuth _firebaseAuth;
+  FirebaseUser _user;
+  Status _status = Status.Uninitialized;
+  
+  //final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  AuthService.instance() : _firebaseAuth = FirebaseAuth.instance{
+    _firebaseAuth.onAuthStateChanged.listen(_onAuthStateChanged);
+  }
+
+  Status get status => _status;
+  FirebaseUser get user => _user;
+
+
+  
+
+
+  Future<bool> signInWithEmailAndPassword(String email, String password) async {
     try {
-      final AuthResult authResult = await _firebaseAuth
-          .signInWithCredential(EmailAuthProvider.getCredential(
-        email: email,
-        password: password,
-      ));
-      currentUser = authResult.user;
-      return authResult.user;
+      _status = Status.Authenticating;
+      notifyListeners();
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      return true;
     } catch (error) {
+      _status = Status.Unauthenticated;
       print(error.toString());
+      notifyListeners();
+      return false;
     }
   }
 
@@ -27,7 +42,6 @@ class AuthService {
     try {
       final AuthResult authResult = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      currentUser = authResult.user;
       return authResult.user;
     } catch (error) {
       print(error.toString());
@@ -52,7 +66,6 @@ class AuthService {
             idToken: googleAuth.idToken,
             accessToken: googleAuth.accessToken,
           ));
-          currentUser = authResult.user;
           return authResult.user;
         }
       }
@@ -60,15 +73,28 @@ class AuthService {
       print(error.toString());
     }
   }
-
-  // Future<FirebaseUser> currentUser() async {
-  //   final FirebaseUser user = await _firebaseAuth.currentUser();
-  //   return user;
-  // }
-
-  Future<void> signOut() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut();
-    return _firebaseAuth.signOut();
+  
+  Future signOut() async {
+    _firebaseAuth.signOut();
+    _status = Status.Unauthenticated;
+    notifyListeners();
+    return Future.delayed(Duration.zero);
+    
+    
+    
+    //final GoogleSignIn googleSignIn = GoogleSignIn();
+    //await googleSignIn.signOut();
+    //return _firebaseAuth.signOut();
   }
+
+  Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async{
+    if(firebaseUser == null){
+      _status = Status.Unauthenticated;
+    } else{
+      _user = firebaseUser;
+      _status = Status.Authenticated;
+    }
+    notifyListeners();
+  }
+
 }

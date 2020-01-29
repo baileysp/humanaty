@@ -12,7 +12,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage>{
-  final AuthService _auth = AuthService();
+  //final AuthService _auth = AuthService();
    
   final _registrationFormKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
