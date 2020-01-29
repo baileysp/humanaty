@@ -2,35 +2,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService  {
-
+class AuthService {
   FirebaseUser currentUser;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  
-  Future<FirebaseUser> signInWithEmailAndPassword(String email, String password) async {
-    try{
+  Future<FirebaseUser> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
       final AuthResult authResult = await _firebaseAuth
-        .signInWithCredential(EmailAuthProvider.getCredential(
-      email: email,
-      password: password,
+          .signInWithCredential(EmailAuthProvider.getCredential(
+        email: email,
+        password: password,
       ));
       currentUser = authResult.user;
-    return authResult.user;
-    }catch(error){
+      return authResult.user;
+    } catch (error) {
       print(error.toString());
     }
   }
 
-  Future<FirebaseUser> createUserWithEmailAndPassword(String email, String password) async {
+  Future<FirebaseUser> createUserWithEmailAndPassword(
+      String email, String password) async {
     try {
       final AuthResult authResult = await _firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: email, password: password);
       currentUser = authResult.user;
       return authResult.user;
-    }catch(error){
-
+    } catch (error) {
       print(error.toString());
     }
   }
@@ -40,29 +39,26 @@ class AuthService  {
   }
 
   Future<FirebaseUser> signInWithGoogle() async {
-    try{
+    try {
       final GoogleSignIn googleSignIn = GoogleSignIn();
-    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+      final GoogleSignInAccount googleUser = await googleSignIn.signIn();
 
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      if (googleAuth.accessToken != null && googleAuth.idToken != null) {
-        final AuthResult authResult = await _firebaseAuth
-            .signInWithCredential(GoogleAuthProvider.getCredential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        ));
-        currentUser = authResult.user;
-        return authResult.user;
-      } 
-    }
-    }catch(error){
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        if (googleAuth.accessToken != null && googleAuth.idToken != null) {
+          final AuthResult authResult = await _firebaseAuth
+              .signInWithCredential(GoogleAuthProvider.getCredential(
+            idToken: googleAuth.idToken,
+            accessToken: googleAuth.accessToken,
+          ));
+          currentUser = authResult.user;
+          return authResult.user;
+        }
+      }
+    } catch (error) {
       print(error.toString());
     }
-
-
-
   }
 
   // Future<FirebaseUser> currentUser() async {

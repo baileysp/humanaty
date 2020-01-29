@@ -29,16 +29,37 @@ class _RegisterPageState extends State<RegisterPage>{
   
   @override
   Widget build(BuildContext context){
-    return new Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        leading: backButton()
+        ),
       body: ListView(
         shrinkWrap: true,
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(16.0),
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              backButton()
-            ],
+          Text("Join Our Community,",
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
+            ),
+          Text("Create an account with humanaty", 
+            style: TextStyle(fontSize: 16)),
+          SizedBox(height: 50),
+          Form(
+            key: _registrationFormKey,
+            child: Column(
+              children: <Widget>[
+                nameField(),
+                emailField(),
+                passwordField(),
+                confirmPasswordField(),
+                SizedBox(height: 30),
+                registerButton(),
+                SizedBox(height: 30),
+                alreadyUser()
+
+              ],
+            )
           )
         ],
       )
@@ -47,7 +68,7 @@ class _RegisterPageState extends State<RegisterPage>{
 
   Widget backButton(){
     return IconButton(
-      onPressed: (){},
+      onPressed: (){Navigator.pop(context);},
       icon: Icon(
         Icons.arrow_back,
         color: Colors.grey
@@ -55,107 +76,100 @@ class _RegisterPageState extends State<RegisterPage>{
     );
   }
 
-
-  Widget registrationForm(){
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Form(
-        key: _registrationFormKey,
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            nameField(),
-            emailField(),
-            passwordField(),
-            confirmPasswordField(),
-            registerButton()
-            
-          ],
-        )
-      )
-    );
-  }
-
   Widget nameField(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 70.0, 0, 0),
+    return SizedBox(
+      height: 70.0,
       child: TextFormField(
-         decoration: textInputDecoration.copyWith(
-           hintText: "Name",
-           prefixIcon: Icon(Icons.person_outline, color: Colors.grey))
-      )
+        decoration: textInputDecoration.copyWith(
+          hintText: "Name",
+          prefixIcon: Icon(Icons.person_outline, color: Colors.grey))
+      ),
     );
   }
 
   Widget emailField(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+    return SizedBox(
+      height: 70.0,
       child: TextFormField(
-        controller: _emailController,
-        keyboardType: TextInputType.emailAddress,
-        decoration: textInputDecoration.copyWith(
-          hintText: "Email",
-          prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
-        validator: emailValidator
-      )
+      controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
+      decoration: textInputDecoration.copyWith(
+        hintText: "Email",
+        prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
+      validator: emailValidator
+      ),
     );
   }
 
   Widget passwordField(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+    return SizedBox(
+      height: 70.0,
       child: TextFormField(
         controller: _passwordController,
-        obscureText: true,
+        obscureText: _passwordObscured,
         decoration: textInputDecoration.copyWith(
           hintText: "Password",
-          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)
-        ),
+          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
+          suffixIcon: IconButton(
+              icon: Icon(_passwordObscured ? Icons.visibility_off : Icons.visibility),
+              color: Colors.grey,
+              onPressed: () {
+                setState(() {
+                  _passwordObscured = !_passwordObscured;
+                });
+              },
+            )),        
         validator: passwordValidator
-      )
+      ),
     );
   }
 
   Widget confirmPasswordField(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+    return SizedBox(
+      height: 70.0,
       child: TextFormField(
         obscureText: _passwordObscured,
         decoration: textInputDecoration.copyWith(
           hintText: "Confirm Password",
-          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)
-        ),
+          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)),
         validator: (confirmation){
           String password = _passwordController.text;
           return confirmation == password ? null : "Passwords do not match";
         },
-      )
+      ),
     );
   }
 
   Widget registerButton(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 35.0, 0, 0),
+    return Container(
+      width: double.infinity,
+      height: 50.0,
       child: FlatButton(
         color: Pallete.humanGreen,
-        onPressed: () async {
+        onPressed: () {
           if(_registrationFormKey.currentState.validate()){
             String password = _passwordController.text;
             String email = _emailController.text.trim();
-            _auth.createUserWithEmailAndPassword(email, password).whenComplete((){
-              if (_auth.currentUser != null){
-                Navigator.pushReplacementNamed(context, '/home');
-              } 
-            });
-
-                         
+                                  
           }
         } ,
-        child: Text(
-          "Register",
-          style: TextStyle(color: Colors.white)
+        child: Text("Register", 
+          style: TextStyle(color: Colors.white, fontSize: 16.0)
         )
-      )
-    );
+      ),
+    )
+    ;
+  }
+
+  Widget alreadyUser() {
+    return FlatButton(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text("Already have an account? Login"));
   }
 }
+
+
+
