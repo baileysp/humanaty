@@ -55,7 +55,9 @@ class HomeState extends State<Home> {
   Widget signOut() {
     return FlatButton(
       color: Colors.blue,
-      onPressed: (){Provider.of<AuthService>(context, listen: false).signOut();},
+      onPressed: (){
+        print(context.describeOwnershipChain('/home'));
+        Provider.of<AuthService>(context, listen: false).signOut();},
       child: Text("Sign Out")
     );
   }
