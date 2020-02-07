@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
               "Welcome Back,",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
             ),
-            Text("Sign in with humanaty", style: TextStyle(fontSize: 16)),
+            Text("Sign in with huMANAty", style: TextStyle(fontSize: 16)),
             SizedBox(height: 50),
             errorText(),
             Form(
