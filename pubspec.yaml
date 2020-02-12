@@ -19,6 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # SearchBar plugin
+  loader_search_bar: ^1.0.3+3
+
   # Add the dependency for the Firebase Core Flutter SDK
   firebase_core: ^0.4.0+9
 
