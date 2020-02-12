@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:humanaty/services/authError.dart';
+import 'package:humanaty/services/firebaseError.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/common/widgets/constants.dart';
@@ -43,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
               "Join Our Community,",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
             ),
-            Text("Create an account with humanaty",
+            Text("Create an account with huMANAty",
                 style: TextStyle(fontSize: 16)),
             SizedBox(height: 50),
             errorText(),
