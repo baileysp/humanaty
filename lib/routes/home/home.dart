@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:humanaty/services/auth.dart';
 import 'package:loader_search_bar/loader_search_bar.dart';
+import 'package:provider/provider.dart';
 /**
  * Current TODOs:
  * 1. Reuseable event card widget
@@ -13,11 +15,28 @@ import 'package:loader_search_bar/loader_search_bar.dart';
 //Screen/Widget that is displayed for the Home page is the 'Current' class
 
 List<HumanatyEvent> testEvents = [
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "DINNER TIME", eventDate: "1/14/23", eventDescription: "scrumptuous dinner with corona virus",),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "Delicious Dinner", eventDate: "1/17/24", eventDescription: "It's actually not delicious",),
+  HumanatyEvent(
+      eventName: "Test",
+      eventDate: "1/11/23",
+      eventDescription: "Blah Blah Blah Blah "),
+  HumanatyEvent(
+    eventName: "DINNER TIME",
+    eventDate: "1/14/23",
+    eventDescription: "scrumptuous dinner with corona virus",
+  ),
+  HumanatyEvent(
+      eventName: "Test",
+      eventDate: "1/11/23",
+      eventDescription: "Blah Blah Blah Blah "),
+  HumanatyEvent(
+      eventName: "Test",
+      eventDate: "1/11/23",
+      eventDescription: "Blah Blah Blah Blah "),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
 ];
 
 List<HumanatyEvent> displayedEvents = testEvents;
@@ -25,14 +44,15 @@ List<HumanatyEvent> displayedEvents = testEvents;
 class Current extends StatefulWidget {
   CurrentState createState() => CurrentState();
 }
+
 class CurrentState extends State<Current> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      drawer: HumanatyDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
+        resizeToAvoidBottomInset: false,
+        drawer: HumanatyDrawer(),
+        body: SingleChildScrollView(
+            child: Column(
           children: <Widget>[
             // mainSearch,
             title,
@@ -48,41 +68,34 @@ class CurrentState extends State<Current> {
               },
             )
           ],
-        )
-      )
-    );
+        )));
   }
 
   Widget title = Container(
-    padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
-    child: Align(
-      alignment: Alignment.topCenter,
-      child: Text(
-        "Humanaty",
-        style: TextStyle(fontSize: 34),
-      ),
-    )
-  );
+      padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Text(
+          "Humanaty",
+          style: TextStyle(fontSize: 34),
+        ),
+      ));
 
   //TODO: Build searchbar widget, no existing searchbar
   Widget searchBar = Container(
-    padding: const EdgeInsets.fromLTRB(36, 20, 36, 10),
-    child: TextField(
-      decoration: InputDecoration(
-        hintText: "City name here..."
-      ),
-      onChanged: (text) {
-        text = text.toLowerCase();
-        // setState(() {
-        //   displayedEvents = testEvents.where((event) {
-        //     var title = event.eventName.toLowerCase();
-        //     return title.contains(title);
-        //   }).toList();
-        // });
-      },
-    )
-  );
-
+      padding: const EdgeInsets.fromLTRB(36, 20, 36, 10),
+      child: TextField(
+        decoration: InputDecoration(hintText: "City name here..."),
+        onChanged: (text) {
+          text = text.toLowerCase();
+          // setState(() {
+          //   displayedEvents = testEvents.where((event) {
+          //     var title = event.eventName.toLowerCase();
+          //     return title.contains(title);
+          //   }).toList();
+          // });
+        },
+      ));
 }
 
 class Home extends StatefulWidget {
@@ -91,15 +104,10 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   int navIndex = 0;
-  static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [
-    Current(),
-    Settings(),
-    Settings(),
-    Map(),
-    Map()
-  ];
-  
+  static const TextStyle navStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final _navigationOptions = [Current(), Settings(), Settings(), Map(), Map()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,32 +116,31 @@ class HomeState extends State<Home> {
         onTap: selectNav,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text("Home")
-          ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text("Settings")
-          ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text("Map")
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text("Map")
-        ),
-      ],
-      selectedItemColor: Colors.blue,
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), title: Text("Settings")),
+          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
+          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
+        ],
+        selectedItemColor: Colors.blue,
       ),
       body: _navigationOptions[navIndex],
-
     );
   }
+
   void selectNav(int index) {
     setState(() {
       navIndex = index;
     });
+  }
+
+  Widget signOut() {
+    return FlatButton(
+        color: Colors.blue,
+        onPressed: () {
+          print(context.describeOwnershipChain('/home'));
+          Provider.of<AuthService>(context, listen: false).signOut();
+        },
+        child: Text("Sign Out"));
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/common/design.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:flutter/services.dart';
 
@@ -18,31 +21,41 @@ void main() => {
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Humanaty",
-      theme: ThemeData(
-        //primaryColor: 
-      ),
-      
-      
-      
-      
-      
-      /*
-      TODO:
-      Check to see if there is an account logged in to decide whether to navigate to
-      Home or Login
-      */
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Home(),
-        '/login': (context) => LoginPage(),
-        '/map': (context) => Map(),
-        '/settings': (context) => Settings(),
-        '/events': (context) => Events(),
-        '/registration': (context) => RegisterPage()
-      },
+    return ChangeNotifierProvider(
+      create: (_) => AuthService.instance(),
+      child: Consumer(builder: (context, AuthService user, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "Humanaty",
+          theme: ThemeData(fontFamily: 'Nuninto_Sans'),
+
+          home: LandingPage(),
+          //initialRoute: '/login',
+          routes: {
+            '/home': (context) => Home(),
+            '/login': (context) => LoginPage(),
+            '/map': (context) => Map(),
+            '/settings': (context) => Settings(),
+            '/events': (context) => Events(),
+            '/registration': (context) => RegisterPage()
+          },
+        );
+      }),
     );
+  }
+}
+
+class LandingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<AuthService>(context);
+    switch (user.status) {
+      case Status.Uninitialized:
+      case Status.Unauthenticated:
+      case Status.Authenticating:
+        return LoginPage();
+      case Status.Authenticated:
+        return Home();
+    }
   }
 }
