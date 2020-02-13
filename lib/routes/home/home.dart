@@ -43,6 +43,7 @@ class CurrentState extends State<Current> {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: testEvents.length,
+              controller: ScrollController(),
               itemBuilder: (context, index) {
                 return testEvents[index];
               },
@@ -92,7 +93,14 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  ScrollController scrollController = new ScrollController();
   int navIndex = 0;
+
+  @override
+  void dispose(){
+    scrollController.dispose();
+    super.dispose();
+  }
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final realNavOptions = [
     Current(),
@@ -123,7 +131,11 @@ class HomeState extends State<Home> {
       ],
       selectedItemColor: Colors.blue,
       ),
+<<<<<<< HEAD
       body: realNavOptions[navIndex],
+=======
+      body: _navigationOptions[navIndex], 
+>>>>>>> 4b60064a0990045fb29daee83c7d9cdc3712941f
 
     );
   }
