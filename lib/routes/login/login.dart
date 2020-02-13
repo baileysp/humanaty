@@ -1,188 +1,204 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets/constants.dart';
+import 'package:humanaty/routes/login/resetDialog.dart';
+import 'package:humanaty/routes/register/register.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
-  
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>{
-  final AuthService _auth = AuthService();
-  
-  final _passwordController = TextEditingController();
-  final _emailController = TextEditingController();
-  
+class _LoginPageState extends State<LoginPage> {
+  final _password = TextEditingController();
+  final _email = TextEditingController();
+
   final _signInFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
+  String _errorMessage;
 
-  @override 
-  void initState(){
+  @override
+  void initState() {
     _passwordObscured = true;
+    _errorMessage = "";
     super.initState();
-    //pasword visibility false
   }
 
   @override
-  Widget build(BuildContext context){
-    return new Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: loginForm()
-      )
-    );
-  }
-
-  Widget loginForm(){
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Form(
-        key: _signInFormKey,
-        child: ListView(
+  Widget build(BuildContext context) {
+    final user = Provider.of<AuthService>(context);
+    return Scaffold(
+      appBar: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            actions: <Widget>[continueAnonymously(user)],),
+      body: ListView(
           shrinkWrap: true,
-          children: <Widget>[          
-            usernameField(),
-            passwordField(),
-            loginButton(),
-            googleSignIn(),
-            newUser()
-          ],
-        )
-      )
+          padding: EdgeInsets.all(16.0),
+          children: <Widget>[
+            //SizedBox(height: 80),
+            Text(
+              "Welcome Back,",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
+            ),
+            Text("Sign in with huMANAty", style: TextStyle(fontSize: 16)),
+            SizedBox(height: 50),
+            errorText(),
+            Form(
+                key: _signInFormKey,
+                child: Column(
+                  children: <Widget>[
+                    emailField(),
+                    SizedBox(height: 0),
+                    passwordField(),
+                    SizedBox(height: 0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[forgotPassword()],
+                    ),
+                    SizedBox(height: 80.0),
+                    loginButton(user),
+                    SizedBox(height: 16.0),
+                    googleSignIn(user),
+                    SizedBox(height: 40.0),
+                    newUser(user)
+                  ],
+                ))
+          ]),
     );
   }
 
-  Widget usernameField(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+  Widget errorText() {
+    return SizedBox(
+        height: 20,
+        child: Text(_errorMessage != null ? _errorMessage : " ",
+            style: TextStyle(color: Colors.red, fontSize: 13.0)));
+  }
+
+  Widget emailField() {
+    return SizedBox(
+      height: 70.0,
       child: TextFormField(
-        controller: _emailController,
+        controller: _email,
         keyboardType: TextInputType.emailAddress,
         decoration: textInputDecoration.copyWith(
-          hintText: "Username",
-          prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)
-        ),
+            hintText: "Email",
+            prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
         validator: emailValidator,
-      )
+      ),
     );
   }
-  
-  Widget passwordField(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+
+  Widget passwordField() {
+    return SizedBox(
+      height: 70.0,
       child: TextFormField(
-        controller: _passwordController,
+        controller: _password,
         obscureText: _passwordObscured,
         decoration: textInputDecoration.copyWith(
-          hintText: "Password",
-          prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
-          suffixIcon: IconButton(
-            icon: Icon(_passwordObscured? Icons.visibility_off : Icons.visibility),
-            color: Colors.grey,
-            onPressed:(){
-              setState(() {
-                _passwordObscured = !_passwordObscured;
-              });
-            },
-          )
-        ),
+            hintText: "Password",
+            prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
+            suffixIcon: IconButton(
+              icon: Icon(
+                  _passwordObscured ? Icons.visibility_off : Icons.visibility),
+              color: Colors.grey,
+              onPressed: () {
+                setState(() {
+                  _passwordObscured = !_passwordObscured;
+                });
+              },
+            )),
         validator: passwordValidator,
-      )
+      ),
     );
   }
 
-  Widget loginButton(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 35.0, 0, 0),
-      child: FlatButton(
-        color: Pallete.humanGreen,
-        onPressed: () async {
-          if(_signInFormKey.currentState.validate()){
-            String password = _passwordController.text;
-            String email = _emailController.text.trim();
+  Widget loginButton(AuthService user) {
+    return Container(
+      width: double.infinity,
+      height: 50.0,
+      child: RaisedButton(
+          color: Pallete.humanGreen,
+          onPressed: () async {
+            if (_signInFormKey.currentState.validate()) {
+              String email = _email.text.trim();
+              String password = _password.text;
 
-
-            _auth.signInWithEmailAndPassword(email, password).whenComplete((){
-              if (_auth.currentUser != null){
-                Navigator.pushReplacementNamed(context, '/home');
-              }else{
-                _signInFormKey.currentState.reset();
-              } 
-            }); 
-          }         
-        } ,
-        child: Text(
-          "Login",
-          style: TextStyle(color: Colors.white)
-
-        )
-      )
-    );
-  }
-  
-
-  Widget googleSignIn(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: FlatButton(
-
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.nfc),
-            Text("Sign in with Google")
-          ],
-        ),
-        onPressed: (){
-          _auth.signInWithGoogle().whenComplete((){
-              if (_auth.currentUser != null){
-                Navigator.pushReplacementNamed(context, '/home');
-              }else{
-                _signInFormKey.currentState.reset();
-              } 
-            });             
-        }
-      )
+              if (!await user.signInWithEmailAndPassword(email, password)) {
+                setState(() {
+                  _errorMessage = user.error;
+                  _signInFormKey.currentState.reset();
+                });
+              }
+            }
+          },
+          child: Text(
+              user.status == Status.Authenticating ? "Logging In" : "Login",
+              style: TextStyle(color: Colors.white, fontSize: 16.0))),
     );
   }
 
-  Widget newUser(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: FlatButton(
+  Widget googleSignIn(AuthService user) {
+    return Container(
+      height: 50.0,
+      child: RaisedButton(
+          onPressed: () async{
+            if (!await user.signInWithGoogle()){
+
+            }
+          },
+          color: Colors.white,
+          //shape: RoundedRectangleBorder(side: BorderSide(width: 2.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Sign in with Google", style: TextStyle(fontSize: 16.0))
+            ],
+          )),
+    );
+  }
+
+  Widget newUser(user) {
+    return FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        onPressed: (){
+        onPressed: () {
           Navigator.pushNamed(context, '/registration');
         },
-        child: Text(
-          "Don't have an account? Sign up"
-        )
-      )
-    );
+        child: Text("Don't have an account? Sign up"));
   }
-  
-  
-  
-  Widget forgotPassword(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: FlatButton(
-        onPressed: (){
-          //move to forgot password page
+
+  Widget forgotPassword() {
+    return InkWell(
+        onTap: () {
+          //_showForgotPasswordDialog();
+          showDialog(
+            context: context,
+            builder: (_){
+              return ResetDialog();
+            }
+          );
         },
-        child: Text(
-          "Forgot Password?"
-        )
-      )
-    );
+        child: Text("Forgot Password?"));
   }
 
-
-
-
-
-
+  Widget continueAnonymously(AuthService user){
+    return FlatButton(
+      onPressed: (){
+        user.signinAnon();
+      },
+      child: Text('Skip for now',
+      style: TextStyle(color: Colors.black),)
+    );
+  }
+  
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 }

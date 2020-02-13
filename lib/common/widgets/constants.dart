@@ -10,7 +10,6 @@ const textInputDecoration = InputDecoration(
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Pallete.humanGreen, width: 2.0)
   )
-  
 );
 
 String emailValidator(String email){
@@ -20,7 +19,7 @@ String emailValidator(String email){
 }
 
 String passwordValidator(String password){
-  var passValid = password.length < 9 ? "Your password must have at least 8 characters" : null;
+  var passValid = password.length < 8 ? "Your password must have at least 8 characters" : null;
   return passValid;
 }
 
