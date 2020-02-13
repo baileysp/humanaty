@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
@@ -122,7 +123,7 @@ class HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
           BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
         ],
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Pallete.humanGreen,
       ),
       body: _navigationOptions[navIndex],
     );
@@ -132,15 +133,5 @@ class HomeState extends State<Home> {
     setState(() {
       navIndex = index;
     });
-  }
-
-  Widget signOut() {
-    return FlatButton(
-        color: Colors.blue,
-        onPressed: () {
-          print(context.describeOwnershipChain('/home'));
-          Provider.of<AuthService>(context, listen: false).signOut();
-        },
-        child: Text("Sign Out"));
   }
 }

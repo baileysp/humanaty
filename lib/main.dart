@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:flutter/services.dart';
@@ -11,8 +9,8 @@ void main() => {
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, //top bar color
       statusBarIconBrightness: Brightness.dark, //top bar icons
-      systemNavigationBarColor: Colors.white, //bottom bar color
-      systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
+      //systemNavigationBarColor: Colors.white, //bottom bar color
+      //systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
     )
   ),
   runApp(Main())
@@ -51,9 +49,11 @@ class LandingPage extends StatelessWidget {
     final user = Provider.of<AuthService>(context);
     switch (user.status) {
       case Status.Uninitialized:
+        //splash scren
       case Status.Unauthenticated:
       case Status.Authenticating:
         return LoginPage();
+      case Status.Anon:
       case Status.Authenticated:
         return Home();
     }

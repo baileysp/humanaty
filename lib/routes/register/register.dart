@@ -146,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Container(
       width: double.infinity,
       height: 50.0,
-      child: FlatButton(
+      child: RaisedButton(
           color: Pallete.humanGreen,
           onPressed: () async {
             if (_registrationFormKey.currentState.validate()) {
