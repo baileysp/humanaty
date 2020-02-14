@@ -1,26 +1,30 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:humanaty/models/user.dart';
+import 'package:humanaty/services/database.dart';
 import 'package:humanaty/services/firebaseError.dart';
 
 enum Status {Uninitialized, Authenticated, Authenticating, Unauthenticated, Anon}
 
 class AuthService with ChangeNotifier {
   FirebaseAuth _firebaseAuth;
-  FirebaseUser _user;
+  User _user;
   Status _status = Status.Uninitialized;
   String _error = "";
-
-  //final GoogleSignIn googleSignIn = GoogleSignIn();
 
   AuthService.instance() : _firebaseAuth = FirebaseAuth.instance {
     _firebaseAuth.onAuthStateChanged.listen(_onAuthStateChanged);
   }
 
   Status get status => _status;
-  FirebaseUser get user => _user;
+  User get user => _user;
   String get error => _error;
+
+  User _userFromFirebaseUser(FirebaseUser user){
+    return user != null ? User(uid: user.uid) : null;
+  }
 
   Future<bool> signinAnon() async{
     try {
@@ -48,12 +52,13 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<bool> createUserWithEmailAndPassword(String email, String password) async {
+  Future<bool> createUserWithEmailAndPassword(String displayName, String email, String password) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await DatabaseService(uid: user.uid).createUserDoc(displayName, email);
+     
       return true;
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
@@ -125,7 +130,7 @@ class AuthService with ChangeNotifier {
       _status = Status.Unauthenticated;
       _user = null;
     } else {
-      _user = firebaseUser;
+      _user = _userFromFirebaseUser(firebaseUser);
       _status = firebaseUser.isAnonymous ? Status.Anon : Status.Authenticated;
       print("Logging in: $_user");
     }
