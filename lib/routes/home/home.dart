@@ -42,11 +42,11 @@ List<HumanatyEvent> testEvents = [
 
 List<HumanatyEvent> displayedEvents = testEvents;
 
-class Current extends StatefulWidget {
-  CurrentState createState() => CurrentState();
+class HomePage extends StatefulWidget {
+  HomePageState createState() => HomePageState();
 }
 
-class CurrentState extends State<Current> {
+class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +77,7 @@ class CurrentState extends State<Current> {
       child: Align(
         alignment: Alignment.topCenter,
         child: Text(
-          "Humanaty",
+          "HuMANAty",
           style: TextStyle(fontSize: 34),
         ),
       ));
@@ -99,36 +99,37 @@ class CurrentState extends State<Current> {
       ));
 }
 
-class Home extends StatefulWidget {
-  HomeState createState() => HomeState();
+class BottomNavBarRouter extends StatefulWidget {
+  BottomNavBarRouterState createState() => BottomNavBarRouterState();
 }
 
-class HomeState extends State<Home> {
+class BottomNavBarRouterState extends State<BottomNavBarRouter> {
   int navIndex = 0;
-  static const TextStyle navStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [Current(), Settings(), Settings(), Map(), Map()];
+  static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final _navigationOptions = [HomePage(), HomePage(), Map(), Map()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navIndex,
-        onTap: selectNav,
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text("Settings")),
-          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
-          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
-        ],
-        selectedItemColor: Pallete.humanGreen,
-      ),
+      bottomNavigationBar: bottomNavBar(),
       body: _navigationOptions[navIndex],
     );
   }
 
+  Widget bottomNavBar(){
+    return BottomNavigationBar(
+        currentIndex: navIndex,
+        onTap: selectNav,
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
+          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
+          BottomNavigationBarItem(icon: Icon(Icons.library_books), title: Text("My Events")),
+        ],
+        selectedItemColor: Pallete.humanGreen,
+      );
+  }
   void selectNav(int index) {
     setState(() {
       navIndex = index;

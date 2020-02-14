@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:humanaty/common/widgets/loading/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/routes/_router.dart';
@@ -28,9 +29,8 @@ class Main extends StatelessWidget {
           theme: ThemeData(fontFamily: 'Nuninto_Sans'),
 
           home: LandingPage(),
-          //initialRoute: '/login',
           routes: {
-            '/home': (context) => Home(),
+            '/home': (context) => BottomNavBarRouter(),
             '/login': (context) => LoginPage(),
             '/map': (context) => Map(),
             '/settings': (context) => Settings(),
@@ -49,13 +49,13 @@ class LandingPage extends StatelessWidget {
     final user = Provider.of<AuthService>(context);
     switch (user.status) {
       case Status.Uninitialized:
-        //splash scren
+        return Loading();
       case Status.Unauthenticated:
       case Status.Authenticating:
         return LoginPage();
       case Status.Anon:
       case Status.Authenticated:
-        return Home();
+        return BottomNavBarRouter();
     }
   }
 }
