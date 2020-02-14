@@ -9,3 +9,4 @@ export 'login/login.dart';
 export 'map/map.dart';
 export 'settings/settings.dart';
 export 'register/register.dart';
+export 'profile/profile.dart';
