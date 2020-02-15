@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:humanaty/services/auth.dart';
 import 'package:loader_search_bar/loader_search_bar.dart';
+import 'package:provider/provider.dart';
 /**
  * Current TODOs:
  * 1. Reuseable event card widget
@@ -13,26 +16,64 @@ import 'package:loader_search_bar/loader_search_bar.dart';
 //Screen/Widget that is displayed for the Home page is the 'Current' class
 
 List<HumanatyEvent> testEvents = [
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "DINNER TIME", eventDate: "1/14/23", eventDescription: "scrumptuous dinner with corona virus",),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "Test", eventDate: "1/11/23", eventDescription: "Blah Blah Blah Blah "),
-  HumanatyEvent(eventName: "Delicious Dinner", eventDate: "1/17/24", eventDescription: "It's actually not delicious",),
+  HumanatyEvent(
+      eventName: "Test",
+      eventDate: "1/11/23",
+      eventDescription: "Blah Blah Blah Blah "),
+  HumanatyEvent(
+    eventName: "DINNER TIME",
+    eventDate: "1/14/23",
+    eventDescription: "scrumptuous dinner with corona virus",
+  ),
+  HumanatyEvent(
+      eventName: "Test",
+      eventDate: "1/11/23",
+      eventDescription: "Blah Blah Blah Blah "),
+  HumanatyEvent(
+      eventName: "Test",
+      eventDate: "1/11/23",
+      eventDescription: "Blah Blah Blah Blah "),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
 ];
 
 List<HumanatyEvent> displayedEvents = testEvents;
 
-class Current extends StatefulWidget {
-  CurrentState createState() => CurrentState();
+class HomePage extends StatefulWidget {
+  HomePageState createState() => HomePageState();
 }
-class CurrentState extends State<Current> {
+
+class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      drawer: HumanatyDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
+        resizeToAvoidBottomInset: false,
+        drawer: HumanatyDrawer(),
+        body: SingleChildScrollView(
+            child: Column(
           children: <Widget>[
             // mainSearch,
             title,
@@ -49,95 +90,77 @@ class CurrentState extends State<Current> {
               },
             )
           ],
-        )
-      )
-    );
+        )));
   }
 
+  
+
   Widget title = Container(
-    padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
-    child: Align(
-      alignment: Alignment.topCenter,
-      child: Text(
-        "Humanaty",
-        style: TextStyle(fontSize: 34),
-      ),
-    )
-  );
+      padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Text(
+          "HuMANAty",
+          style: TextStyle(fontSize: 34),
+        ),
+      ));
 
   //TODO: Build searchbar widget, no existing searchbar
   Widget searchBar = Container(
-    padding: const EdgeInsets.fromLTRB(36, 20, 36, 10),
-    child: TextField(
-      decoration: InputDecoration(
-        hintText: "City name here..."
-      ),
-      onChanged: (text) {
-        text = text.toLowerCase();
-        // setState(() {
-        //   displayedEvents = testEvents.where((event) {
-        //     var title = event.eventName.toLowerCase();
-        //     return title.contains(title);
-        //   }).toList();
-        // });
-      },
-    )
-  );
-
+      padding: const EdgeInsets.fromLTRB(36, 20, 36, 10),
+      child: TextField(
+        decoration: InputDecoration(hintText: "City name here..."),
+        onChanged: (text) {
+          text = text.toLowerCase();
+          // setState(() {
+          //   displayedEvents = testEvents.where((event) {
+          //     var title = event.eventName.toLowerCase();
+          //     return title.contains(title);
+          //   }).toList();
+          // });
+        },
+      ));
 }
 
-class Home extends StatefulWidget {
-  HomeState createState() => HomeState();
+class BottomNavBarRouter extends StatefulWidget {
+  @override
+  BottomNavBarRouterState createState() => BottomNavBarRouterState();
 }
 
-class HomeState extends State<Home> {
-  ScrollController scrollController = new ScrollController();
+class BottomNavBarRouterState extends State<BottomNavBarRouter> {
   int navIndex = 0;
+  ScrollController scrollController = new ScrollController();
 
   @override
   void dispose(){
     scrollController.dispose();
     super.dispose();
   }
-  static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [
-    Current(),
-    Settings(),
-    Settings(),
-    Map(),
-    Map()
-  ];
   
+  static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final _navigationOptions = [HomePage(), HomePage(), Map(), Map()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: bottomNavBar(),
+      body: _navigationOptions[navIndex],
+    );
+  }
+
+  Widget bottomNavBar(){
+    return BottomNavigationBar(
         currentIndex: navIndex,
         onTap: selectNav,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text("Home")
-          ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text("Settings")
-          ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text("Map")
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text("Map")
-        ),
-      ],
-      selectedItemColor: Colors.blue,
-      ),
-      body: _navigationOptions[navIndex], 
-
-    );
+          BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
+          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
+          BottomNavigationBarItem(icon: Icon(Icons.library_books), title: Text("My Events")),
+        ],
+        selectedItemColor: Pallete.humanGreen,
+      );
   }
   void selectNav(int index) {
     setState(() {
