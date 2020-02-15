@@ -51,7 +51,7 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
 
 Widget title(UserData userData) { 
   return Container(
-    padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+    padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
     child: Align(
       alignment: Alignment.topCenter,
       child: Column(
@@ -60,11 +60,30 @@ Widget title(UserData userData) {
             "HuMANAty Current Profile",
             style: TextStyle(fontSize: 20)
           ),
-          Text(
-            userData.displayName,
-            style: TextStyle(fontSize: 16)
-          ),
-          HumanatyRating(rating: userData.consumerRating)
+          Container(
+            padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        userData.displayName,
+                        style: TextStyle(fontSize: 16)
+                      ),
+                      HumanatyRating(rating: userData.consumerRating)
+                    ],
+                  ),
+                ),
+                Container(
+                  color: Colors.red,
+                  width: 70.0,
+                  height: 70.0
+                )
+              ],
+            ),
+          )
         ],
       )
     )
