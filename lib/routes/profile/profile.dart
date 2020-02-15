@@ -64,7 +64,7 @@ Widget title(UserData userData) {
             userData.displayName,
             style: TextStyle(fontSize: 16)
           ),
-          HumanatyRating(rating: 3)
+          HumanatyRating(rating: userData.consumerRating)
         ],
       )
     )
