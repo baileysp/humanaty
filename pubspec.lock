@@ -111,13 +111,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_spinkit:
+  flutter_auth_buttons:
     dependency: "direct main"
     description:
-      name: flutter_spinkit
+      name: flutter_auth_buttons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.1+1"
+    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
