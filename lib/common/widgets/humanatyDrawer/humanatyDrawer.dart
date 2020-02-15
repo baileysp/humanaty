@@ -43,7 +43,6 @@ class HumanatyDrawer extends StatelessWidget {
               content: Text("Please Log-In to view your profile"),
               ));
             } else {
-              print("We at least get to here");
               Navigator.pop(context);
               Navigator.push(
                 context,

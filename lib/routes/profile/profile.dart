@@ -36,14 +36,13 @@ class ProfileState extends State<Profile> {
 }
 
 Widget profile(AuthService _auth, UserData userData, BuildContext context) {
-  print(userData.displayName);
   return Scaffold(
     drawer: HumanatyDrawer(),
     resizeToAvoidBottomInset: false,
     body: SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          title(userData),
+          title(userData, context),
           titledSection("Ratings:"),
           titledSection("About Me:"),
           titledSection("Past Meals:"),
@@ -55,16 +54,30 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
   );
 }
 
-Widget title(UserData userData) { 
+Widget title(UserData userData, BuildContext context) { 
   return Container(
-    padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
+    padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
     child: Align(
       alignment: Alignment.topCenter,
       child: Column(
         children: <Widget>[
-          Text(
-            "HuMANAty Current Profile",
-            style: TextStyle(fontSize: 24)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                width: 65,
+                child: RaisedButton(
+                  child: Text("Back"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }
+                )
+              ),
+              Text(
+                "HuMANAty Profile",
+                style: TextStyle(fontSize: 24)
+              ),
+            ],
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
