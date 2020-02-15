@@ -111,13 +111,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_auth_buttons:
+  flutter_spinkit:
     dependency: "direct main"
     description:
-      name: flutter_auth_buttons
+      name: flutter_spinkit
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0"
+    version: "4.1.1+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -128,6 +128,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_maps_flutter:
+    dependency: "direct main"
+    description:
+      name: google_maps_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.21+15"
   google_sign_in:
     dependency: "direct main"
     description:

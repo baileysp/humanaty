@@ -15,6 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _registrationFormKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
+  final _nameController = TextEditingController();
 
   bool _passwordObscured;
   String _errorMessage;
@@ -83,6 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
+        controller: _nameController,
           decoration: textInputDecoration.copyWith(
               hintText: "Name",
               prefixIcon: Icon(Icons.person_outline, color: Colors.grey))),
@@ -146,13 +148,14 @@ class _RegisterPageState extends State<RegisterPage> {
     return Container(
       width: double.infinity,
       height: 50.0,
-      child: FlatButton(
+      child: RaisedButton(
           color: Pallete.humanGreen,
           onPressed: () async {
             if (_registrationFormKey.currentState.validate()) {
+              String displayName = _nameController.text.trim();
               String password = _passwordController.text;
               String email = _emailController.text.trim();
-              if (!await user.createUserWithEmailAndPassword(email, password)) {
+              if (!await user.createUserWithEmailAndPassword(displayName, email, password)) {
                  setState(() {
                   _errorMessage = user.error;
                   _registrationFormKey.currentState.reset();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:humanaty/routes/events/events.dart';
 
 class HumanatyEvent extends StatelessWidget {
   HumanatyEvent(
@@ -29,6 +30,15 @@ class HumanatyEvent extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(24, 8, 24, 8),
       child: new InkWell(
         onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Events(
+                eventName: this.eventName,
+                eventDate: this.eventDate,
+                eventDescription: this.eventDescription)
+            )
+          );
           print(eventName + " was clicked");
         },
         child: Padding(

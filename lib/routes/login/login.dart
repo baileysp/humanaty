@@ -32,11 +32,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context);
     return Scaffold(
+      appBar: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            actions: <Widget>[continueAnonymously(user)],),
       body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),
           children: <Widget>[
-            SizedBox(height: 80),
+            //SizedBox(height: 80),
             Text(
               "Welcome Back,",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
@@ -48,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                 key: _signInFormKey,
                 child: Column(
                   children: <Widget>[
-                    usernameField(),
+                    emailField(),
                     SizedBox(height: 0),
                     passwordField(),
                     SizedBox(height: 0),
@@ -75,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(color: Colors.red, fontSize: 13.0)));
   }
 
-  Widget usernameField() {
+  Widget emailField() {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
@@ -181,6 +185,16 @@ class _LoginPageState extends State<LoginPage> {
         child: Text("Forgot Password?"));
   }
 
+  Widget continueAnonymously(AuthService user){
+    return FlatButton(
+      onPressed: (){
+        user.signinAnon();
+      },
+      child: Text('Skip for now',
+      style: TextStyle(color: Colors.black),)
+    );
+  }
+  
   @override
   void dispose() {
     _email.dispose();
