@@ -13,9 +13,23 @@ class UserData{
   final String birthday;
   final List<String> dietaryRestrictions;
   final bool wheelchairRequired;
+  final int consumerRating;
+  final int chefRating;
 
-  UserData({this.uid, this.displayName, this.email, this.photo, this.aboutMe, this.location, this.birthday, this.dietaryRestrictions, this.wheelchairRequired});
-
-
+  UserData(
+    {
+      this.uid,
+      this.displayName,
+      this.email,
+      this.photo,
+      this.aboutMe = "This is an about me test",
+      this.location,
+      this.birthday,
+      this.dietaryRestrictions,
+      this.wheelchairRequired,
+      this.consumerRating = 3,
+      this.chefRating = 3
+    }
+  );
 
 }

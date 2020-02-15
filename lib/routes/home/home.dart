@@ -38,6 +38,26 @@ List<HumanatyEvent> testEvents = [
     eventDate: "1/17/24",
     eventDescription: "It's actually not delicious",
   ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
+  HumanatyEvent(
+    eventName: "Delicious Dinner",
+    eventDate: "1/17/24",
+    eventDescription: "It's actually not delicious",
+  ),
 ];
 
 List<HumanatyEvent> displayedEvents = testEvents;
@@ -64,6 +84,7 @@ class HomePageState extends State<HomePage> {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: testEvents.length,
+              controller: ScrollController(),
               itemBuilder: (context, index) {
                 return testEvents[index];
               },
@@ -102,11 +123,20 @@ class HomePageState extends State<HomePage> {
 }
 
 class BottomNavBarRouter extends StatefulWidget {
+  @override
   BottomNavBarRouterState createState() => BottomNavBarRouterState();
 }
 
 class BottomNavBarRouterState extends State<BottomNavBarRouter> {
   int navIndex = 0;
+  ScrollController scrollController = new ScrollController();
+
+  @override
+  void dispose(){
+    scrollController.dispose();
+    super.dispose();
+  }
+  
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final _navigationOptions = [HomePage(), HomePage(), Map(), Map()];
 

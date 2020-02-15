@@ -13,16 +13,16 @@ class HumanatyDrawer extends StatelessWidget {
     final _auth = Provider.of<AuthService>(context);
 
     return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: _auth.user.uid).userData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData || _auth.status == Status.Anon) {
-            UserData userData = snapshot.data;
-            return drawer(_auth, userData, context);
-          }
-          //Navigator.pop(context);
-          //_auth.signOut();
-          return Loading();
-        });
+      stream: DatabaseService(uid: _auth.user.uid).userData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData || _auth.status == Status.Anon) {
+          UserData userData = snapshot.data;
+          return drawer(_auth, userData, context);
+        }
+        //Navigator.pop(context);
+        //_auth.signOut();
+        return Loading();
+      });
   }
 
   Widget drawer(AuthService _auth, UserData userData, BuildContext context) {
@@ -43,7 +43,6 @@ class HumanatyDrawer extends StatelessWidget {
               content: Text("Please Log-In to view your profile"),
               ));
             } else {
-              print("We at least get to here");
               Navigator.pop(context);
               Navigator.push(
                 context,
