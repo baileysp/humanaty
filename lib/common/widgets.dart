@@ -1,3 +1,5 @@
 export 'widgets/humanatyDrawer/humanatyDrawer.dart';
 export 'widgets/humanatyEvent/humanatyEvent.dart';
 export 'widgets/humanatyEventList/humanatyEventList.dart';
+export 'widgets/humanatyRating/humanatyRating.dart';
+export 'widgets/loading/loading.dart';
