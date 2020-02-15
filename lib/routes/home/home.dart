@@ -93,8 +93,6 @@ class HomePageState extends State<HomePage> {
         )));
   }
 
-  
-
   Widget title = Container(
       padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
       child: Align(
