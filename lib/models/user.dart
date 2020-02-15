@@ -22,7 +22,7 @@ class UserData{
       this.displayName,
       this.email,
       this.photo,
-      this.aboutMe,
+      this.aboutMe = "This is an about me test",
       this.location,
       this.birthday,
       this.dietaryRestrictions,

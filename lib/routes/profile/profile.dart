@@ -43,10 +43,10 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
       child: Column(
         children: <Widget>[
           title(userData, context),
-          titledSection("Ratings:"),
-          titledSection("About Me:"),
-          titledSection("Past Meals:"),
-          titledSection("Allergies")
+          titledSection("Ratings:", userData.aboutMe),
+          titledSection("About Me:", userData.aboutMe),
+          titledSection("Past Meals:", userData.aboutMe),
+          titledSection("Allergies:", userData.aboutMe),
         ]
       )
     ),
@@ -110,27 +110,42 @@ Widget title(UserData userData, BuildContext context) {
   );
 }
 
-Widget titledSection(String text) {
+Widget titledSection(String sectionTitle, String content) {
+  double sectionWidth = 300;
+
   return Container(
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 20),
+        Container(
+          width: sectionWidth,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                sectionTitle,
+                style: TextStyle(fontSize: 20),
+              ),
+              InkWell(
+                child: Icon(Icons.edit),
+                onTap: () {
+                  print("Edit " + sectionTitle + " clicked");
+                },
+              )
+            ],
           ),
         ),
         Container(
+          padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             border: Border.all(
               color: Pallete.humanGreenLight
             )
           ),
-          width: 300,
+          width: sectionWidth,
           height: 80,
+          child: Text(content),
         )
       ],
     ),
