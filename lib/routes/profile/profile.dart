@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
-import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:humanaty/models/user.dart';
+import 'package:humanaty/common/design.dart';
+import 'package:humanaty/routes/_router.dart';
 
 class Profile extends StatefulWidget {
 
@@ -36,6 +36,7 @@ class ProfileState extends State<Profile> {
 Widget profile(AuthService _auth, UserData userData, BuildContext context) {
   print(userData.displayName);
   return Scaffold(
+    drawer: HumanatyDrawer(),
     resizeToAvoidBottomInset: false,
     body: SingleChildScrollView(
       child: Column(
@@ -63,6 +64,7 @@ Widget title(UserData userData) {
             userData.displayName,
             style: TextStyle(fontSize: 16)
           ),
+          HumanatyRating(rating: 3)
         ],
       )
     )
