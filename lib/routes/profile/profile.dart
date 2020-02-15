@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
@@ -41,7 +43,11 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
     body: SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          title(userData)
+          title(userData),
+          titledSection("Ratings:"),
+          titledSection("About Me:"),
+          titledSection("Past Meals:"),
+          titledSection("Allergies")
         ]
       )
     ),
@@ -58,7 +64,7 @@ Widget title(UserData userData) {
         children: <Widget>[
           Text(
             "HuMANAty Current Profile",
-            style: TextStyle(fontSize: 20)
+            style: TextStyle(fontSize: 24)
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
@@ -70,16 +76,17 @@ Widget title(UserData userData) {
                     children: <Widget>[
                       Text(
                         userData.displayName,
-                        style: TextStyle(fontSize: 16)
+                        style: TextStyle(fontSize: 20)
                       ),
                       HumanatyRating(rating: userData.consumerRating)
                     ],
                   ),
                 ),
+                //PLACEHOLDER FOR PROFILE PICTURE
                 Container(
-                  color: Colors.red,
-                  width: 70.0,
-                  height: 70.0
+                  color: Pallete.humanGreenLight,
+                  width: 100.0,
+                  height: 100.0
                 )
               ],
             ),
@@ -87,5 +94,32 @@ Widget title(UserData userData) {
         ],
       )
     )
+  );
+}
+
+Widget titledSection(String text) {
+  return Container(
+    margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Pallete.humanGreenLight
+            )
+          ),
+          width: 300,
+          height: 80,
+        )
+      ],
+    ),
   );
 }
