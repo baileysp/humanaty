@@ -37,6 +37,21 @@ class ProfileState extends State<Profile> {
 
 Widget profile(AuthService _auth, UserData userData, BuildContext context) {
   return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: Icon(Icons.arrow_back, color: Colors.grey)
+      ),
+      title: Text(
+        "My Profile",
+        style: TextStyle(color: Colors.black),
+      ),
+      centerTitle: true,
+    ),
     drawer: HumanatyDrawer(),
     resizeToAvoidBottomInset: false,
     body: SingleChildScrollView(
@@ -56,29 +71,29 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
 
 Widget title(UserData userData, BuildContext context) { 
   return Container(
-    padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+    // padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
     child: Align(
       alignment: Alignment.topCenter,
       child: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                width: 65,
-                child: RaisedButton(
-                  child: Text("Back"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }
-                )
-              ),
-              Text(
-                "HuMANAty Profile",
-                style: TextStyle(fontSize: 24)
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: <Widget>[
+          //     // Container(
+          //     //   width: 65,
+          //     //   child: RaisedButton(
+          //     //     child: Text("Back"),
+          //     //     onPressed: () {
+          //     //       Navigator.pop(context);
+          //     //     }
+          //     //   )
+          //     // ),
+          //     Text(
+          //       "HuMANAty Profile",
+          //       style: TextStyle(fontSize: 34)
+          //     ),
+          //   ],
+          // ),
           Container(
             padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
             child: Row(
