@@ -15,6 +15,14 @@ class DatabaseService{
     });
   }
 
+   // Future<void> updateUserData(String displayName, String photo, String aboutMe, String location, String birthday, List<String> dietaryRestrictions, bool wheelchairRequired) async {
+  //   return await userCollection.document(uid).setData({
+  //     'displayName' : displayName,
+  //     'photo' : photo,
+  //     'aboutMe'
+  //   }, merge: true);
+  // }
+
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
     return UserData(
       uid: uid,

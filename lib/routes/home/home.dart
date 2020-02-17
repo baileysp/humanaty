@@ -127,14 +127,8 @@ class BottomNavBarRouter extends StatefulWidget {
 
 class BottomNavBarRouterState extends State<BottomNavBarRouter> {
   int navIndex = 0;
-  ScrollController scrollController = new ScrollController();
+  ScrollController scrollController = ScrollController();
 
-  @override
-  void dispose(){
-    scrollController.dispose();
-    super.dispose();
-  }
-  
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final _navigationOptions = [HomePage(), HomePage(), Map(), Map()];
 
@@ -159,14 +153,17 @@ class BottomNavBarRouterState extends State<BottomNavBarRouter> {
         ],
         selectedItemColor: Pallete.humanGreen,
       );
-
-    //);
   }
   void selectNav(int index) {
     print(index);
-    //print(realNavOptions.toString());
     setState(() {
       navIndex = index;
     });
+  }
+
+  @override
+  void dispose(){
+    scrollController.dispose();
+    super.dispose();
   }
 }

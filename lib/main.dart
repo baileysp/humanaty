@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/common/widgets/loading/loading.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/routes/_router.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+
 
 void main() => {
   SystemChrome.setSystemUIOverlayStyle(

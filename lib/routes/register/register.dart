@@ -168,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 });
               } else{Navigator.pop(context);}}
           },
-          child: Text("Register",
+          child: Text(user.status == Status.Authenticating ? "Registering" : "Register",
               style: TextStyle(color: Colors.white, fontSize: 16.0))),
     );
   }
