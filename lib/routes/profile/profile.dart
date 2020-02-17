@@ -44,10 +44,11 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
       child: Column(
         children: <Widget>[
           title(userData, context),
-          titledSection("Ratings:", userData.aboutMe),
-          titledSection("About Me:", userData.aboutMe),
-          titledSection("Past Meals:", userData.aboutMe),
-          titledSection("Allergies:", userData.aboutMe),
+          profileEntry()
+          //titledSection("Ratings:", userData.aboutMe),
+          //titledSection("About Me:", userData.aboutMe),
+          //titledSection("Past Meals:", userData.aboutMe),
+          //titledSection("Allergies:", userData.aboutMe),
         ]
       )
     ),
@@ -57,29 +58,10 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
 
 Widget title(UserData userData, BuildContext context) { 
   return Container(
-    // padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
     child: Align(
       alignment: Alignment.topCenter,
       child: Column(
         children: <Widget>[
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: <Widget>[
-          //     // Container(
-          //     //   width: 65,
-          //     //   child: RaisedButton(
-          //     //     child: Text("Back"),
-          //     //     onPressed: () {
-          //     //       Navigator.pop(context);
-          //     //     }
-          //     //   )
-          //     // ),
-          //     Text(
-          //       "HuMANAty Profile",
-          //       style: TextStyle(fontSize: 34)
-          //     ),
-          //   ],
-          // ),
           Container(
             padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
             child: Row(
@@ -108,6 +90,20 @@ Widget title(UserData userData, BuildContext context) {
         ],
       )
     )
+  );
+}
+
+Widget profileEntry(){
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Row(
+      children: <Widget>[
+        Text("Display Name"),
+        Expanded(
+          child: TextFormField(),
+        )
+      ],
+    ),
   );
 }
 
