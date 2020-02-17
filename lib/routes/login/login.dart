@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:humanaty/common/design.dart';
-import 'package:humanaty/common/widgets/AppBar/appbar.dart';
-import 'package:humanaty/common/widgets/constants.dart';
+import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/login/resetDialog.dart';
-import 'package:humanaty/routes/register/register.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:humanaty/util/validator.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,9 +15,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _password = TextEditingController();
-  final _email = TextEditingController();
-
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  
   final _signInFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
   String _errorMessage;
@@ -31,14 +34,15 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<AuthService>(context);
+    final _auth = Provider.of<AuthService>(context);
     return Scaffold(
-      appBar: humanatyAppBar(actions: <Widget>[continueAnonymously(user)],),
+      appBar: HumanatyAppBar(
+        actions: <Widget>[continueAnonymously(_auth)],
+      ),
       body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),
           children: <Widget>[
-            //SizedBox(height: 80),
             Text(
               "Welcome Back,",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
@@ -51,19 +55,17 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     emailField(),
-                    SizedBox(height: 0),
                     passwordField(),
-                    SizedBox(height: 0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[forgotPassword()],
                     ),
                     SizedBox(height: 80.0),
-                    loginButton(user),
+                    loginButton(_auth),
                     SizedBox(height: 16.0),
-                    googleSignIn(user),
+                    googleSignIn(_auth),
                     SizedBox(height: 40.0),
-                    newUser(user)
+                    newUser(_auth)
                   ],
                 ))
           ]),
@@ -81,12 +83,16 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
-        controller: _email,
+        controller: _emailController,
         keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.next,
+        focusNode: _emailFocus,
         decoration: textInputDecoration.copyWith(
             hintText: "Email",
             prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
+        inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
         validator: emailValidator,
+        onFieldSubmitted: (term) {_fieldFocusChange(context, _emailFocus, _passwordFocus);},
       ),
     );
   }
@@ -95,8 +101,10 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
-        controller: _password,
+        controller: _passwordController,
         obscureText: _passwordObscured,
+        textInputAction: TextInputAction.done,
+        focusNode: _passwordFocus,
         decoration: textInputDecoration.copyWith(
             hintText: "Password",
             prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
@@ -110,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                 });
               },
             )),
+        inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
         validator: passwordValidator,
       ),
     );
@@ -123,8 +132,8 @@ class _LoginPageState extends State<LoginPage> {
           color: Pallete.humanGreen,
           onPressed: () async {
             if (_signInFormKey.currentState.validate()) {
-              String email = _email.text.trim();
-              String password = _password.text;
+              String email = _emailController.text;
+              String password = _passwordController.text;
 
               if (!await user.signInWithEmailAndPassword(email, password)) {
                 setState(() {
@@ -144,10 +153,8 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       height: 50.0,
       child: RaisedButton(
-          onPressed: () async{
-            if (!await user.signInWithGoogle()){
-
-            }
+          onPressed: () async {
+            if (!await user.signInWithGoogle()) {}
           },
           color: Colors.white,
           //shape: RoundedRectangleBorder(side: BorderSide(width: 2.0)),
@@ -173,29 +180,36 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
         onTap: () {
           showDialog(
-            context: context,
-            builder: (_){
-              return ResetDialog();
-            }
-          );
+              context: context,
+              builder: (_) {
+                return ResetDialog();
+              });
         },
         child: Text("Forgot Password?"));
   }
 
-  Widget continueAnonymously(AuthService user){
+  Widget continueAnonymously(AuthService user) {
     return FlatButton(
-      onPressed: (){
-        user.signinAnon();
-      },
-      child: Text('Skip for now',
-      style: TextStyle(color: Colors.black),)
-    );
+        onPressed: () {
+          user.signinAnon();
+        },
+        child: Text(
+          'Skip for now',
+          style: TextStyle(color: Colors.black),
+        ));
   }
-  
+
+  _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+
   @override
   void dispose() {
-    _email.dispose();
-    _password.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class humanatyAppBar extends StatelessWidget implements PreferredSizeWidget{
+class HumanatyAppBar extends StatelessWidget implements PreferredSizeWidget{
   final Color backgroundColor;
   final double elevation;
   final bool displayBackBtn;
   final String title;
   final List<Widget> actions;
 
-  humanatyAppBar({
+  HumanatyAppBar({
     this.backgroundColor,
     this.elevation,
     this.displayBackBtn = false,

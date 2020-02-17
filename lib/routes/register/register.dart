@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
-import 'package:humanaty/common/widgets/constants.dart';
+import 'package:humanaty/util/validator.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -11,13 +12,17 @@ class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
-
 class _RegisterPageState extends State<RegisterPage> {
-  final _registrationFormKey = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
-  final _emailController = TextEditingController();
   final _nameController = TextEditingController();
-
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  
+  final FocusNode _nameFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  final FocusNode _confirmPassFocus = FocusNode();
+  
+  final _registrationFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
   String _errorMessage;
 
@@ -30,9 +35,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<AuthService>(context);
+    final _auth = Provider.of<AuthService>(context);
     return Scaffold(
-        appBar: humanatyAppBar(displayBackBtn: true),
+        appBar: HumanatyAppBar(displayBackBtn: true),
         body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),
@@ -54,21 +59,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     passwordField(),
                     confirmPasswordField(),
                     SizedBox(height: 30),
-                    registerButton(user),
+                    registerButton(_auth),
                     SizedBox(height: 30),
                     alreadyUser()
                   ],
                 ))
           ],
         ));
-  }
-
-  Widget backButton() {
-    return IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: Icon(Icons.arrow_back, color: Colors.grey));
   }
 
   Widget errorText() {
@@ -83,9 +80,12 @@ class _RegisterPageState extends State<RegisterPage> {
       height: 70.0,
       child: TextFormField(
         controller: _nameController,
+        textInputAction: TextInputAction.next,
+        focusNode: _nameFocus,
           decoration: textInputDecoration.copyWith(
               hintText: "Name",
-              prefixIcon: Icon(Icons.person_outline, color: Colors.grey))),
+              prefixIcon: Icon(Icons.person_outline, color: Colors.grey)),
+        onFieldSubmitted: (term) {_fieldFocusChange(context, _nameFocus, _emailFocus);}),
     );
   }
 
@@ -95,10 +95,14 @@ class _RegisterPageState extends State<RegisterPage> {
       child: TextFormField(
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          focusNode: _emailFocus,
           decoration: textInputDecoration.copyWith(
               hintText: "Email",
               prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
-          validator: emailValidator),
+          inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
+          validator: emailValidator,
+          onFieldSubmitted: (term) {_fieldFocusChange(context, _emailFocus, _passwordFocus);},),
     );
   }
 
@@ -108,6 +112,8 @@ class _RegisterPageState extends State<RegisterPage> {
       child: TextFormField(
           controller: _passwordController,
           obscureText: _passwordObscured,
+          textInputAction: TextInputAction.next,
+          focusNode: _passwordFocus,
           decoration: textInputDecoration.copyWith(
               hintText: "Password",
               prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
@@ -122,7 +128,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
                 },
               )),
-          validator: passwordValidator),
+          inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
+          validator: passwordValidator,
+          onFieldSubmitted: (term) {_fieldFocusChange(context, _passwordFocus, _confirmPassFocus);},),
     );
   }
 
@@ -131,13 +139,13 @@ class _RegisterPageState extends State<RegisterPage> {
       height: 70.0,
       child: TextFormField(
         obscureText: _passwordObscured,
+        textInputAction: TextInputAction.done,
+        focusNode: _confirmPassFocus,
         decoration: textInputDecoration.copyWith(
             hintText: "Confirm Password",
             prefixIcon: Icon(Icons.lock_outline, color: Colors.grey)),
-        validator: (confirmation) {
-          String password = _passwordController.text;
-          return confirmation == password ? null : "Passwords do not match";
-        },
+        inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
+        validator: (password){return confirmPassValidator(password, _passwordController);}
       ),
     );
   }
@@ -151,18 +159,14 @@ class _RegisterPageState extends State<RegisterPage> {
           onPressed: () async {
             if (_registrationFormKey.currentState.validate()) {
               String displayName = _nameController.text.trim();
-              String password = _passwordController.text;
-              String email = _emailController.text.trim();
+              String email = _emailController.text;
+              String password = _passwordController.text;              
               if (!await user.createUserWithEmailAndPassword(displayName, email, password)) {
                  setState(() {
                   _errorMessage = user.error;
                   _registrationFormKey.currentState.reset();
                 });
-              } else{
-                //#TODO Fix this bit 
-                Navigator.pop(context);
-              }
-            }
+              } else{Navigator.pop(context);}}
           },
           child: Text("Register",
               style: TextStyle(color: Colors.white, fontSize: 16.0))),
@@ -176,5 +180,22 @@ class _RegisterPageState extends State<RegisterPage> {
           Navigator.pop(context);
         },
         child: Text("Already have an account? Login"));
+  }
+
+  _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameFocus.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _confirmPassFocus.dispose();
+    super.dispose();
   }
 }

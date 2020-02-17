@@ -46,8 +46,8 @@ class Main extends StatelessWidget {
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<AuthService>(context);
-    switch (user.status) {
+    final _auth = Provider.of<AuthService>(context);
+    switch (_auth.status) {
       case Status.Uninitialized:
         return Loading();
       case Status.Unauthenticated:

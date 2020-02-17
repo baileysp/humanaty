@@ -37,7 +37,7 @@ class ProfileState extends State<Profile> {
 
 Widget profile(AuthService _auth, UserData userData, BuildContext context) {
   return Scaffold(
-    appBar: humanatyAppBar(displayBackBtn: true, title: "Profile"),
+    appBar: HumanatyAppBar(displayBackBtn: true, title: "Profile"),
     drawer: HumanatyDrawer(),
     resizeToAvoidBottomInset: false,
     body: SingleChildScrollView(
