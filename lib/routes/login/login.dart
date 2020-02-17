@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
+import 'package:humanaty/common/widgets/AppBar/appbar.dart';
 import 'package:humanaty/common/widgets/constants.dart';
 import 'package:humanaty/routes/login/resetDialog.dart';
 import 'package:humanaty/routes/register/register.dart';
@@ -32,10 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context);
     return Scaffold(
-      appBar: AppBar(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            actions: <Widget>[continueAnonymously(user)],),
+      appBar: humanatyAppBar(actions: <Widget>[continueAnonymously(user)],),
       body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),
@@ -174,7 +172,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget forgotPassword() {
     return InkWell(
         onTap: () {
-          //_showForgotPasswordDialog();
           showDialog(
             context: context,
             builder: (_){

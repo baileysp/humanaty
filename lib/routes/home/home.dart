@@ -160,11 +160,11 @@ class BottomNavBarRouterState extends State<BottomNavBarRouter> {
         selectedItemColor: Pallete.humanGreen,
       );
 
-    );
+    //);
   }
   void selectNav(int index) {
     print(index);
-    print(realNavOptions.toString());
+    //print(realNavOptions.toString());
     setState(() {
       navIndex = index;
     });

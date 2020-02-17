@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
+import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/common/widgets/constants.dart';
 import 'package:provider/provider.dart';
@@ -31,10 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context);
     return Scaffold(
-        appBar: AppBar(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            leading: backButton()),
+        appBar: humanatyAppBar(displayBackBtn: true),
         body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),

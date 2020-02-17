@@ -37,21 +37,7 @@ class ProfileState extends State<Profile> {
 
 Widget profile(AuthService _auth, UserData userData, BuildContext context) {
   return Scaffold(
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0.0,
-      leading: IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: Icon(Icons.arrow_back, color: Colors.grey)
-      ),
-      title: Text(
-        "My Profile",
-        style: TextStyle(color: Colors.black),
-      ),
-      centerTitle: true,
-    ),
+    appBar: humanatyAppBar(displayBackBtn: true, title: "Profile"),
     drawer: HumanatyDrawer(),
     resizeToAvoidBottomInset: false,
     body: SingleChildScrollView(
