@@ -37,8 +37,12 @@ dependencies:
   google_sign_in: ^4.1.1
   provider: ^4.0.2
   google_maps_flutter: 0.5.21+15
+  
   #loading indicators
   flutter_spinkit: "^4.1.1"
+
+  #enum to string
+  enum_to_string: ^1.0.8
 
 dev_dependencies:
   flutter_test:
@@ -62,7 +66,41 @@ flutter:
   fonts:
     - family: Nuninto_Sans
       fonts:
-        - asset: assets/fonts/NunitoSans-Regular.ttf
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-Black.ttf
+          weight: 900
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-BlackItalic.ttf
+          weight: 900
+          style: italic
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-Bold.ttf
+          weight: 700
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-ExtraBold.ttf
+          weight: 800
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-ExtraLight.ttf
+          weight: 300
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-ExtraLightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-Light.ttf
+          weight: 300
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/Nunito_Sans/NunitoSans-Regular.ttf
+          weight: 400
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-SemiBold.ttf
+          weight: 600
+        - asset: assets\fonts\Nunito_Sans\NunitoSans-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
           
             
   #   - family: Trajan Pro

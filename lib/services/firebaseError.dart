@@ -13,6 +13,7 @@ String errorConverter(PlatformException error){
       _errorMessage = "We couldn't find your humanaty account.";
       break;
     default:
+      print(error.code.toString());
       _errorMessage = "Something went wrong";
   }
   return _errorMessage;

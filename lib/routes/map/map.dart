@@ -20,7 +20,6 @@ class Map extends StatelessWidget {
           })
         ],
       ),
-      drawer: Drawer(),
     );
   }
 

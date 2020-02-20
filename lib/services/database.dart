@@ -7,10 +7,11 @@ class DatabaseService{
 
   final CollectionReference userCollection = Firestore.instance.collection('users');
 
-  Future<void> createUserDoc(String displayName, String email) async{
+  Future<void> createUserDoc(String displayName, String email, Map allergyMap) async{
     return await userCollection.document(uid).setData({
       'displayName': displayName,
       'email' : email,
+      'allergies' : allergyMap,
       'uid': uid
     });
   }
@@ -24,15 +25,22 @@ class DatabaseService{
   // }
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
-    return UserData(
+   return UserData(
       uid: uid,
       displayName: snapshot.data['displayName'],
-      email: snapshot.data['email']
+      email: snapshot.data['email'],
+      allergies: Map.from(snapshot.data['allergies'])
     );
   }
 
   Stream<UserData> get userData{
     return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
+  Future<void> updateAllergyData(Map userAllergies) async{
+    return await userCollection.document(uid).updateData({
+      'allergies' : userAllergies
+    });
   }
 
   

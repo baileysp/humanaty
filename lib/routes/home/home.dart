@@ -69,6 +69,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    //final _auth = Provider.of<AuthService>(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         //drawer: HumanatyDrawer(),
@@ -91,6 +92,11 @@ class HomePageState extends State<HomePage> {
             )
           ],
         )));
+  }
+
+  Widget logout(AuthService _auth){
+    Navigator.pop(context);
+    _auth.signOut();
   }
 
   Widget title = Container(
@@ -120,6 +126,9 @@ class HomePageState extends State<HomePage> {
       ));
 }
 
+
+
+
 class BottomNavBarRouter extends StatefulWidget {
   @override
   BottomNavBarRouterState createState() => BottomNavBarRouterState();
@@ -133,6 +142,12 @@ class BottomNavBarRouterState extends State<BottomNavBarRouter> {
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final _navigationOptions = [Loading(), HomePage(), Map(), Map()];
 
+  @override
+  void initState() {
+    _navIndex = 1;
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
