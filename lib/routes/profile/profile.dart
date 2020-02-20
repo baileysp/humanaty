@@ -11,35 +11,40 @@ import 'package:humanaty/common/design.dart';
 import 'package:humanaty/routes/_router.dart';
 
 class Profile extends StatefulWidget {
+  final UserData userData;
+  const Profile({Key key, this.userData}): super(key: key);
+
   @override
   ProfileState createState() => ProfileState();
+  
 }
 
 class ProfileState extends State<Profile> {
   final FocusNode _emailFocus = FocusNode();
-  bool isPressed;
+  //bool _accessibilityAccommodations;
 
   @override
   void initState() {
-    isPressed = false;
+    //_accessibilityAccommodations = ;
+    //this.userData;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
-
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: _auth.user.uid).userData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            UserData userData = snapshot.data;
-            return profile(_auth, userData, context);
-          }
-          //Navigator.pop(context);
-          //_auth.signOut();
-          return Loading();
-        });
+    return profile(_auth, widget.userData, context);
+    // return StreamBuilder<UserData>(
+    //     stream: DatabaseService(uid: _auth.user.uid).userData,
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasData) {
+    //         UserData userData = snapshot.data;
+    //         return profile(_auth, userData, context);
+    //       }
+    //       Navigator.pop(context);
+    //       _auth.signOut();
+    //       return Loading();
+    //     });
   }
 
   Widget profile(AuthService _auth, UserData userData, BuildContext context) {
@@ -47,57 +52,27 @@ class ProfileState extends State<Profile> {
       appBar: HumanatyAppBar(displayBackBtn: true, title: "Edit Profile"),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-          child: Column(children: <Widget>[
-        header(userData),
-        SizedBox(height: 20),
-        //test(),
-        Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                //profileEntry(userData),
-                emailEntry(userData.email)
-              ],
-            )),
-        //emailEntry(),
-        Divider(),
-        //profileEntry(),
-        allergyButton(_auth, userData, context)
-
+        child: Column(children: <Widget>[
+          header(userData),
+          SizedBox(height: 20),
+          //test(),
+          Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: <Widget>[
+                  //emailEntry(userData.email),
+                  Divider(),
+                  emailEdit(userData.email),
+                ],
+              )),
+          //emailEntry(),
+          Divider(),
+          //profileEntry(),
+          wheelChairAccessiblity(userData),
+          allergyButton( context, _auth, userData),
+          updateProfile(_auth, userData)
       ])),
     );
-  }
-
-  Widget title(UserData userData, BuildContext context) {
-    return Container(
-        child: Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        child: Column(
-                          children: <Widget>[
-                            Text(userData.displayName,
-                                style: TextStyle(fontSize: 20)),
-                            HumanatyRating(rating: userData.consumerRating)
-                          ],
-                        ),
-                      ),
-                      //PLACEHOLDER FOR PROFILE PICTURE
-                      Container(
-                          color: Pallete.humanGreenLight,
-                          width: 100.0,
-                          height: 100.0)
-                    ],
-                  ),
-                )
-              ],
-            )));
   }
 
   Widget profileEntry(UserData userData) {
@@ -189,7 +164,25 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  
+  Widget emailEdit(String email){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text("Email", style: TextStyle(fontSize: 16),),
+        SizedBox(
+          width: 300,
+          child: TextFormField(
+            textAlign: TextAlign.right,
+            initialValue: email,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(),
+              border: InputBorder.none
+            ),
+          ),
+        )
+      ],
+    );
+  }
   
   
   
@@ -205,8 +198,19 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Widget allergyButton(AuthService _auth, UserData userData, BuildContext context) {
-    print(userData.allergies.runtimeType);
+
+  Widget wheelChairAccessiblity(UserData userData){
+    return ListTile(
+      trailing: Icon(userData.accessibilityAccommodations ? Icons.accessible_forward : Icons.accessibility,
+                    color: userData.accessibilityAccommodations ? Pallete.humanGreen : Colors.black45),
+      title: Text("Accessibility Accomodation Required"),
+      onTap: (){setState(() {
+        userData.accessibilityAccommodations = !userData.accessibilityAccommodations;
+      });},
+    );
+  }
+
+  Widget allergyButton( BuildContext context, AuthService _auth, UserData userData) {
     return ListTile(
       trailing: Icon(Icons.arrow_forward),
       title: Text("Allergies"),
@@ -214,44 +218,21 @@ class ProfileState extends State<Profile> {
     );
   }
 
-
-
-  Widget titledSection(String sectionTitle, String content) {
-    double sectionWidth = 300;
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: sectionWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  sectionTitle,
-                  style: TextStyle(fontSize: 20),
-                ),
-                InkWell(
-                  child: Icon(Icons.edit),
-                  onTap: () {
-                    print("Edit " + sectionTitle + " clicked");
-                  },
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Pallete.humanGreenLight)),
-            width: sectionWidth,
-            height: 80,
-            child: Text(content),
-          )
-        ],
+  Widget updateProfile(AuthService _auth, UserData userData){
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+      child: Container(
+        width: double.infinity,
+        height: 50.0,
+        child: RaisedButton(
+            color: Pallete.humanGreen,
+            onPressed: () async {await DatabaseService(uid: _auth.user.uid).updateUserData(userData);},
+            child: Text(
+                "Update Profile",
+                style: TextStyle(color: Colors.white, fontSize: 16.0))),
       ),
     );
   }
 }
+
+ 

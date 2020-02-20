@@ -46,7 +46,7 @@ class HumanatyDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Profile()),
+                MaterialPageRoute(builder: (context) => Profile(userData: userData)),
               );
             }
           },

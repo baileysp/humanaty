@@ -46,9 +46,9 @@ class _AllergyPageState extends State<AllergyPage> {
 Widget updateAllergies(BuildContext context, AuthService auth, Map userAllergies){
   return FlatButton(
     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    onPressed: ()async {
+    onPressed: () async {
       await DatabaseService(uid: auth.user.uid).updateAllergyData(userAllergies);
       Navigator.of(context).pop();},
-    color: Pallete.humanGreen,
-    child: Text("Update", style: TextStyle(color: Colors.black)));
+    //color: Pallete.humanGreen,
+    child: Text("Update", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)));
 }

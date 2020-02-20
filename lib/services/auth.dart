@@ -57,7 +57,7 @@ class AuthService with ChangeNotifier {
       _status = Status.Authenticating;
       notifyListeners();
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      await DatabaseService(uid: user.uid).createUserDoc(displayName, email, Allergy().allergyMap);
+      await DatabaseService(uid: user.uid).createUserDoc(displayName, email);
      
       return true;
     } on PlatformException catch (error) {

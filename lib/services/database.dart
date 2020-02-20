@@ -7,11 +7,12 @@ class DatabaseService{
 
   final CollectionReference userCollection = Firestore.instance.collection('users');
 
-  Future<void> createUserDoc(String displayName, String email, Map allergyMap) async{
+  Future<void> createUserDoc(String displayName, String email) async{
     return await userCollection.document(uid).setData({
       'displayName': displayName,
       'email' : email,
-      'allergies' : allergyMap,
+      'allergies' : Allergy().allergyMap,
+      'accessibilityAccommodations' : false,
       'uid': uid
     });
   }
@@ -29,7 +30,8 @@ class DatabaseService{
       uid: uid,
       displayName: snapshot.data['displayName'],
       email: snapshot.data['email'],
-      allergies: Map.from(snapshot.data['allergies'])
+      allergies: Map.from(snapshot.data['allergies']),
+      accessibilityAccommodations: snapshot.data['accessibilityAccommodations']
     );
   }
 
@@ -43,6 +45,14 @@ class DatabaseService{
     });
   }
 
+  Future<void> updateUserData(UserData userData) async{
+    //oldUserDoc = 
+    return await userCollection.document(uid).updateData({
+      'displayName': userData.displayName,
+      'email' : userData.email,
+      'accessibilityAccommodations' : userData.accessibilityAccommodations
+    });
+  }
   
   // Future<void> updateUserData(String displayName, String photo, String aboutMe, String location, String birthday, List<String> dietaryRestrictions, bool wheelchairRequired) async {
   //   return await userCollection.document(uid).setData({

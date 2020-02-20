@@ -14,7 +14,9 @@ class UserData {
   final String location;
   final String birthday;
   final Map<String, bool> allergies;
-  final bool wheelchairRequired;
+
+  //currently limited to wheelChairAccessibility, can be expanded in future
+  bool accessibilityAccommodations;
   final int consumerRating;
   final int chefRating;
   //Allergy allergies;
@@ -34,7 +36,7 @@ class UserData {
       this.location,
       this.birthday,
       this.allergies,
-      this.wheelchairRequired,
+      this.accessibilityAccommodations,
       this.consumerRating = 3,
       this.chefRating = 3});
 }
