@@ -71,7 +71,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        drawer: HumanatyDrawer(),
+        //drawer: HumanatyDrawer(),
         body: SingleChildScrollView(
             child: Column(
           children: <Widget>[
@@ -126,23 +126,26 @@ class BottomNavBarRouter extends StatefulWidget {
 }
 
 class BottomNavBarRouterState extends State<BottomNavBarRouter> {
-  int navIndex = 0;
-  ScrollController scrollController = ScrollController();
+  int _navIndex = 0;
+  ScrollController _scrollController = ScrollController();
+  final _bottomNavBarKey = GlobalKey<ScaffoldState>();
 
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [HomePage(), HomePage(), Map(), Map()];
+  final _navigationOptions = [Loading(), HomePage(), Map(), Map()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _bottomNavBarKey,
+      drawer: HumanatyDrawer(),
       bottomNavigationBar: bottomNavBar(),
-      body: _navigationOptions[navIndex],
+      body: _navigationOptions[_navIndex]
     );
   }
 
   Widget bottomNavBar(){
     return BottomNavigationBar(
-        currentIndex: navIndex,
+        currentIndex: _navIndex,
         onTap: selectNav,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -157,13 +160,13 @@ class BottomNavBarRouterState extends State<BottomNavBarRouter> {
   void selectNav(int index) {
     print(index);
     setState(() {
-      navIndex = index;
+      index != 0 ? _navIndex = index : _bottomNavBarKey.currentState.openDrawer();    
     });
   }
 
   @override
   void dispose(){
-    scrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }

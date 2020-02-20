@@ -44,7 +44,9 @@ Widget profile(AuthService _auth, UserData userData, BuildContext context) {
       child: Column(
         children: <Widget>[
           title(userData, context),
-          profileEntry()
+          profileEntry(),
+          Divider(),
+          //profileEntry(),
           //titledSection("Ratings:", userData.aboutMe),
           //titledSection("About Me:", userData.aboutMe),
           //titledSection("Past Meals:", userData.aboutMe),
@@ -96,12 +98,37 @@ Widget title(UserData userData, BuildContext context) {
 Widget profileEntry(){
   return Padding(
     padding: const EdgeInsets.all(16.0),
-    child: Row(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Display Name"),
-        Expanded(
-          child: TextFormField(),
-        )
+        Text("Name", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: TextFormField(
+                
+                decoration: InputDecoration(
+                  //filled: true,
+                  hintText: "First Name",
+                  border: InputBorder.none
+                ),
+              ),
+            ), 
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  //filled: true,
+                  hintText: "Last Name",
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      //color: Pallete.humanGreen
+                    )
+                  )
+                ),
+              )
+            )
+          ],
+        ),
       ],
     ),
   );

@@ -15,7 +15,13 @@ class UserData{
   final bool wheelchairRequired;
   final int consumerRating;
   final int chefRating;
+  //event list
+  //final List<Event> eventHistory
+  //final List<Event> upcomingEvents
 
+  //information 4 Host
+  //final bool hostVerified;
+  
   UserData(
     {
       this.uid,
