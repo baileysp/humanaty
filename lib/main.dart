@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 void main() => {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarColor: Colors.white, //top bar color
+      statusBarColor: Colors.transparent, //top bar color
       statusBarIconBrightness: Brightness.light, //top bar icons
       //systemNavigationBarColor: Colors.white, //bottom bar color
       //systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
@@ -37,7 +37,9 @@ class Main extends StatelessWidget {
             '/map': (context) => Map(),
             '/settings': (context) => Settings(),
             '/events': (context) => Events(),
-            '/registration': (context) => RegisterPage()
+            '/registration': (context) => RegisterPage(),
+            //'/profile' : (context) => Profile()
+            //'/imageEdit' : (context) => ImageEdit(),
           },
         );
       }),

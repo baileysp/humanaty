@@ -12,6 +12,7 @@ class DatabaseService{
     return await userCollection.document(uid).setData({
       'displayName': displayName,
       'email' : email,
+      'photUrl' : "",
       'aboutMe' : "",
       'birthday' : currentYMD.substring(0, currentYMD.indexOf(" ")),
       'allergies' : Allergy().allergyMap,
@@ -25,6 +26,7 @@ class DatabaseService{
       uid: uid,
       displayName: snapshot.data['displayName'],
       email: snapshot.data['email'],
+      photoUrl: snapshot.data['photoUrl'],
       aboutMe: snapshot.data['aboutMe'],
       birthday: DateTime.parse(snapshot.data['birthday']),
       allergies: Map.from(snapshot.data['allergies']),
@@ -39,6 +41,12 @@ class DatabaseService{
   Future<void> updateAllergyData(Map userAllergies) async{
     return await userCollection.document(uid).updateData({
       'allergies' : userAllergies
+    });
+  }
+
+  Future<void> updateProfilePic(String url) async{
+    await userCollection.document(uid).updateData({
+      'photoUrl' : url
     });
   }
 

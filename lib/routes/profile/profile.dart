@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -27,6 +25,7 @@ class ProfileState extends State<Profile> {
 
   final FocusNode _emailFocus = FocusNode();
   final _updateProfileFormKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -41,6 +40,7 @@ class ProfileState extends State<Profile> {
 
   Widget profile(BuildContext context, AuthService _auth, UserData userData) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: HumanatyAppBar(
           displayBackBtn: true,
           title: "Edit Profile",
@@ -60,7 +60,8 @@ class ProfileState extends State<Profile> {
             wheelChairAccessiblity(userData),
             allergyButton(context, _auth, userData),
             SizedBox(height: 16),
-            updateProfile(context, _auth, userData)
+            updateProfile(context, _auth, userData),
+            SizedBox(height: 32)
           ]          
         ),
     );
@@ -68,15 +69,35 @@ class ProfileState extends State<Profile> {
 
   Widget header(UserData userData) {
     return Padding(
-      padding: const EdgeInsets.only(right: 16, left: 32),
+      padding: const EdgeInsets.only(right: 16, left: 16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          SizedBox(width: 75, height: 75, child: Placeholder()),
-          //SizedBox(width: 50),
+          SizedBox(width: 150, height: 125, 
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              //crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20.0, bottom: 16),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(userData.photoUrl),
+                      backgroundColor: Pallete.humanGreen,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed:()async {
+                      await showModalBottomSheet(context: context, builder: (context){ return ImageOptions();
+                      },backgroundColor: Colors.transparent);
+                      setState((){var test = 5;});},
+                  )
+              ],
+            )),
           Container(
             height: 100,
-            width: 250,
+            width: 200,
             child: Column(
               children: <Widget>[
                 SizedBox(height: 16),
@@ -235,8 +256,7 @@ class ProfileState extends State<Profile> {
         ));
   }
 
-  void updateProfileFunc(
-      BuildContext context, AuthService _auth, UserData userData) async {
+  void updateProfileFunc(BuildContext context, AuthService _auth, UserData userData) async {
     if (_updateProfileFormKey.currentState.validate()) {
       String displayName = _nameController.text.trim();
       String email = _emailController.text;
@@ -248,4 +268,5 @@ class ProfileState extends State<Profile> {
       await DatabaseService(uid: _auth.user.uid).updateUserData(userData);
     }
   }
+
 }

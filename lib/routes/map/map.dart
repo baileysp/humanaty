@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/common/widgets/googleMapsWidget/maps.dart';
+import 'package:humanaty/common/widgets/googlemaps/maps.dart';
 
 class Map extends StatelessWidget {
   @override

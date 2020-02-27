@@ -9,7 +9,7 @@ class UserData {
   final String uid;
   String displayName;
   String email;
-  String photo;
+  String photoUrl;
   String aboutMe;
   String location;
   DateTime birthday;
@@ -31,7 +31,7 @@ class UserData {
       {this.uid,
       this.displayName,
       this.email,
-      this.photo,
+      this.photoUrl,
       this.aboutMe = "This is an about me test",
       this.location,
       this.birthday,

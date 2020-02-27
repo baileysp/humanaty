@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/common/widgets/loading/loading.dart';
+import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/routes/home/home.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
+import 'package:humanaty/services/uploader.dart';
 import 'package:provider/provider.dart';
 import 'package:humanaty/routes/profile/profile.dart';
 
@@ -31,8 +32,20 @@ class HumanatyDrawer extends StatelessWidget {
         padding: EdgeInsets.all(0.0),
         children: <Widget>[
         DrawerHeader(
-          child: Text(_auth.status == Status.Anon ? 'Welcome Anon' : 'Welcome '+ userData.displayName,
-          style: TextStyle(fontSize: 16),),
+          child: _auth.status == Status.Anon ? Text('Welcome Anon') :
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              CircleAvatar(radius: 70, backgroundImage : NetworkImage(userData.photoUrl)),
+              SizedBox(width: 8),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(userData.displayName, style: TextStyle(fontSize: 16)),
+                  HumanatyRating(rating: userData.consumerRating, starSize: 15)
+              ],)
+            ],
+          ),          
         ),
         ListTile(
           title: Text('Profile'),
