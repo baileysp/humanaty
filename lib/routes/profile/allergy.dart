@@ -12,7 +12,6 @@ class AllergyPage extends StatefulWidget{
   @override
   _AllergyPageState createState() => _AllergyPageState();
 }
-
 class _AllergyPageState extends State<AllergyPage> {
 
   @override

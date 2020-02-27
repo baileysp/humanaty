@@ -7,12 +7,12 @@ class User {
 
 class UserData {
   final String uid;
-  final String displayName;
-  final String email;
-  final String photo;
-  final String aboutMe;
-  final String location;
-  final String birthday;
+  String displayName;
+  String email;
+  String photo;
+  String aboutMe;
+  String location;
+  DateTime birthday;
   final Map<String, bool> allergies;
 
   //currently limited to wheelChairAccessibility, can be expanded in future
