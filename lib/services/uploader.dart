@@ -10,16 +10,6 @@ class Uploader{
 
   final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://humanaty-gatech.appspot.com');
   
-
-  Future<void> test()async{
-    print("hello");
-    String filePath = 'defaultProfilePic/defaultProfilePic.jpg';
-    var storageRef = _storage.ref().child(filePath);
-    var url = await storageRef.getDownloadURL() as String;
-    print(url);
-
-  }
-  
   Future<void> uploadProfilePic(File imageFile) async {
     String filePath = 'users/$uid/profilePicture.png';
     var storageRef = _storage.ref().child(filePath);

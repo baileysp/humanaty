@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/user.dart';
-import 'package:humanaty/routes/home/home.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
-import 'package:humanaty/services/uploader.dart';
 import 'package:provider/provider.dart';
 import 'package:humanaty/routes/profile/profile.dart';
 
@@ -12,7 +10,7 @@ class HumanatyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
-
+    
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: _auth.user.uid).userData,
       builder: (context, snapshot) {
@@ -36,7 +34,7 @@ class HumanatyDrawer extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              CircleAvatar(radius: 70, backgroundImage : NetworkImage(userData.photoUrl)),
+              if(userData.photoUrl != null) CircleAvatar(radius: 70, backgroundImage : NetworkImage(userData.photoUrl)),
               SizedBox(width: 8),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,

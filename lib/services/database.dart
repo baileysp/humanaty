@@ -12,7 +12,7 @@ class DatabaseService{
     return await userCollection.document(uid).setData({
       'displayName': displayName,
       'email' : email,
-      'photUrl' : "",
+      'photoUrl' : "https://firebasestorage.googleapis.com/v0/b/humanaty-gatech.appspot.com/o/defaultProfilePic%2FdefaultProfilePic.jpg?alt=media&token=e87a7526-daf8-4466-b186-e8703b1da31b",
       'aboutMe' : "",
       'birthday' : currentYMD.substring(0, currentYMD.indexOf(" ")),
       'allergies' : Allergy().allergyMap,
