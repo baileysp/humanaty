@@ -26,38 +26,33 @@ List<HumanatyEvent> testEvents = [
     eventDescription: "scrumptuous dinner with corona virus",
   ),
   HumanatyEvent(
-      eventName: "Test",
+      eventName: "Chinese Cuisine",
       eventDate: "1/11/23",
-      eventDescription: "Blah Blah Blah Blah "),
+      eventDescription: "Get lost in the szechuan sauce."),
   HumanatyEvent(
-      eventName: "Test",
+      eventName: "Pizza Night at Johnny's",
       eventDate: "1/11/23",
-      eventDescription: "Blah Blah Blah Blah "),
+      eventDescription: "Don't get lost in the tomato sauce."),
   HumanatyEvent(
     eventName: "Delicious Dinner",
     eventDate: "1/17/24",
-    eventDescription: "It's actually not delicious",
+    eventDescription: "It's actually quite delicious",
   ),
   HumanatyEvent(
-    eventName: "Delicious Dinner",
+    eventName: "Not so Delicious Dinner",
     eventDate: "1/17/24",
-    eventDescription: "It's actually not delicious",
+    eventDescription: "Don't buy a seat here",
   ),
   HumanatyEvent(
-    eventName: "Delicious Dinner",
+    eventName: "Test huMANAty Event",
     eventDate: "1/17/24",
-    eventDescription: "It's actually not delicious",
+    eventDescription: "Testing for home display purposes.",
   ),
   HumanatyEvent(
-    eventName: "Delicious Dinner",
+    eventName: "Test huMANAty Event",
     eventDate: "1/17/24",
-    eventDescription: "It's actually not delicious",
-  ),
-  HumanatyEvent(
-    eventName: "Delicious Dinner",
-    eventDate: "1/17/24",
-    eventDescription: "It's actually not delicious",
-  ),
+    eventDescription: "Testing for home display purposes.",
+  )
 ];
 
 List<HumanatyEvent> displayedEvents = testEvents;
