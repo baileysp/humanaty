@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 class ImageOptions extends StatefulWidget {
   _ImageOptionsState createState() => _ImageOptionsState();
 }
-
 class _ImageOptionsState extends State<ImageOptions>{
   File _imageFile;
 
@@ -23,7 +22,7 @@ class _ImageOptionsState extends State<ImageOptions>{
             width: double.infinity,
             height: 50,
             child: RaisedButton(
-              child: Text("Take Photo", style: TextStyle(fontSize: 16.0)),
+              child: Text('Take Photo', style: TextStyle(fontSize: 16.0)),
               onPressed: () => _pickImage(ImageSource.camera),
             ),
           ),
@@ -31,7 +30,7 @@ class _ImageOptionsState extends State<ImageOptions>{
             width: double.infinity,
             height: 50,
             child: RaisedButton(
-              child: Text("Select Photo", style: TextStyle(fontSize: 16.0)),
+              child: Text('Select Photo', style: TextStyle(fontSize: 16.0)),
               onPressed: () async {
                 await _pickImage(ImageSource.gallery);
                 await Navigator.push(context,MaterialPageRoute(builder: (context) => ImageEdit(file: _imageFile)),);
@@ -45,9 +44,7 @@ class _ImageOptionsState extends State<ImageOptions>{
             height: 50,
             child: RaisedButton(
               child: Text("Cancel", style:TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ),
         ],

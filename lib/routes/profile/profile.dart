@@ -28,9 +28,7 @@ class ProfileState extends State<Profile> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void initState() {
-    super.initState();
-  }
+  void initState() => super.initState();
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +41,18 @@ class ProfileState extends State<Profile> {
       key: _scaffoldKey,
       appBar: HumanatyAppBar(
           displayBackBtn: true,
-          title: "Edit Profile",
+          title: 'Edit Profile',
           actions: [updateProfileAppBar(context, _auth, userData)]),
       //resizeToAvoidBottomInset: false,
       body: ListView(
           children: <Widget> [
             Form(
-            key: _updateProfileFormKey,
-            child: Column(children: <Widget>[
-              header(userData),
-              emailField(userData),
-              birthdayField(context, userData),
-            ])),
+              key: _updateProfileFormKey,
+              child: Column(children: <Widget>[
+                header(userData),
+                emailField(userData),
+                birthdayField(context, userData),
+              ])),
             aboutMeField(userData,),
             SizedBox(height: 20),
             wheelChairAccessiblity(userData),
@@ -88,10 +86,10 @@ class ProfileState extends State<Profile> {
                   ),
                   IconButton(
                     icon: Icon(Icons.edit),
-                    onPressed:()async {
+                    onPressed:() async {
                       await showModalBottomSheet(context: context, builder: (context){ return ImageOptions();
                       },backgroundColor: Colors.transparent);
-                      setState((){var test = 5;});},
+                      },
                   )
               ],
             )),
@@ -123,15 +121,13 @@ class ProfileState extends State<Profile> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         SizedBox(
-            width: 150,
-            child: TextFormField(
-                controller: _nameController,
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(),
-                    border: InputBorder.none),
-                validator: nameValidator))
+          width: 150,
+          child: TextFormField(
+            controller: _nameController,
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(border: InputBorder.none),
+            validator: nameValidator))
       ],
     );
   }
@@ -139,7 +135,7 @@ class ProfileState extends State<Profile> {
   Widget emailField(UserData userData) {
     _emailController.text = userData.email;
     return ListTile(
-      title: Text("Email"),
+      title: Text('Email'),
       trailing: SizedBox(
         width: 200,
         child: TextFormField(
@@ -147,24 +143,26 @@ class ProfileState extends State<Profile> {
           focusNode: _emailFocus,
           textAlign: TextAlign.right,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(),
             border: InputBorder.none,
           ),
           inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
           validator: emailValidator,
         ),
       ),
-      onTap: () {
-        FocusScope.of(context).requestFocus(_emailFocus);
-      },
+      onTap:() => FocusScope.of(context).requestFocus(_emailFocus)
     );
   }
 
   Widget aboutMeField(UserData userData) {
-    _aboutMeController.text = userData.aboutMe;
+     _aboutMeController.text = 'Tell future guests about your qualifications';
+    if(userData.aboutMe.isEmpty) _aboutMeController.text = userData.aboutMe;
+    
+    
+    if(userData.aboutMe == null) print("testing");
+    
     return Column(
       children: <Widget>[
-        ListTile(title: Text("About Me"),),
+        ListTile(title: Text('About Me'),),
         SizedBox(
           width: 350,
           child: TextFormField(
@@ -182,47 +180,37 @@ class ProfileState extends State<Profile> {
 
   Widget birthdayField(BuildContext context, UserData userData) {
     return ListTile(
-        title: Text("Birthday"),
-        trailing: Icon(Icons.cake),
-        onTap: () {
-          DatePicker.showDatePicker(context, currentTime: userData.birthday,
-              onConfirm: (date) {
-            userData.birthday = date;
-          },
-              theme: DatePickerTheme(
-                  doneStyle: TextStyle(color: Pallete.humanGreen)));
-        });
+      title: Text('Birthday'),
+      trailing: Icon(Icons.cake),
+      onTap: () {
+        DatePicker.showDatePicker(context, currentTime: userData.birthday,
+          onConfirm: (date) => {userData.birthday = date},
+          theme: DatePickerTheme(doneStyle: TextStyle(color: Pallete.humanGreen)));
+      });
   }
 
   Widget wheelChairAccessiblity(UserData userData) {
     return ListTile(
       trailing: Icon(
-          userData.accessibilityAccommodations
-              ? Icons.accessible_forward
-              : Icons.accessibility,
-          color: userData.accessibilityAccommodations
-              ? Pallete.humanGreen
-              : Colors.black45),
-      title: Text("Accessibility Accomodation Required"),
-      onTap: () {
-        setState(() {
-          userData.accessibilityAccommodations =
-              !userData.accessibilityAccommodations;
-        });
-      },
+        userData.accessibilityAccommodations
+            ? Icons.accessible_forward
+            : Icons.accessibility,
+        color: userData.accessibilityAccommodations
+            ? Pallete.humanGreen
+            : Colors.black45),
+      title: Text('Accessibility Accomodation Required'),
+      onTap: () {setState(() {userData.accessibilityAccommodations = !userData.accessibilityAccommodations;});},
     );
   }
 
   Widget allergyButton(BuildContext context, AuthService _auth, UserData userData) {
     return ListTile(
       trailing: Icon(Icons.arrow_forward),
-      title: Text("Allergies"),
+      title: Text('Allergies'),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  AllergyPage(userAllergies: userData.allergies, auth: _auth)),
+        Navigator.push(context,
+          MaterialPageRoute(builder: (context) =>
+            AllergyPage(userAllergies: userData.allergies, auth: _auth)),
         );
       },
     );
@@ -230,30 +218,26 @@ class ProfileState extends State<Profile> {
 
   Widget updateProfile(BuildContext context, AuthService _auth, UserData userData) {
     return Padding(
-      padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         width: double.infinity,
         height: 50.0,
         child: RaisedButton(
-            color: Pallete.humanGreen,
-            onPressed: () async {
-              updateProfileFunc(context, _auth, userData);
-            },
-            child: Text("Update Profile",
-                style: TextStyle(color: Colors.white, fontSize: 16.0))),
+          color: Pallete.humanGreen,
+          onPressed:() async => updateProfileFunc(context, _auth, userData),      
+          child: Text('Update Profile',
+            style: TextStyle(color: Colors.white, fontSize: 16.0))),
       ),
     );
   }
 
   Widget updateProfileAppBar(BuildContext context, AuthService _auth, UserData userData) {
+    return SizedBox();
     return FlatButton(
-        onPressed: () async {
-          updateProfileFunc(context, _auth, userData);
-        },
-        child: Text(
-          "update",
-          style: TextStyle(color: Colors.black87),
-        ));
+      onPressed: () async => updateProfileFunc(context, _auth, userData),
+      child: Text('update',
+        style: TextStyle(color: Colors.black87),
+      ));
   }
 
   void updateProfileFunc(BuildContext context, AuthService _auth, UserData userData) async {

@@ -5,14 +5,18 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:humanaty/services/firebaseError.dart';
+import 'package:humanaty/util/logger.dart';
 
 enum Status {Uninitialized, Authenticated, Authenticating, Unauthenticated, Anon}
 
 class AuthService with ChangeNotifier {
+  final log = getLogger('AuthService');
+  
   FirebaseAuth _firebaseAuth;
   User _user;
   Status _status = Status.Uninitialized;
-  String _error = "";
+  String _error = '';
+  final Duration _timeoutDuration = Duration(seconds: 5);
 
   AuthService.instance() : _firebaseAuth = FirebaseAuth.instance {
     _firebaseAuth.onAuthStateChanged.listen(_onAuthStateChanged);
@@ -41,13 +45,15 @@ class AuthService with ChangeNotifier {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-      return true;
+      AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, 
+        password: password);
+      return result != null;
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
       _error = errorConverter(error);
       notifyListeners();
+      _onException('signInWithEmailAndPass', error);
       return false;
     }
   }
@@ -56,14 +62,18 @@ class AuthService with ChangeNotifier {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, 
+        password: password);
+      
+      //consider removing await
       await DatabaseService(uid: user.uid).createUserDoc(displayName, email);
-     
-      return true;
+      return result != null;
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
       _error = errorConverter(error);
       notifyListeners();
+      _onException('createUserWithEmailAndPass', error);
       return false;
     }
   }
@@ -86,20 +96,20 @@ class AuthService with ChangeNotifier {
         return false;
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      await _firebaseAuth.signInWithCredential(credential);
-      return true;
+      AuthResult result = await _firebaseAuth.signInWithCredential(credential);
+      return result != null;
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
       print(error.toString());
       _error = errorConverter(error);
       notifyListeners();
+      _onException('signInWithGoogle', error);
       return false;
     }
   }
@@ -115,6 +125,7 @@ class AuthService with ChangeNotifier {
   }
 
   Future signOut() async {
+    log.d('Logging Out $_user');
     _firebaseAuth.signOut();
     _status = Status.Unauthenticated;
     notifyListeners();
@@ -132,10 +143,20 @@ class AuthService with ChangeNotifier {
     } else {
       _user = _userFromFirebaseUser(firebaseUser);
       _status = firebaseUser.isAnonymous ? Status.Anon : Status.Authenticated;
-      print("Logging in: $_user");
+      log.d('Logging in $_user');
     }
-    print(_user);
-    print("Updating status to: $_status");
+    //log.d('Updating status to: $_status');
     notifyListeners();
   }
-}
+
+  _onTimeOut(String methodName){
+    log.w('$methodName timed out');
+    return null;
+  }
+
+  _onException(String methodName, PlatformException error){
+    String errorString = error.code.toString();
+    log.e('$methodName threw $errorString');
+  }
+
+}//User

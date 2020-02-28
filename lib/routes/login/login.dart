@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _passwordObscured = true;
-    _errorMessage = "";
+    _errorMessage = '';
     super.initState();
   }
 
@@ -36,18 +36,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
     return Scaffold(
-      appBar: HumanatyAppBar(
-        actions: <Widget>[continueAnonymously(_auth)],
-      ),
+      appBar: HumanatyAppBar(actions: <Widget>[continueAnonymously(_auth)],),
       body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),
           children: <Widget>[
-            Text(
-              "Welcome Back,",
+            Text('Welcome Back,',
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
             ),
-            Text("Sign in with huMANAty", style: TextStyle(fontSize: 16)),
+            Text('Sign in with huMANAty', 
+              style: TextStyle(fontSize: 16)),
             SizedBox(height: 50),
             errorText(),
             Form(
@@ -75,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget errorText() {
     return SizedBox(
         height: 20,
-        child: Text(_errorMessage != null ? _errorMessage : " ",
+        child: Text(_errorMessage != null ? _errorMessage : '',
             style: TextStyle(color: Colors.red, fontSize: 13.0)));
   }
 
@@ -88,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
         textInputAction: TextInputAction.next,
         focusNode: _emailFocus,
         decoration: textInputDecoration.copyWith(
-            hintText: "Email",
+            hintText: 'Email',
             prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
         inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
         validator: emailValidator,
@@ -132,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
           color: Pallete.humanGreen,
           onPressed: () async {
             if (_signInFormKey.currentState.validate()) {
-              String email = _emailController.text;
+              String email = _emailController.text.trim();
               String password = _passwordController.text;
 
               if (!await user.signInWithEmailAndPassword(email, password)) {
@@ -144,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           child: Text(
-              user.status == Status.Authenticating ? "Logging In" : "Login",
+              user.status == Status.Authenticating ? 'Logging In' : 'Login',
               style: TextStyle(color: Colors.white, fontSize: 16.0))),
     );
   }
@@ -173,30 +171,21 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           Navigator.pushNamed(context, '/registration');
         },
-        child: Text("Don't have an account? Sign up"));
+        child: Text('Don\'t have an account? Sign up'));
   }
 
   Widget forgotPassword() {
     return InkWell(
-        onTap: () {
-          showDialog(
-              context: context,
-              builder: (_) {
-                return ResetDialog();
-              });
-        },
-        child: Text("Forgot Password?"));
+      onTap:() => showDialog(context: context, builder: (_) {return ResetDialog();}),
+      child: Text('Forgot Password?'));
   }
 
   Widget continueAnonymously(AuthService user) {
     return FlatButton(
-        onPressed: () {
-          user.signinAnon();
-        },
-        child: Text(
-          'Skip for now',
-          style: TextStyle(color: Colors.black),
-        ));
+      onPressed:() => user.signinAnon(),
+      child: Text('Skip for now',
+        style: TextStyle(color: Colors.black))
+    );
   }
 
   _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {

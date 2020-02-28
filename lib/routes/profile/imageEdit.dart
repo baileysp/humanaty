@@ -26,14 +26,13 @@ class _ImageEditState extends State<ImageEdit>{
       appBar: HumanatyAppBar(displayBackBtn: true, title: "Crop Image"),      
       body: _buildCropImage(),
       floatingActionButton: cropBtn(_auth),      
-        
     );
   }
 
   Widget cropBtn(AuthService _auth){
     return RaisedButton(
       color: Pallete.humanGreen,
-      child: Text("Crop", style: TextStyle(color: Colors.white, fontSize: 16.0),),
+      child: Text('Crop', style: TextStyle(color: Colors.white, fontSize: 16.0),),
       onPressed:() async{
         var crop = _imageCropKey.currentState;
         File croppedFile = await crop.cropCompleted(_imageFile, pictureQuality: 900);
@@ -44,7 +43,7 @@ class _ImageEditState extends State<ImageEdit>{
   }
 
   Widget _buildCropImage() {
-  return Container(
+    return Container(
       color: Colors.white,
       child: ImgCrop(
         key: _imageCropKey,
@@ -52,6 +51,6 @@ class _ImageEditState extends State<ImageEdit>{
         chipShape: 'circle',
         image: FileImage(_imageFile),
       ),
-  );
-} 
+    );
+  } 
 }

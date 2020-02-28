@@ -3,21 +3,22 @@ import 'package:flutter/services.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 
 
-void main() => {
+void main() {
+  Logger.level = Level.verbose;
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, //top bar color
       statusBarIconBrightness: Brightness.light, //top bar icons
       //systemNavigationBarColor: Colors.white, //bottom bar color
       //systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
-    )
-  ),
-  runApp(Main())
-};
+    ));
+  runApp(Main());
+}
 
 class Main extends StatelessWidget {
   @override

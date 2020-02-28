@@ -3,6 +3,9 @@ import 'package:enum_to_string/enum_to_string.dart';
 class User {
   final String uid;
   User({this.uid});
+  
+  @override
+  String toString() => uid;
 }
 
 class UserData {
@@ -32,18 +35,21 @@ class UserData {
       this.displayName,
       this.email,
       this.photoUrl,
-      this.aboutMe = "This is an about me test",
+      this.aboutMe,
       this.location,
       this.birthday,
       this.allergies,
       this.accessibilityAccommodations,
       this.consumerRating = 3,
       this.chefRating = 3});
+
+  @override 
+  String toString() => '$displayName $uid';
+  
 }
 
 enum Allergies { SoyBean, Fish, Milk, TreeNut, Peanut, Shellfish, Eggs, Wheat}
 String test;
-
 class Allergy {
   Map<String, bool> allergies;
   final bool hasSoyBean;
