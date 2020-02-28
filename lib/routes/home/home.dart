@@ -17,13 +17,13 @@ import 'package:provider/provider.dart';
 
 List<HumanatyEvent> testEvents = [
   HumanatyEvent(
-      eventName: "Test",
+      eventName: "Test Title",
       eventDate: "1/11/23",
-      eventDescription: "Blah Blah Blah Blah "),
+      eventDescription: "Description goes here"),
   HumanatyEvent(
-    eventName: "DINNER TIME",
+    eventName: "Indian Food",
     eventDate: "1/14/23",
-    eventDescription: "scrumptuous dinner with corona virus",
+    eventDescription: "Come enjoy cuisine of the east.",
   ),
   HumanatyEvent(
       eventName: "Chinese Cuisine",
