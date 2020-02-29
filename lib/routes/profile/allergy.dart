@@ -38,5 +38,5 @@ Widget updateAllergiesBtn(BuildContext context, AuthService auth, Map userAllerg
     onPressed: () async {
       await DatabaseService(uid: auth.user.uid).updateAllergyData(userAllergies);
       Navigator.of(context).pop();},
-    child: Text('update', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)));
+    child: Text('update', style: TextStyle(color: Colors.black)));
 }

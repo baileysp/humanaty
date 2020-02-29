@@ -11,8 +11,8 @@ import 'package:humanaty/common/design.dart';
 import 'package:humanaty/routes/_router.dart';
 
 class Profile extends StatefulWidget {
-  final UserData userData;
-  const Profile({Key key, this.userData}) : super(key: key);
+  final UserData prevUserData;
+  const Profile({Key key, this.prevUserData}) : super(key: key);
 
   @override
   ProfileState createState() => ProfileState();
@@ -33,7 +33,13 @@ class ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
-    return profile(context, _auth, widget.userData);
+    
+    return StreamBuilder<UserData>(
+      stream: DatabaseService(uid: _auth.user.uid).userData,
+      builder: (context, snapshot) {
+        UserData userData = (snapshot.hasData) ? snapshot.data : widget.prevUserData;
+        return profile(context, _auth, userData);
+      });
   }
 
   Widget profile(BuildContext context, AuthService _auth, UserData userData) {
@@ -66,22 +72,26 @@ class ProfileState extends State<Profile> {
   }
 
   Widget header(UserData userData) {
+    print(userData.photoUrl);
     return Padding(
       padding: const EdgeInsets.only(right: 16, left: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          SizedBox(width: 150, height: 125, 
+          SizedBox(width: 150, height: 150, 
             child: Stack(
               alignment: Alignment.bottomRight,
               //crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0, bottom: 16),
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(userData.photoUrl),
-                      backgroundColor: Pallete.humanGreen,
+                    child: Hero(
+                      tag : 'avatar',
+                      child: CircleAvatar(
+                        radius: 70,
+                        backgroundImage: NetworkImage(userData.photoUrl),
+                        backgroundColor: Pallete.humanGreen,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -137,7 +147,7 @@ class ProfileState extends State<Profile> {
     return ListTile(
       title: Text('Email'),
       trailing: SizedBox(
-        width: 200,
+        width: 300,
         child: TextFormField(
           controller: _emailController,
           focusNode: _emailFocus,
@@ -232,9 +242,10 @@ class ProfileState extends State<Profile> {
   }
 
   Widget updateProfileAppBar(BuildContext context, AuthService _auth, UserData userData) {
-    return SizedBox();
     return FlatButton(
-      onPressed: () async => updateProfileFunc(context, _auth, userData),
+      onPressed: () {
+        Navigator.pop(context);
+        updateProfileFunc(context, _auth, userData);},
       child: Text('update',
         style: TextStyle(color: Colors.black87),
       ));

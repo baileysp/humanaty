@@ -16,6 +16,7 @@ class HumanatyDrawer extends StatelessWidget {
       stream: DatabaseService(uid: _auth.user.uid).userData,
       builder: (context, snapshot) {
         if (snapshot.hasData || _auth.status == Status.Anon) {
+          print('updating info');
           UserData userData = snapshot.data;
           return drawer(_auth, userData, context);
         }
@@ -50,9 +51,12 @@ class HumanatyDrawer extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         if(userData.photoUrl != null) 
-          CircleAvatar(radius: 70, 
-            backgroundColor: Pallete.humanGreen,
-            backgroundImage : NetworkImage(userData.photoUrl)),
+          Hero(
+            tag: 'avatar',
+            child: CircleAvatar(radius: 70, 
+              backgroundColor: Pallete.humanGreen,
+              backgroundImage : NetworkImage(userData.photoUrl)),
+          ),
         SizedBox(width: 8),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -72,7 +76,7 @@ class HumanatyDrawer extends StatelessWidget {
         status == Status.Anon ? 
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("Please Log-In to view your profile"))) :
-          Navigator.push(context,MaterialPageRoute(builder: (context) => Profile(userData: userData)));
+          Navigator.push(context,MaterialPageRoute(builder: (context) => Profile(prevUserData: userData)));
       },);
   }
 

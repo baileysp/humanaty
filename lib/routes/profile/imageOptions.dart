@@ -9,9 +9,9 @@ class ImageOptions extends StatefulWidget {
   _ImageOptionsState createState() => _ImageOptionsState();
 }
 class _ImageOptionsState extends State<ImageOptions>{
-  File _imageFile;
+  dynamic _imageEditReturn;
 
-  Widget build(BuildContext context) {      
+  Widget build(BuildContext context) {  
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
@@ -23,7 +23,7 @@ class _ImageOptionsState extends State<ImageOptions>{
             height: 50,
             child: RaisedButton(
               child: Text('Take Photo', style: TextStyle(fontSize: 16.0)),
-              onPressed: () => _pickImage(ImageSource.camera),
+              onPressed: () => _pickImage(context, ImageSource.camera),
             ),
           ),
           Container(
@@ -31,11 +31,7 @@ class _ImageOptionsState extends State<ImageOptions>{
             height: 50,
             child: RaisedButton(
               child: Text('Select Photo', style: TextStyle(fontSize: 16.0)),
-              onPressed: () async {
-                await _pickImage(ImageSource.gallery);
-                await Navigator.push(context,MaterialPageRoute(builder: (context) => ImageEdit(file: _imageFile)),);
-                Navigator.pop(context);
-                },
+              onPressed: () => _pickImage(context, ImageSource.gallery)
             ),
           ),
           Divider(),
@@ -52,12 +48,12 @@ class _ImageOptionsState extends State<ImageOptions>{
     );
   }
 
-  Future<void> _pickImage(ImageSource imagesource) async{
+  Future<void> _pickImage(BuildContext context, ImageSource imagesource) async{
     File selected = await ImagePicker.pickImage(source: imagesource);
-    print("image selected");
-    setState(() {
-      _imageFile = selected;
-    });
+    if (selected != null)
+      _imageEditReturn = await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ImageEdit(file: selected)));
+    if (_imageEditReturn != 'cancelled') Navigator.pop(context);
   }
 
 }

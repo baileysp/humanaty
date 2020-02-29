@@ -17,34 +17,55 @@ class ImageEdit extends StatefulWidget{
 class _ImageEditState extends State<ImageEdit>{
   final _imageCropKey = GlobalKey<ImgCropState>();
   File _imageFile;
+  
 
   @override
   Widget build(BuildContext context) {
     _imageFile = widget.file;
     final _auth = Provider.of<AuthService>(context);
-    return Scaffold(
-      appBar: HumanatyAppBar(displayBackBtn: true, title: "Crop Image"),      
-      body: _buildCropImage(),
-      floatingActionButton: cropBtn(_auth),      
+    return Scaffold(   
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          _buildCropImage(),
+          Container(
+            color: Colors.black38,
+            padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                cancelBtn(context),
+                cropBtn(_auth)
+              ],
+            ),
+          )
+        ]
+      ),           
     );
   }
 
+  Widget cancelBtn(BuildContext context){
+    return FlatButton(
+      child: Text('Cancel', 
+        style: TextStyle(color: Colors.white, fontSize: 22)), 
+      onPressed:() => Navigator.pop(context, 'cancelled'),);
+  }
+
   Widget cropBtn(AuthService _auth){
-    return RaisedButton(
-      color: Pallete.humanGreen,
-      child: Text('Crop', style: TextStyle(color: Colors.white, fontSize: 16.0),),
+    return FlatButton(
+      child: Text('Select', style: TextStyle(color: Colors.white, fontSize: 22.0),),
       onPressed:() async{
+        Navigator.pop(context);
         var crop = _imageCropKey.currentState;
         File croppedFile = await crop.cropCompleted(_imageFile, pictureQuality: 900);
-        await Uploader(uid: _auth.user.uid).uploadProfilePic(croppedFile);
-        Navigator.pop(context); 
+        Uploader(uid: _auth.user.uid).uploadProfilePic(croppedFile);
       },
     );
   }
 
   Widget _buildCropImage() {
     return Container(
-      color: Colors.white,
+      color: Colors.black,
       child: ImgCrop(
         key: _imageCropKey,
         chipRadius: 150,  

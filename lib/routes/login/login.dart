@@ -141,9 +141,8 @@ class _LoginPageState extends State<LoginPage> {
               }
             }
           },
-          child: Text(
-              user.status == Status.Authenticating ? 'Logging In' : 'Login',
-              style: TextStyle(color: Colors.white, fontSize: 16.0))),
+          child: Text(user.status == Status.Authenticating ? 'Logging In' : 'Login',
+            style: TextStyle(color: Colors.white, fontSize: 16.0))),
     );
   }
 

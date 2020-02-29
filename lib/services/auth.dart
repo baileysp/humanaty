@@ -145,7 +145,6 @@ class AuthService with ChangeNotifier {
       _status = firebaseUser.isAnonymous ? Status.Anon : Status.Authenticated;
       log.d('Logging in $_user');
     }
-    //log.d('Updating status to: $_status');
     notifyListeners();
   }
 

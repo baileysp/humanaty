@@ -12,8 +12,8 @@ void main() {
   Logger.level = Level.verbose;
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, //top bar color
-      statusBarIconBrightness: Brightness.light, //top bar icons
+      //statusBarColor: Colors.transparent, //top bar color
+      //statusBarIconBrightness: Brightness.dark, //top bar icons
       //systemNavigationBarColor: Colors.white, //bottom bar color
       //systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
     ));

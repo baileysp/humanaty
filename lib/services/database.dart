@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:humanaty/models/user.dart';
+import 'package:humanaty/util/logger.dart';
 
 class DatabaseService{
+  final log = getLogger('DatabaseService');
   final String uid;
   DatabaseService({this.uid});
 
