@@ -75,7 +75,7 @@ class HumanatyDrawer extends StatelessWidget {
         Navigator.pop(context);
         status == Status.Anon ? 
           Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text("Please Log-In to view your profile"))) :
+            content: Text('Please Log-In to view your profile'))) :
           Navigator.push(context,MaterialPageRoute(builder: (context) => Profile(prevUserData: userData)));
       },);
   }

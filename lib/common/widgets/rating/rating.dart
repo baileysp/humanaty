@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class HumanatyRating extends StatelessWidget {
 
-  final int rating;
+  final double rating;
   final double starSize;
 
   const HumanatyRating({

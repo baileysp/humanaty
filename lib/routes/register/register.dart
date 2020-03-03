@@ -47,19 +47,19 @@ class _RegisterPageState extends State<RegisterPage> {
             Text("Create an account with huMANAty",
               style: TextStyle(fontSize: 16)),
             SizedBox(height: 50),
-            errorText(),
+            _errorText(),
             Form(
               key: _registrationFormKey,
               child: Column(
                 children: <Widget>[
-                  nameField(),
-                  emailField(),
-                  passwordField(),
-                  confirmPasswordField(),
+                  _nameField(),
+                  _emailField(),
+                  _passwordField(),
+                  _confirmPasswordField(),
                   SizedBox(height: 30),
-                  registerButton(_auth),
+                  _registerButton(_auth),
                   SizedBox(height: 30),
-                  alreadyUser()
+                  _alreadyUser()
                 ],
               )
             )
@@ -68,14 +68,14 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget errorText() {
+  Widget _errorText() {
     return SizedBox(
       height: 20,
       child: Text(_errorMessage!= null ? _errorMessage : '',
         style: TextStyle(color: Colors.red, fontSize: 13.0)));
   }
 
-  Widget nameField() {
+  Widget _nameField() {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
@@ -89,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget emailField() {
+  Widget _emailField() {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
@@ -106,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget passwordField() {
+  Widget _passwordField() {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
@@ -128,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget confirmPasswordField() {
+  Widget _confirmPasswordField() {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
@@ -143,7 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget registerButton(AuthService user) {
+  Widget _registerButton(AuthService _auth) {
     return Container(
       width: double.infinity,
       height: 50.0,
@@ -154,19 +154,19 @@ class _RegisterPageState extends State<RegisterPage> {
             String displayName = _nameController.text.trim();
             String email = _emailController.text;
             String password = _passwordController.text;              
-            if (!await user.createUserWithEmailAndPassword(displayName, email, password)) {
+            if (!await _auth.createUserWithEmailAndPassword(displayName, email, password)) {
               setState((){
-                _errorMessage = user.error;
+                _errorMessage = _auth.error;
                 _registrationFormKey.currentState.reset();
               });
             } else{Navigator.pop(context);}}
         },
-        child: Text(user.status == Status.Authenticating ? 'Registering' : 'Register',
+        child: Text(_auth.status == Status.Authenticating ? 'Registering' : 'Register',
           style: TextStyle(color: Colors.white, fontSize: 16.0))),
     );
   }
 
-  Widget alreadyUser() {
+  Widget _alreadyUser() {
     return FlatButton(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       onPressed:() => Navigator.pop(context),

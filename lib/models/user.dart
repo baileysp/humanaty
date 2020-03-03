@@ -9,78 +9,77 @@ class User {
 }
 
 class UserData {
-  final String uid;
-  String displayName;
-  String email;
-  String photoUrl;
-  String aboutMe;
-  String location;
-  DateTime birthday;
+  final String aboutMe;
+  final bool accessibilityAccommodations;
   final Map<String, bool> allergies;
-
-  //currently limited to wheelChairAccessibility, can be expanded in future
-  bool accessibilityAccommodations;
-  final int consumerRating;
-  final int chefRating;
-  //Allergy allergies;
-  //event list
-  //final List<Event> eventHistory
-  //final List<Event> upcomingEvents
-
-  //information 4 Host
-  //final bool hostVerified;
-
-  UserData(
-      {this.uid,
-      this.displayName,
-      this.email,
-      this.photoUrl,
-      this.aboutMe,
-      this.location,
-      this.birthday,
-      this.allergies,
-      this.accessibilityAccommodations,
-      this.consumerRating = 3,
-      this.chefRating = 3});
+  final DateTime birthday;
+  //final List<String> consumerEventHistory
+  final double consumerRating;
+  //final List<String> consumerUpcomingEvents
+  final String displayName;
+  final String email;
+  //final List<String> hostEventHistory
+  final double hostRating;
+  //final List<String> hostUpcomingEvents
+  final bool hostVerified;
+  final Map<String, String> location;
+  final String photoUrl;
+  final String uid;
+ 
+  UserData({
+    this.aboutMe,
+    this.accessibilityAccommodations,
+    this.allergies,
+    this.birthday,
+    //this.consumerEventHistory,
+    this.consumerRating,
+    //this.consumerUpcomingEvents,
+    this.displayName,
+    this.email,
+    //this.hostEventHistory,
+    this.hostRating,
+    //this.hostUpcomingEvents,
+    this.hostVerified,
+    this.location,
+    this.photoUrl,
+    this.uid});
 
   @override 
   String toString() => '$displayName $uid';
-  
-}
 
-enum Allergies { SoyBean, Fish, Milk, TreeNut, Peanut, Shellfish, Eggs, Wheat}
-String test;
+}
+enum Allergens {Eggs, Fish, Milk, Peanut, Shellfish, SoyBean, TreeNut, Wheat}
 class Allergy {
   Map<String, bool> allergies;
-  final bool hasSoyBean;
+  final bool hasEggs;
   final bool hasFish;
   final bool hasMilk;
-  final bool hasTreeNut;
   final bool hasPeanut;
   final bool hasShellFish;
-  final bool hasEggs;
+  final bool hasSoyBean;
+  final bool hasTreeNut;
   final bool hasWheat;
 
-  Allergy(
-      {this.hasSoyBean = false,
-      this.hasFish = false,
-      this.hasMilk = false,
-      this.hasTreeNut = false,
-      this.hasPeanut = false,
-      this.hasShellFish = false,
-      this.hasEggs = false,
-      this.hasWheat = false});
+  Allergy({
+    this.hasEggs = false,
+    this.hasFish = false,
+    this.hasMilk = false,
+    this.hasPeanut = false,
+    this.hasShellFish = false,
+    this.hasSoyBean = false,   
+    this.hasTreeNut = false,
+    this.hasWheat = false});
 
   Map get allergyMap {
     allergies = {
-      EnumToString.parse(Allergies.SoyBean): hasSoyBean,
-      EnumToString.parse(Allergies.Fish): hasFish,
-      EnumToString.parse(Allergies.Milk): hasMilk,
-      EnumToString.parse(Allergies.TreeNut): hasTreeNut,
-      EnumToString.parse(Allergies.Peanut): hasPeanut,
-      EnumToString.parse(Allergies.Shellfish): hasShellFish,
-      EnumToString.parse(Allergies.Eggs): hasEggs,
-      EnumToString.parse(Allergies.Wheat): hasWheat
+      EnumToString.parse(Allergens.Eggs): hasEggs,
+      EnumToString.parse(Allergens.Fish): hasFish,
+      EnumToString.parse(Allergens.Milk): hasMilk,
+      EnumToString.parse(Allergens.Peanut): hasPeanut,
+      EnumToString.parse(Allergens.Shellfish): hasShellFish,
+      EnumToString.parse(Allergens.SoyBean): hasSoyBean,   
+      EnumToString.parse(Allergens.TreeNut): hasTreeNut,
+      EnumToString.parse(Allergens.Wheat): hasWheat
     };
     return allergies;
   }

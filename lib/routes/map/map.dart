@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets/googlemaps/maps.dart';
 
-class Map extends StatelessWidget {
+class GoogleMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

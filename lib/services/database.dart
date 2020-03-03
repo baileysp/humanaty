@@ -14,41 +14,45 @@ class DatabaseService{
   Future<void> createUserDoc(String displayName, String email) async{
     String currentYMD = DateTime.now().toString();
     return await userCollection.document(uid).setData({
+      'aboutMe' : 'Tell future guests about your qualifications',
+      'accessibilityAccommodations' : false,
+      'allergies' : Allergy().allergyMap,
+      'birthday' : currentYMD.substring(0, currentYMD.indexOf(' ')),
+      'consumerRating' : 5,
       'displayName': displayName,
       'email' : email,
+      'hostRating' : 5,
       'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/humanaty-gatech.appspot.com/o/defaultProfilePic%2FdefaultProfilePic.jpg?alt=media&token=e87a7526-daf8-4466-b186-e8703b1da31b',
-      'aboutMe' : '',
-      'birthday' : currentYMD.substring(0, currentYMD.indexOf(' ')),
-      'allergies' : Allergy().allergyMap,
-      'accessibilityAccommodations' : false,
       'uid': uid
     });
   }
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
-   return UserData(
-      uid: uid,
+    return UserData(
+      aboutMe: snapshot.data['aboutMe'],
+      accessibilityAccommodations: snapshot.data['accessibilityAccommodations'],
+      allergies: Map.from(snapshot.data['allergies']),
+      birthday: DateTime.parse(snapshot.data['birthday']),
+      consumerRating: snapshot.data['consumerRating'].toDouble(),
       displayName: snapshot.data['displayName'],
       email: snapshot.data['email'],
+      hostRating: snapshot.data['hostRating'].toDouble(),
       photoUrl: snapshot.data['photoUrl'],
-      aboutMe: snapshot.data['aboutMe'],
-      birthday: DateTime.parse(snapshot.data['birthday']),
-      allergies: Map.from(snapshot.data['allergies']),
-      accessibilityAccommodations: snapshot.data['accessibilityAccommodations']
+      uid: uid,        
     );
   }
 
-  Future<void> updateUserData(UserData userData) async{
-    String userBirthday = userData.birthday.toString();
+  Future<void> updateUserData(String aboutMe, bool accessibilityAccommodations, DateTime birthday,
+    String displayName) async{
+    String _birthday = birthday.toString();
     return await userCollection.document(uid).updateData({
-      'displayName': userData.displayName,
-      //'email' : userData.email,
-      'aboutMe' : userData.aboutMe,
-      'birthday' : userBirthday.substring(0, userBirthday.indexOf(" ")),
-      'accessibilityAccommodations' : userData.accessibilityAccommodations
+      'aboutMe': aboutMe.trim(),
+      'accessibilityAccommodations': accessibilityAccommodations,
+      'birthday' : _birthday.substring(0, _birthday.indexOf(" ")),
+      'displayName' : displayName.trim(),
     });
   }
-  
+    
   Future<void> updateAllergyData(Map userAllergies) async{
     return await userCollection.document(uid).updateData({
       'allergies' : userAllergies

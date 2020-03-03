@@ -26,9 +26,9 @@ class ProfileState extends State<Profile> {
   final FocusNode _emailFocus = FocusNode();
   final _updateProfileFormKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() => super.initState();
+  
+  bool _accessibilityAccommodations;
+  DateTime _birthday;
 
   @override
   Widget build(BuildContext context) {
@@ -38,43 +38,42 @@ class ProfileState extends State<Profile> {
       stream: DatabaseService(uid: _auth.user.uid).userData,
       builder: (context, snapshot) {
         UserData userData = (snapshot.hasData) ? snapshot.data : widget.prevUserData;
-        return profile(context, _auth, userData);
+        return _profile(context, _auth, userData);
       });
   }
 
-  Widget profile(BuildContext context, AuthService _auth, UserData userData) {
+  Widget _profile(BuildContext context, AuthService _auth, UserData userData) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: HumanatyAppBar(
           displayBackBtn: true,
           title: 'Edit Profile',
-          actions: [updateProfileAppBar(context, _auth, userData)]),
+          actions: [_updateProfileAppBar(context, _auth, userData)]),
       //resizeToAvoidBottomInset: false,
       body: ListView(
-          children: <Widget> [
-            Form(
-              key: _updateProfileFormKey,
-              child: Column(children: <Widget>[
-                header(userData),
-                emailField(userData),
-                birthdayField(context, userData),
-              ])),
-            aboutMeField(userData,),
-            SizedBox(height: 20),
-            wheelChairAccessiblity(userData),
-            allergyButton(context, _auth, userData),
-            SizedBox(height: 16),
-            updateProfile(context, _auth, userData),
-            SizedBox(height: 32)
+        children: <Widget> [
+          Form(
+            key: _updateProfileFormKey,
+            child: Column(children: <Widget>[
+              _header(userData.displayName, userData.photoUrl),
+              _emailField(userData),
+              _birthdayField(context, _birthday ?? userData.birthday),
+            ])),
+          _aboutMeField(userData.aboutMe),
+          SizedBox(height: 20),
+          _accessiblityAccomodations(_accessibilityAccommodations ?? userData.accessibilityAccommodations),
+          _allergyBtn(context, _auth, userData.allergies),
+          SizedBox(height: 16),
+          _updateProfile(context, _auth, userData),
+          SizedBox(height: 32)
           ]          
         ),
     );
   }
 
-  Widget header(UserData userData) {
-    print(userData.photoUrl);
+  Widget _header(String displayName, String photoUrl) {
     return Padding(
-      padding: const EdgeInsets.only(right: 16, left: 16),
+      padding: EdgeInsets.only(right: 16, left: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -89,7 +88,7 @@ class ProfileState extends State<Profile> {
                       tag : 'avatar',
                       child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: NetworkImage(userData.photoUrl),
+                        backgroundImage: NetworkImage(photoUrl),
                         backgroundColor: Pallete.humanGreen,
                       ),
                     ),
@@ -97,9 +96,8 @@ class ProfileState extends State<Profile> {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed:() async {
-                      await showModalBottomSheet(context: context, builder: (context){ return ImageOptions();
-                      },backgroundColor: Colors.transparent);
-                      },
+                      await showModalBottomSheet(context: context, builder: (context){ return ImageOptions();},
+                        backgroundColor: Colors.transparent);},
                   )
               ],
             )),
@@ -109,14 +107,7 @@ class ProfileState extends State<Profile> {
             child: Column(
               children: <Widget>[
                 SizedBox(height: 16),
-                nameField(userData),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    HumanatyRating(
-                        rating: userData.consumerRating, starSize: 15)
-                  ],
-                )
+                _nameField(displayName)
               ],
             ),
           )
@@ -125,8 +116,8 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Widget nameField(UserData userData) {
-    _nameController.text = userData.displayName;
+  Widget _nameField(String displayName) {
+    _nameController.text = displayName;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -142,7 +133,7 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Widget emailField(UserData userData) {
+  Widget _emailField(UserData userData) {
     _emailController.text = userData.email;
     return ListTile(
       title: Text('Email'),
@@ -163,13 +154,8 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Widget aboutMeField(UserData userData) {
-     _aboutMeController.text = 'Tell future guests about your qualifications';
-    if(userData.aboutMe.isEmpty) _aboutMeController.text = userData.aboutMe;
-    
-    
-    if(userData.aboutMe == null) print("testing");
-    
+  Widget _aboutMeField(String aboutMe) {
+    _aboutMeController.text = aboutMe;    
     return Column(
       children: <Widget>[
         ListTile(title: Text('About Me'),),
@@ -188,45 +174,47 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Widget birthdayField(BuildContext context, UserData userData) {
+  Widget _birthdayField(BuildContext context, DateTime birthday) {
     return ListTile(
       title: Text('Birthday'),
       trailing: Icon(Icons.cake),
       onTap: () {
-        DatePicker.showDatePicker(context, currentTime: userData.birthday,
-          onConfirm: (date) => {userData.birthday = date},
+        DatePicker.showDatePicker(context, currentTime: birthday,
+          onConfirm: (date) => {_birthday = date},
           theme: DatePickerTheme(doneStyle: TextStyle(color: Pallete.humanGreen)));
       });
   }
 
-  Widget wheelChairAccessiblity(UserData userData) {
+  Widget _accessiblityAccomodations(bool accessibilityAccommodations) {
     return ListTile(
       trailing: Icon(
-        userData.accessibilityAccommodations
+        accessibilityAccommodations
             ? Icons.accessible_forward
             : Icons.accessibility,
-        color: userData.accessibilityAccommodations
+        color: accessibilityAccommodations
             ? Pallete.humanGreen
             : Colors.black45),
       title: Text('Accessibility Accomodation Required'),
-      onTap: () {setState(() {userData.accessibilityAccommodations = !userData.accessibilityAccommodations;});},
+      onTap: () {setState(() {
+        _accessibilityAccommodations = _accessibilityAccommodations ?? accessibilityAccommodations;
+        _accessibilityAccommodations = !_accessibilityAccommodations;});},
     );
   }
 
-  Widget allergyButton(BuildContext context, AuthService _auth, UserData userData) {
+  Widget _allergyBtn(BuildContext context, AuthService _auth, Map<String, bool> allergies) {
     return ListTile(
       trailing: Icon(Icons.arrow_forward),
       title: Text('Allergies'),
       onTap: () {
         Navigator.push(context,
           MaterialPageRoute(builder: (context) =>
-            AllergyPage(userAllergies: userData.allergies, auth: _auth)),
+            AllergyPage(userAllergies: allergies, auth: _auth)),
         );
       },
     );
   }
 
-  Widget updateProfile(BuildContext context, AuthService _auth, UserData userData) {
+  Widget _updateProfile(BuildContext context, AuthService _auth, UserData userData) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
@@ -234,33 +222,33 @@ class ProfileState extends State<Profile> {
         height: 50.0,
         child: RaisedButton(
           color: Pallete.humanGreen,
-          onPressed:() async => updateProfileFunc(context, _auth, userData),      
+          onPressed:() async => _updateProfileFunc(context, _auth, userData),      
           child: Text('Update Profile',
             style: TextStyle(color: Colors.white, fontSize: 16.0))),
       ),
     );
   }
 
-  Widget updateProfileAppBar(BuildContext context, AuthService _auth, UserData userData) {
+  Widget _updateProfileAppBar(BuildContext context, AuthService _auth, UserData userData) {
     return FlatButton(
-      onPressed: () {
+      onPressed: () async{
         Navigator.pop(context);
-        updateProfileFunc(context, _auth, userData);},
+        _updateProfileFunc(context, _auth, userData);
+        },
       child: Text('update',
         style: TextStyle(color: Colors.black87),
       ));
   }
 
-  void updateProfileFunc(BuildContext context, AuthService _auth, UserData userData) async {
+  void _updateProfileFunc(BuildContext context, AuthService _auth, UserData userData) async {
     if (_updateProfileFormKey.currentState.validate()) {
-      String displayName = _nameController.text.trim();
-      String email = _emailController.text;
-      String aboutMe = _aboutMeController.text;
-      userData.displayName = displayName;
-      //userData.email = email;
-      userData.aboutMe = aboutMe;
-
-      await DatabaseService(uid: _auth.user.uid).updateUserData(userData);
+      String _aboutMe = _aboutMeController.text.trim();
+      _accessibilityAccommodations ??= userData.accessibilityAccommodations;
+      _birthday ??= userData.birthday;
+      String _displayName = _nameController.text;      
+      //String email = _emailController.text;
+      await DatabaseService(uid: _auth.user.uid).updateUserData(
+        _aboutMe, _accessibilityAccommodations, _birthday, _displayName);
     }
   }
 

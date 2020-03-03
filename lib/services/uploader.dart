@@ -12,6 +12,8 @@ class Uploader{
   final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://humanaty-gatech.appspot.com');
   
   Future<void> uploadProfilePic(File imageFile) async {
+    assert(imageFile != null);
+    
     String filePath = 'users/$uid/profilePicture.png';
     StorageReference storageRef = _storage.ref().child(filePath);
     storageRef.putFile(imageFile);

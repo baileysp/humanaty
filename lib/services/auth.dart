@@ -59,6 +59,10 @@ class AuthService with ChangeNotifier {
   }
 
   Future<bool> createUserWithEmailAndPassword(String displayName, String email, String password) async {
+    displayName = displayName.trim();
+    email = email.trim();
+    password = password.trim();
+    
     try {
       _status = Status.Authenticating;
       notifyListeners();

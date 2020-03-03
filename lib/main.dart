@@ -35,7 +35,7 @@ class Main extends StatelessWidget {
           routes: {
             '/home': (context) => BottomNavBarRouter(),
             '/login': (context) => LoginPage(),
-            '/map': (context) => Map(),
+            '/map': (context) => GoogleMap(),
             '/settings': (context) => Settings(),
             '/events': (context) => Events(),
             '/registration': (context) => RegisterPage(),

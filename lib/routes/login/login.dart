@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
     return Scaffold(
-      appBar: HumanatyAppBar(actions: <Widget>[continueAnonymously(_auth)],),
+      appBar: HumanatyAppBar(actions: <Widget>[_continueAnonymously(_auth)],),
       body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),
@@ -47,37 +47,37 @@ class _LoginPageState extends State<LoginPage> {
             Text('Sign in with huMANAty', 
               style: TextStyle(fontSize: 16)),
             SizedBox(height: 50),
-            errorText(),
+            _errorText(),
             Form(
                 key: _signInFormKey,
                 child: Column(
                   children: <Widget>[
-                    emailField(),
-                    passwordField(),
+                    _emailField(),
+                    _passwordField(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[forgotPassword()],
+                      children: <Widget>[_forgotPassword()],
                     ),
                     SizedBox(height: 80.0),
-                    loginButton(_auth),
+                    _loginButton(_auth),
                     SizedBox(height: 16.0),
-                    googleSignIn(_auth),
+                    _googleSignIn(_auth),
                     SizedBox(height: 40.0),
-                    newUser(_auth)
+                    _newUser()
                   ],
                 ))
           ]),
     );
   }
 
-  Widget errorText() {
+  Widget _errorText() {
     return SizedBox(
         height: 20,
         child: Text(_errorMessage != null ? _errorMessage : '',
             style: TextStyle(color: Colors.red, fontSize: 13.0)));
   }
 
-  Widget emailField() {
+  Widget _emailField() {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget passwordField() {
+  Widget _passwordField() {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget loginButton(AuthService user) {
+  Widget _loginButton(AuthService _auth) {
     return Container(
       width: double.infinity,
       height: 50.0,
@@ -133,25 +133,25 @@ class _LoginPageState extends State<LoginPage> {
               String email = _emailController.text.trim();
               String password = _passwordController.text;
 
-              if (!await user.signInWithEmailAndPassword(email, password)) {
+              if (!await _auth.signInWithEmailAndPassword(email, password)) {
                 setState(() {
-                  _errorMessage = user.error;
+                  _errorMessage = _auth.error;
                   _signInFormKey.currentState.reset();
                 });
               }
             }
           },
-          child: Text(user.status == Status.Authenticating ? 'Logging In' : 'Login',
+          child: Text(_auth.status == Status.Authenticating ? 'Logging In' : 'Login',
             style: TextStyle(color: Colors.white, fontSize: 16.0))),
     );
   }
 
-  Widget googleSignIn(AuthService user) {
+  Widget _googleSignIn(AuthService _auth) {
     return Container(
       height: 50.0,
       child: RaisedButton(
           onPressed: () async {
-            if (!await user.signInWithGoogle()) {}
+            if (!await _auth.signInWithGoogle()) {}
           },
           color: Colors.white,
           //shape: RoundedRectangleBorder(side: BorderSide(width: 2.0)),
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget newUser(user) {
+  Widget _newUser() {
     return FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         onPressed: () {
@@ -173,15 +173,15 @@ class _LoginPageState extends State<LoginPage> {
         child: Text('Don\'t have an account? Sign up'));
   }
 
-  Widget forgotPassword() {
+  Widget _forgotPassword() {
     return InkWell(
       onTap:() => showDialog(context: context, builder: (_) {return ResetDialog();}),
       child: Text('Forgot Password?'));
   }
 
-  Widget continueAnonymously(AuthService user) {
+  Widget _continueAnonymously(AuthService _auth) {
     return FlatButton(
-      onPressed:() => user.signinAnon(),
+      onPressed:() => _auth.signinAnon(),
       child: Text('Skip for now',
         style: TextStyle(color: Colors.black))
     );
