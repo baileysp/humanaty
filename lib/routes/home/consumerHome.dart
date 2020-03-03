@@ -57,11 +57,11 @@ List<HumanatyEvent> testEvents = [
 
 List<HumanatyEvent> displayedEvents = testEvents;
 
-class HomePage extends StatefulWidget {
-  HomePageState createState() => HomePageState();
+class ConsumerHomePage extends StatefulWidget {
+  ConsumerHomePageState createState() => ConsumerHomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class ConsumerHomePageState extends State<ConsumerHomePage> {
   @override
   Widget build(BuildContext context) {
     //final _auth = Provider.of<AuthService>(context);
@@ -124,18 +124,18 @@ class HomePageState extends State<HomePage> {
 
 
 
-class BottomNavBarRouter extends StatefulWidget {
+class ConsumerRouter extends StatefulWidget {
   @override
-  BottomNavBarRouterState createState() => BottomNavBarRouterState();
+  ConsumerRouterState createState() => ConsumerRouterState();
 }
 
-class BottomNavBarRouterState extends State<BottomNavBarRouter> {
+class ConsumerRouterState extends State<ConsumerRouter> {
   int _navIndex = 0;
   ScrollController _scrollController = ScrollController();
   final _bottomNavBarKey = GlobalKey<ScaffoldState>();
 
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [Loading(), HomePage(), Map(), Map()];
+  final _navigationOptions = [Loading(), ConsumerHomePage(), Map(), Map()];
 
   @override
   void initState() {

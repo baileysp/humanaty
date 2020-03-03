@@ -4,7 +4,8 @@ Be sure to add new routes here
 */
 
 export 'events/events.dart';
-export 'home/home.dart';
+export 'home/consumerHome.dart';
+export 'home/hostHome.dart';
 export 'login/login.dart';
 export 'map/map.dart';
 export 'settings/settings.dart';

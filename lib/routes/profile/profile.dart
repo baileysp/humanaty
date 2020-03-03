@@ -71,33 +71,39 @@ class ProfileState extends State<Profile> {
     );
   }
 
+  Widget _header1(String displayName, String photoUrl){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      );
+  }
+
   Widget _header(String displayName, String photoUrl) {
     return Padding(
       padding: EdgeInsets.only(right: 16, left: 16),
       child: Row(
+        //mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          SizedBox(width: 150, height: 150, 
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              //crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0, bottom: 16),
-                    child: CircleAvatar(
-                      radius: 70,
-                      backgroundImage: NetworkImage(photoUrl),
-                      backgroundColor: Pallete.humanGreen,
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed:() async {
-                      await showModalBottomSheet(context: context, builder: (context){ return ImageOptions();},
-                        backgroundColor: Colors.transparent);},
-                  )
-              ],
-            )),
+        Stack(
+           alignment: Alignment.bottomRight,
+           //crossAxisAlignment: CrossAxisAlignment.end,
+             children: <Widget>[
+               Padding(
+                 padding: const EdgeInsets.only(right: 20.0, bottom: 16),
+                 child: CircleAvatar(
+                   radius: 50,
+                   backgroundImage: NetworkImage(photoUrl),
+                   backgroundColor: Pallete.humanGreen,
+                 ),
+               ),
+               IconButton(
+                 icon: Icon(Icons.edit),
+                 onPressed:() async {
+                   await showModalBottomSheet(context: context, builder: (context){ return ImageOptions();},
+                     backgroundColor: Colors.transparent);},
+               )
+           ],
+         ),
           Container(
             height: 100,
             width: 200,
@@ -135,7 +141,7 @@ class ProfileState extends State<Profile> {
     return ListTile(
       title: Text('Email'),
       trailing: SizedBox(
-        width: 300,
+        width: 250,
         child: TextFormField(
           controller: _emailController,
           focusNode: _emailFocus,

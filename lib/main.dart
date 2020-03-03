@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanaty/common/widgets.dart';
+import 'package:humanaty/models/appmode.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:logger/logger.dart';
@@ -20,31 +21,60 @@ void main() {
   runApp(Main());
 }
 
+// class Main extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ChangeNotifierProvider(
+//       create: (_) => AuthService.instance(),
+//       child: Consumer(builder: (context, AuthService user, _) {
+//         return MaterialApp(
+//           debugShowCheckedModeBanner: false,
+//           title: "Humanaty",
+//           theme: ThemeData(fontFamily: 'Nuninto_Sans'),
+
+//           home: LandingPage(),
+//           routes: {
+//             '/home': (context) => BottomNavBarRouter(),
+//             '/login': (context) => LoginPage(),
+//             '/map': (context) => GoogleMap(),
+//             '/settings': (context) => Settings(),
+//             '/events': (context) => Events(),
+//             '/registration': (context) => RegisterPage(),
+//             //'/profile' : (context) => Profile()
+//             //'/imageEdit' : (context) => ImageEdit(),
+//           },
+//         );
+//       }),
+//     );
+//   }
+// }
+
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthService.instance(),
-      child: Consumer(builder: (context, AuthService user, _) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: "Humanaty",
-          theme: ThemeData(fontFamily: 'Nuninto_Sans'),
+    return MultiProvider(
+      providers:[
+        ChangeNotifierProvider(create:(_) => AuthService.instance()),
+        ChangeNotifierProvider(create:(_)  => AppMode())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Humanaty",
+        theme: ThemeData(fontFamily: 'Nuninto_Sans'),
 
-          home: LandingPage(),
-          routes: {
-            '/home': (context) => BottomNavBarRouter(),
-            '/login': (context) => LoginPage(),
-            '/map': (context) => GoogleMap(),
-            '/settings': (context) => Settings(),
-            '/events': (context) => Events(),
-            '/registration': (context) => RegisterPage(),
-            //'/profile' : (context) => Profile()
-            //'/imageEdit' : (context) => ImageEdit(),
+        home: LandingPage(),
+        routes: {
+          '/home': (context) => ConsumerRouter(),
+          '/login': (context) => LoginPage(),
+          '/map': (context) => GoogleMap(),
+          '/settings': (context) => Settings(),
+          '/events': (context) => Events(),
+          '/registration': (context) => RegisterPage(),
+          //'/profile' : (context) => Profile()
+          //'/imageEdit' : (context) => ImageEdit(),
           },
-        );
-      }),
-    );
+        )
+      );
   }
 }
 
@@ -52,6 +82,7 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
+    final _mode = Provider.of<AppMode>(context);
     switch (_auth.status) {
       case Status.Uninitialized:
         return Loading();
@@ -60,7 +91,8 @@ class LandingPage extends StatelessWidget {
         return LoginPage();
       case Status.Anon:
       case Status.Authenticated:
-        return BottomNavBarRouter();
+        if (_mode.isConsumerMode()) return ConsumerRouter();
+        else return HostRouter();
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
+import 'package:humanaty/models/appmode.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
@@ -11,30 +12,33 @@ class HumanatyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
-    
+    final _mode = Provider.of<AppMode>(context);
+    print(_mode.mode);    
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: _auth.user.uid).userData,
       builder: (context, snapshot) {
-        if (snapshot.hasData || _auth.status == Status.Anon) {
+        if (snapshot.hasData || _auth.isAnonUser()) {
           UserData userData = snapshot.data;
-          return drawer(_auth, userData, context);
+          return drawer(context, _auth, userData, _mode);
         }
+        print(snapshot);
         //Navigator.pop(context);
         //_auth.signOut();
         return Loading();
       });
   }
 
-  Widget drawer(AuthService _auth, UserData userData, BuildContext context) {
+  Widget drawer(BuildContext context, AuthService _auth, UserData userData, AppMode _mode) {
     return Drawer(
         child: ListView(
         children: <Widget>[
-          DrawerHeader(child: _auth.status == Status.Anon ? _anonHeader() : _userHeader(context, userData)),
+          DrawerHeader(child: _auth.isAnonUser() ? _anonHeader() : _userHeader(context, userData)),
           _profileTile(context, _auth.status, userData),
           _settingsTile(),
           _loginTile(context, _auth),
           Divider(),
-          _aboutTile()
+          _aboutTile(),
+          _switchModeTile(context, _mode)
         ],
     ));
   }
@@ -46,6 +50,7 @@ class HumanatyDrawer extends StatelessWidget {
   }
 
   Widget _userHeader(BuildContext context, UserData userData){
+    //print(userData.photoUrl);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
@@ -91,7 +96,7 @@ class HumanatyDrawer extends StatelessWidget {
 
   Widget _loginTile(BuildContext context, AuthService _auth){
     return ListTile(
-      title: Text(_auth.status == Status.Anon ? 'Login' : 'Sign Out'),
+      title: Text(_auth.isAnonUser() ? 'Login' : 'Sign Out'),
       onTap: () {
         Navigator.pop(context);
         _auth.signOut();
@@ -102,7 +107,16 @@ class HumanatyDrawer extends StatelessWidget {
   Widget _aboutTile(){
     return ListTile(
       title: Text('About'),
-      onTap: () {},
+      onTap:() {},
+    );
+  }
+
+  Widget _switchModeTile(BuildContext context, AppMode _mode){
+    return ListTile(
+      title: Text('Currently in ${_mode.mode}, Press to Switch'),
+      onTap:() {
+        Navigator.pop(context);
+        _mode.switchMode();}
     );
   }
 }

@@ -25,6 +25,7 @@ class AuthService with ChangeNotifier {
   Status get status => _status;
   User get user => _user;
   String get error => _error;
+  bool isAnonUser() => _status == Status.Anon;
 
   User _userFromFirebaseUser(FirebaseUser user){
     return user != null ? User(uid: user.uid) : null;
@@ -48,6 +49,7 @@ class AuthService with ChangeNotifier {
       AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, 
         password: password);
+      //print(result);  
       return result != null;
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
