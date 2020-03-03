@@ -49,7 +49,11 @@ class _ImageOptionsState extends State<ImageOptions>{
   }
 
   Future<void> _pickImage(BuildContext context, ImageSource imagesource) async{
-    File selected = await ImagePicker.pickImage(source: imagesource);
+    File selected;
+    
+    try{selected = await ImagePicker.pickImage(source: imagesource);}
+    catch(error){}
+    
     if (selected != null)
       _imageEditReturn = await Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ImageEdit(file: selected)));

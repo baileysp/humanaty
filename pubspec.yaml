@@ -37,6 +37,7 @@ dependencies:
   # Add the dependecies for Google SignIn, necessary for firebaseAuth plugin
   google_sign_in: ^4.1.1
   provider: ^4.0.2
+  flutter_google_places: ^0.2.4
   google_maps_flutter: 0.5.21+15
   
   #loading indicators

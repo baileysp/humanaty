@@ -1,10 +1,14 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:loader_search_bar/loader_search_bar.dart';
 import 'package:provider/provider.dart';
+
 /**
  * Current TODOs:
  * 1. Reuseable event card widget
@@ -73,7 +77,7 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
           children: <Widget>[
             // mainSearch,
             title,
-            searchBar,
+            searchBar(),
             // HumanatyEventList(events: testEvents),
             ListView.builder(
               padding: EdgeInsets.all(0),
@@ -105,7 +109,7 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
       ));
 
   //TODO: Build searchbar widget, no existing searchbar
-  Widget searchBar = Container(
+  Widget searchBar1 = Container(
       padding: const EdgeInsets.fromLTRB(36, 20, 36, 10),
       child: TextField(
         decoration: InputDecoration(hintText: "City name here..."),
@@ -119,6 +123,29 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
           // });
         },
       ));
+
+  Widget searchBar(){
+    return Container(
+      padding: EdgeInsets.fromLTRB(36, 20, 36, 10),
+      child: TextFormField(
+        onTap:() async{
+          String kGoogleApiKey = 'AIzaSyD56-s1CZFMTTj9fH-buXL7SQMYEPkZfKo';
+          var p = await PlacesAutocomplete.show(
+                context: context,
+                apiKey: kGoogleApiKey, 
+                mode: Mode.overlay,
+                location: Location(33.880199, -84.512627),
+                radius: 100000
+                );
+          //displayPrediction(p);
+        },
+        
+      )
+    );
+
+  }
+
+
 }
 
 
