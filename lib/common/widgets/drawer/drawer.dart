@@ -16,7 +16,6 @@ class HumanatyDrawer extends StatelessWidget {
       stream: DatabaseService(uid: _auth.user.uid).userData,
       builder: (context, snapshot) {
         if (snapshot.hasData || _auth.status == Status.Anon) {
-          print('updating info');
           UserData userData = snapshot.data;
           return drawer(_auth, userData, context);
         }
@@ -30,33 +29,36 @@ class HumanatyDrawer extends StatelessWidget {
     return Drawer(
         child: ListView(
         children: <Widget>[
-          DrawerHeader(child: _auth.status == Status.Anon ? anonHeader() : userHeader(userData)),
-          profileTile(context, _auth.status, userData),
-          settingsTile(),
-          loginTile(context, _auth),
+          DrawerHeader(child: _auth.status == Status.Anon ? _anonHeader() : _userHeader(context, userData)),
+          _profileTile(context, _auth.status, userData),
+          _settingsTile(),
+          _loginTile(context, _auth),
           Divider(),
-          aboutTile()
+          _aboutTile()
         ],
     ));
   }
 
-  Widget anonHeader(){
+  Widget _anonHeader(){
     return Container(
       padding: EdgeInsets.only(top: 32.0),
       child: Text('Welcome to huMANAty', style: TextStyle(fontSize: 16)));
   }
 
-  Widget userHeader(UserData userData){
+  Widget _userHeader(BuildContext context, UserData userData){
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        if(userData.photoUrl != null) 
-          Hero(
-            tag: 'avatar',
-            child: CircleAvatar(radius: 70, 
-              backgroundColor: Pallete.humanGreen,
-              backgroundImage : NetworkImage(userData.photoUrl)),
-          ),
+        InkWell(
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          onTap: (){
+            Navigator.pop(context);
+            Navigator.push(context,MaterialPageRoute(builder: (context) => Profile(prevUserData: userData)));
+          },
+          child: CircleAvatar(radius: 70, 
+            backgroundColor: Pallete.humanGreen,
+            backgroundImage : NetworkImage(userData.photoUrl)),),
         SizedBox(width: 8),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -68,7 +70,7 @@ class HumanatyDrawer extends StatelessWidget {
     );
   }
 
-  Widget profileTile(BuildContext context, Status status, UserData userData){
+  Widget _profileTile(BuildContext context, Status status, UserData userData){
     return ListTile(
       title: Text('Profile'),
       onTap: (){
@@ -80,14 +82,14 @@ class HumanatyDrawer extends StatelessWidget {
       },);
   }
 
-  Widget settingsTile(){
+  Widget _settingsTile(){
     return ListTile(
       title: Text('Settings'),
       onTap: (){},
     );
   }
 
-  Widget loginTile(BuildContext context, AuthService _auth){
+  Widget _loginTile(BuildContext context, AuthService _auth){
     return ListTile(
       title: Text(_auth.status == Status.Anon ? 'Login' : 'Sign Out'),
       onTap: () {
@@ -97,7 +99,7 @@ class HumanatyDrawer extends StatelessWidget {
     );
   }
 
-  Widget aboutTile(){
+  Widget _aboutTile(){
     return ListTile(
       title: Text('About'),
       onTap: () {},

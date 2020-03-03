@@ -84,13 +84,10 @@ class ProfileState extends State<Profile> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0, bottom: 16),
-                    child: Hero(
-                      tag : 'avatar',
-                      child: CircleAvatar(
-                        radius: 70,
-                        backgroundImage: NetworkImage(photoUrl),
-                        backgroundColor: Pallete.humanGreen,
-                      ),
+                    child: CircleAvatar(
+                      radius: 70,
+                      backgroundImage: NetworkImage(photoUrl),
+                      backgroundColor: Pallete.humanGreen,
                     ),
                   ),
                   IconButton(
