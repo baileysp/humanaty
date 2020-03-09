@@ -15,10 +15,7 @@ void main() {
       //systemNavigationBarColor: Colors.white, //bottom bar color
       //systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
       ));
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
-    runApp(Main());
-  });
+  runApp(Main());
 }
 
 // class Main extends StatelessWidget {
@@ -52,6 +49,7 @@ void main() {
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);    
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => AuthService.instance()),

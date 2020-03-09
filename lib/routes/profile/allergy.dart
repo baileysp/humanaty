@@ -36,6 +36,7 @@ Widget updateAllergiesBtn(BuildContext context, AuthService auth, Map userAllerg
   return FlatButton(
     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     onPressed: () async {
+      
       await DatabaseService(uid: auth.user.uid).updateAllergyData(userAllergies);
       Navigator.of(context).pop();},
     child: Text('update', style: TextStyle(color: Colors.black)));

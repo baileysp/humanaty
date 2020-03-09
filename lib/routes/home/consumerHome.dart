@@ -130,11 +130,6 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
       child: TextFormField(
         onTap:() async{
           String kGoogleApiKey = 'AIzaSyDKNJ1TI_zJnzqBEmMzjlpw3tUBdoCK66g';
-          var _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
-          var result = await _places.queryAutocomplete("smyrna");
-          print(result.status);
-          print(result.predictions.toString());
-          //String kGoogleApiKey = "test";
           Prediction p = await PlacesAutocomplete.show(
                 context: context,
                 apiKey: kGoogleApiKey, 

@@ -18,7 +18,7 @@ class DatabaseService{
     return await userCollection.document(uid).setData({
       'aboutMe' : 'Tell future guests about your qualifications',
       'accessibilityAccommodations' : false,
-      'allergies' : Allergy().allergyMap,
+      'allergies' : [],
       'birthday' : currentYMD.substring(0, currentYMD.indexOf(' ')),
       'consumerRating' : 5,
       'displayName': displayName,
@@ -33,9 +33,9 @@ class DatabaseService{
     return UserData(
       aboutMe: snapshot.data['aboutMe'],
       accessibilityAccommodations: snapshot.data['accessibilityAccommodations'],
-      allergies: Map.from(snapshot.data['allergies']),
+      allergies: Allergy().allergyMapFromList(snapshot.data['allergies'].cast<String>()),
       birthday: DateTime.parse(snapshot.data['birthday']),
-      consumerRating: snapshot.data['consumerRating'].toDouble(),
+      guestRating: snapshot.data['guestRating'].toDouble(),
       displayName: snapshot.data['displayName'],
       email: snapshot.data['email'],
       hostRating: snapshot.data['hostRating'].toDouble(),
@@ -55,9 +55,9 @@ class DatabaseService{
     });
   }
     
-  Future<void> updateAllergyData(Map userAllergies) async{
+  Future<void> updateAllergyData(Map<String, bool> userAllergies) async{
     return await userCollection.document(uid).updateData({
-      'allergies' : userAllergies
+      'allergies' : Allergy().allergyListFromMap(userAllergies)
     });
   }
 

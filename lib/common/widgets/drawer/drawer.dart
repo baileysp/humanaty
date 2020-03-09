@@ -69,7 +69,7 @@ class HumanatyDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Text(userData.displayName, style: TextStyle(fontSize: 16)),
-            HumanatyRating(rating: userData.consumerRating, starSize: 15)
+            HumanatyRating(rating: userData.guestRating, starSize: 15)
         ],)
       ],
     );
