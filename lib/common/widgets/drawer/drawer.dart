@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
-import 'package:humanaty/models/appmode.dart';
+import 'package:humanaty/models/app_mode.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';

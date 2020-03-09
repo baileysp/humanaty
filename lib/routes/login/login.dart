@@ -4,6 +4,7 @@ import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/routes/login/resetDialog.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:humanaty/util/size_config.dart';
 import 'package:humanaty/util/validator.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthService>(context);
+    SizeConfig().init(context);
     return Scaffold(
       appBar: HumanatyAppBar(actions: <Widget>[_continueAnonymously(_auth)],),
       body: ListView(

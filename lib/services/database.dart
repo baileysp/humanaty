@@ -7,7 +7,9 @@ class DatabaseService{
   final String uid;
   DatabaseService({this.uid});
 
+  //final databaseReference = Firestore.instance;
   final CollectionReference userCollection = Firestore.instance.collection('users');
+  final CollectionReference eventCollection = Firestore.instance.collection('events');
 
   Stream<UserData> get userData => userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
    

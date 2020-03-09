@@ -77,7 +77,7 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
           children: <Widget>[
             // mainSearch,
             title,
-            searchBar(),
+            searchBar(context),
             // HumanatyEventList(events: testEvents),
             ListView.builder(
               padding: EdgeInsets.all(0),
@@ -124,19 +124,25 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
         },
       ));
 
-  Widget searchBar(){
+  Widget searchBar(BuildContext context){
     return Container(
       padding: EdgeInsets.fromLTRB(36, 20, 36, 10),
       child: TextFormField(
         onTap:() async{
-          String kGoogleApiKey = 'AIzaSyD56-s1CZFMTTj9fH-buXL7SQMYEPkZfKo';
-          var p = await PlacesAutocomplete.show(
+          String kGoogleApiKey = 'AIzaSyDKNJ1TI_zJnzqBEmMzjlpw3tUBdoCK66g';
+          var _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+          var result = await _places.queryAutocomplete("smyrna");
+          print(result.status);
+          print(result.predictions.toString());
+          //String kGoogleApiKey = "test";
+          Prediction p = await PlacesAutocomplete.show(
                 context: context,
                 apiKey: kGoogleApiKey, 
-                mode: Mode.overlay,
-                location: Location(33.880199, -84.512627),
-                radius: 100000
+                //mode: Mode.overlay,
+                //location: Location(33.880199, -84.512627),
+                //radius: 10000000
                 );
+          print(p);
           //displayPrediction(p);
         },
         

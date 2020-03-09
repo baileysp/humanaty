@@ -4,13 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/database.dart';
-import 'package:humanaty/services/firebaseError.dart';
+import 'package:humanaty/services/firebase_error.dart';
 import 'package:humanaty/util/logger.dart';
 
 enum Status {Uninitialized, Authenticated, Authenticating, Unauthenticated, Anon}
 
 class AuthService with ChangeNotifier {
   final log = getLogger('AuthService');
+  final _fbError = FirebaseError();
   
   FirebaseAuth _firebaseAuth;
   User _user;
@@ -53,7 +54,7 @@ class AuthService with ChangeNotifier {
       return result != null;
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
-      _error = errorConverter(error);
+      _error = _fbError.errorString(error);
       notifyListeners();
       _onException('signInWithEmailAndPass', error);
       return false;
@@ -77,7 +78,7 @@ class AuthService with ChangeNotifier {
       return result != null;
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
-      _error = errorConverter(error);
+      _error = _fbError.errorString(error);
       notifyListeners();
       _onException('createUserWithEmailAndPass', error);
       return false;
@@ -113,7 +114,7 @@ class AuthService with ChangeNotifier {
     } on PlatformException catch (error) {
       _status = Status.Unauthenticated;
       print(error.toString());
-      _error = errorConverter(error);
+      _error = _fbError.errorString(error);
       notifyListeners();
       _onException('signInWithGoogle', error);
       return false;
@@ -125,7 +126,7 @@ class AuthService with ChangeNotifier {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
       return true;
     } on PlatformException catch (error) {
-      _error = errorConverter(error);
+      _error = _fbError.errorString(error);
       return false;
     }
   }
