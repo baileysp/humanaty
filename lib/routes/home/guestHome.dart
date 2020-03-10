@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -61,11 +60,12 @@ List<HumanatyEvent> testEvents = [
 
 List<HumanatyEvent> displayedEvents = testEvents;
 
-class ConsumerHomePage extends StatefulWidget {
-  ConsumerHomePageState createState() => ConsumerHomePageState();
+class GuestHomePage extends StatefulWidget {
+  const GuestHomePage({Key key}): super(key:key);
+  GuestHomePageState createState() => GuestHomePageState();
 }
 
-class ConsumerHomePageState extends State<ConsumerHomePage> {
+class GuestHomePageState extends State<GuestHomePage> {
   @override
   Widget build(BuildContext context) {
     //final _auth = Provider.of<AuthService>(context);
@@ -93,7 +93,7 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
         )));
   }
 
-  Widget logout(AuthService _auth){
+  Widget logout(AuthService _auth) {
     Navigator.pop(context);
     _auth.signOut();
   }
@@ -124,86 +124,103 @@ class ConsumerHomePageState extends State<ConsumerHomePage> {
         },
       ));
 
-  Widget searchBar(BuildContext context){
+  Widget searchBar(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(36, 20, 36, 10),
-      child: TextFormField(
-        onTap:() async{
-          String kGoogleApiKey = 'AIzaSyDKNJ1TI_zJnzqBEmMzjlpw3tUBdoCK66g';
-          Prediction p = await PlacesAutocomplete.show(
-                context: context,
-                apiKey: kGoogleApiKey, 
-                //mode: Mode.overlay,
-                //location: Location(33.880199, -84.512627),
-                //radius: 10000000
-                );
-          print(p);
-          //displayPrediction(p);
-        },
-        
-      )
-    );
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(36, 20, 36, 10),
+        child: FlatButton(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Search for huMANAty events...",
+                  style: TextStyle(fontSize: 16),
+                ),
+                Icon(Icons.search)
+              ],
+            ),
+            onPressed:() async{
+              String location = await showSearch(context: context, delegate: MapSearch());
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
 
+
+
+
+            }));
   }
-
-
 }
 
-
-
-
-class ConsumerRouter extends StatefulWidget {
+class GuestRouter extends StatefulWidget {
   @override
-  ConsumerRouterState createState() => ConsumerRouterState();
+  GuestRouterState createState() => GuestRouterState();
 }
 
-class ConsumerRouterState extends State<ConsumerRouter> {
+class GuestRouterState extends State<GuestRouter> {
   int _navIndex = 0;
   ScrollController _scrollController = ScrollController();
   final _bottomNavBarKey = GlobalKey<ScaffoldState>();
 
-  static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [Loading(), ConsumerHomePage(), Map(), Map()];
+  static const TextStyle navStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final _navigationOptions = [Loading(), GuestHomePage(), MapPage(), MapPage()];
 
   @override
   void initState() {
     _navIndex = 1;
     super.initState();
   }
-  
+
+  final List<Widget> pages = [
+    Loading(),
+    GuestHomePage(key: PageStorageKey('GuestHome')),
+    MapPage(key: PageStorageKey('MapPage')),
+    Settings()//key: PageStorageKey('MapPage'))
+  ];
+  final PageStorageBucket bucket = PageStorageBucket();
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _bottomNavBarKey,
-      drawer: HumanatyDrawer(),
-      bottomNavigationBar: bottomNavBar(),
-      body: _navigationOptions[_navIndex]
+        key: _bottomNavBarKey,
+        drawer: HumanatyDrawer(),
+        bottomNavigationBar: bottomNavBar(),
+        // body: PageStorage(
+        //   child: pages[_navIndex],
+        //   bucket: bucket
+        // ));
+        body: _navigationOptions[_navIndex]);
+  }
+
+  Widget bottomNavBar() {
+    return BottomNavigationBar(
+      currentIndex: _navIndex,
+      onTap: selectNav,
+      type: BottomNavigationBarType.fixed,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
+        BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
+        BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
+        BottomNavigationBarItem(icon: Icon(Icons.library_books), title: Text("My Events")),
+      ],
+      selectedItemColor: Pallete.humanGreen,
     );
   }
 
-  Widget bottomNavBar(){
-    return BottomNavigationBar(
-        currentIndex: _navIndex,
-        onTap: selectNav,
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
-          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
-          BottomNavigationBarItem(icon: Icon(Icons.library_books), title: Text("My Events")),
-        ],
-        selectedItemColor: Pallete.humanGreen,
-      );
-  }
   void selectNav(int index) {
     print(index);
     setState(() {
-      index != 0 ? _navIndex = index : _bottomNavBarKey.currentState.openDrawer();    
+      index != 0
+          ? _navIndex = index
+          : _bottomNavBarKey.currentState.openDrawer();
     });
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _scrollController.dispose();
     super.dispose();
   }

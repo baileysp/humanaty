@@ -61,9 +61,9 @@ class Main extends StatelessWidget {
           theme: ThemeData(fontFamily: 'Nuninto_Sans'),
           home: LandingPage(),
           routes: {
-            '/home': (context) => ConsumerRouter(),
+            '/home': (context) => GuestRouter(),
             '/login': (context) => LoginPage(),
-            '/map': (context) => GoogleMap(),
+            '/map': (context) => MapPage(),
             '/settings': (context) => Settings(),
             '/events': (context) => Events(),
             '/registration': (context) => RegisterPage(),
@@ -88,7 +88,7 @@ class LandingPage extends StatelessWidget {
       case Status.Anon:
       case Status.Authenticated:
         if (_mode.isConsumerMode())
-          return ConsumerRouter();
+          return GuestRouter();
         else
           return HostRouter();
     }
