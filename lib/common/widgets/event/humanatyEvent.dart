@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:humanaty/routes/events/events.dart';
 
 class HumanatyEvent extends StatelessWidget {
+//TODO move to models folder
   HumanatyEvent(
     {
       this.eventName,
