@@ -34,7 +34,7 @@ class HumanatyDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(child: _auth.isAnonUser() ? _anonHeader() : _userHeader(context, userData)),
           _profileTile(context, _auth.status, userData),
-          _settingsTile(),
+          _settingsTile(context, userData),
           _loginTile(context, _auth),
           Divider(),
           _aboutTile(),
@@ -87,10 +87,10 @@ class HumanatyDrawer extends StatelessWidget {
       },);
   }
 
-  Widget _settingsTile(){
+  Widget _settingsTile(BuildContext context, UserData userData){
     return ListTile(
       title: Text('Settings'),
-      onTap: (){},
+      onTap: (){Navigator.of(context).pushNamed('/settings', arguments: userData);},
     );
   }
 

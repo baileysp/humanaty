@@ -67,7 +67,7 @@ class Main extends StatelessWidget {
             '/settings': (context) => Settings(),
             '/events': (context) => Events(),
             '/registration': (context) => RegisterPage(),
-            //'/profile' : (context) => Profile()
+                        //'/profile' : (context) => Profile()
             //'/imageEdit' : (context) => ImageEdit(),
           },
         ));

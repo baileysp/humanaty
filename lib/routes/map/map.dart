@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/common/widgets/googlemaps/google_maps.dart';
+import 'package:humanaty/routes/map/dateSelect.dart';
+import 'package:humanaty/routes/map/filterSelect.dart';
 
 class MapPage extends StatefulWidget{
   const MapPage({Key key}): super(key:key);
@@ -13,10 +15,10 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-          children: <Widget>[MapsWidget(), filter(context)],
+          children: <Widget>[MapsWidget(), filter(context),],
         ),
         appBar:
-            HumanatyAppBar(displayBackBtn: false, actions: [search(context)]));
+            HumanatyAppBar(displayBackBtn: true, title: 'Atlanta', actions: [search(context)],));
   }
 
   Widget search(BuildContext context) {
@@ -36,20 +38,34 @@ class _MapPageState extends State<MapPage> {
             child: RaisedButton(
               child: Text("Date", style: TextStyle(fontSize: 16),),
               color: Colors.white, 
-              onPressed: () {}),),
+              onPressed:() async{
+                 String markedDates = await showModalBottomSheet(context: context, builder: (context){ return DateSelect();},
+                     backgroundColor: Colors.white);
+                 if(markedDates != null){
+                   List<String> markedDatesList = markedDates.split(' ');
+                 }
+
+
+              }),),
           SizedBox(width: 8),
           Expanded(
             child: RaisedButton(
               child: Text("Filters", style: TextStyle(fontSize: 16)),
               color: Colors.white, 
-              onPressed: () {}))
+              onPressed:() async{
+                String filters = await showModalBottomSheet(context: context, builder: (context){ return FilterSelect();},
+                     backgroundColor: Colors.white);
+
+
+              }))
         ],
       ),
     );
   }
 
-  final Padding mapContainer = Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Center(
-          child: SizedBox(width: 350.0, height: 400.0, child: MapsWidget())));
+  
+
+  
+
+  
 }

@@ -6,7 +6,8 @@ import 'package:humanaty/services/database.dart';
 class AllergyPage extends StatefulWidget{
   final AuthService auth;
   final Map userAllergies;
-  const AllergyPage({Key key, this.auth, this.userAllergies}): super(key: key);
+  final bool updateButton;
+  const AllergyPage({Key key, this.auth, this.userAllergies, this.updateButton=true}): super(key: key);
   
   @override
   _AllergyPageState createState() => _AllergyPageState();
@@ -15,7 +16,7 @@ class _AllergyPageState extends State<AllergyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: HumanatyAppBar(displayBackBtn: true, title: 'Edit Allergies', actions: [updateAllergiesBtn(context, widget.auth, widget.userAllergies)]),
+      appBar: HumanatyAppBar(displayBackBtn: true, title: 'Edit Allergies', actions: widget.updateButton ? [updateAllergiesBtn(context, widget.auth, widget.userAllergies)] : null),
       body: ListView.builder(
         itemCount: widget.userAllergies.length,
         itemBuilder: (context, index){

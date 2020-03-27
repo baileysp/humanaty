@@ -61,7 +61,7 @@ List<HumanatyEvent> testEvents = [
 List<HumanatyEvent> displayedEvents = testEvents;
 
 class GuestHomePage extends StatefulWidget {
-  const GuestHomePage({Key key}): super(key:key);
+  GuestHomePage({Key key}) : super(key: key);
   GuestHomePageState createState() => GuestHomePageState();
 }
 
@@ -71,11 +71,9 @@ class GuestHomePageState extends State<GuestHomePage> {
     //final _auth = Provider.of<AuthService>(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        //drawer: HumanatyDrawer(),
         body: SingleChildScrollView(
             child: Column(
           children: <Widget>[
-            // mainSearch,
             title,
             searchBar(context),
             // HumanatyEventList(events: testEvents),
@@ -108,26 +106,10 @@ class GuestHomePageState extends State<GuestHomePage> {
         ),
       ));
 
-  //TODO: Build searchbar widget, no existing searchbar
-  Widget searchBar1 = Container(
-      padding: const EdgeInsets.fromLTRB(36, 20, 36, 10),
-      child: TextField(
-        decoration: InputDecoration(hintText: "City name here..."),
-        onChanged: (text) {
-          text = text.toLowerCase();
-          // setState(() {
-          //   displayedEvents = testEvents.where((event) {
-          //     var title = event.eventName.toLowerCase();
-          //     return title.contains(title);
-          //   }).toList();
-          // });
-        },
-      ));
-
   Widget searchBar(BuildContext context) {
     return Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(36, 20, 36, 10),
+        padding: EdgeInsets.fromLTRB(8, 20, 8, 10),
         child: FlatButton(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,13 +121,14 @@ class GuestHomePageState extends State<GuestHomePage> {
                 Icon(Icons.search)
               ],
             ),
-            onPressed:() async{
+            onPressed: () async {
               String location = await showSearch(context: context, delegate: MapSearch());
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
-
-
-
-
+              if(location != null){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
+                //Navigator.of(context).pushNamed('/map');
+                                
+              }
+               //Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
             }));
   }
 }
@@ -155,44 +138,35 @@ class GuestRouter extends StatefulWidget {
   GuestRouterState createState() => GuestRouterState();
 }
 
-class GuestRouterState extends State<GuestRouter> {
+class GuestRouterState extends State<GuestRouter>{
   int _navIndex = 0;
   ScrollController _scrollController = ScrollController();
-  final _bottomNavBarKey = GlobalKey<ScaffoldState>();
-
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  
   static const TextStyle navStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [Loading(), GuestHomePage(), MapPage(), MapPage()];
-
+ 
   @override
   void initState() {
-    _navIndex = 1;
     super.initState();
+    _navIndex = 1;
   }
 
   final List<Widget> pages = [
     Loading(),
     GuestHomePage(key: PageStorageKey('GuestHome')),
     MapPage(key: PageStorageKey('MapPage')),
-    Settings()//key: PageStorageKey('MapPage'))
+    Settings() //key: PageStorageKey('MapPage'))
   ];
   final PageStorageBucket bucket = PageStorageBucket();
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _bottomNavBarKey,
+        key: _scaffoldKey,
         drawer: HumanatyDrawer(),
         bottomNavigationBar: bottomNavBar(),
-        // body: PageStorage(
-        //   child: pages[_navIndex],
-        //   bucket: bucket
-        // ));
-        body: _navigationOptions[_navIndex]);
+        body: PageStorage(child: pages[_navIndex], bucket: bucket));
   }
 
   Widget bottomNavBar() {
@@ -208,14 +182,15 @@ class GuestRouterState extends State<GuestRouter> {
       ],
       selectedItemColor: Pallete.humanGreen,
     );
-  }
+  }    
+    
 
   void selectNav(int index) {
     print(index);
     setState(() {
       index != 0
           ? _navIndex = index
-          : _bottomNavBarKey.currentState.openDrawer();
+          : _scaffoldKey.currentState.openDrawer();
     });
   }
 

@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:google_maps_webservice/directions.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class User {
   final String uid;
@@ -22,7 +25,7 @@ class UserData {
   final double hostRating;
   //final List<String> hostUpcomingEvents
   final bool hostVerified;
-  final Map<String, String> location;
+  final HumanatyLocation location;
   final String photoUrl;
   final String uid;
 
@@ -67,4 +70,34 @@ class Allergy {
     map.forEach((k, v){if(v) allergyList.add(k.toLowerCase());});
     return allergyList;
   }
+}
+
+class HumanatyLocation {
+  final String address;
+  final String city;
+  final GeoPoint geoPoint;  
+  final String state;
+  final int zip;
+  
+  HumanatyLocation({
+    this.address,
+    this.city,
+    this.geoPoint = const GeoPoint(0, 0),  
+    this.state,  
+    this.zip
+  });
+
+  humanantyLocationFromMap(Map<dynamic, dynamic> location){
+    return HumanatyLocation(
+      address: location['address'].toString(),
+      city: location['city'].toString(),
+      geoPoint: location['coordinates'],
+      state: location['state'],
+      zip: location['zip']
+    );
+  }
+  
+  @override
+  String toString() => '${geoPoint.latitude} + ${geoPoint.longitude}';
+
 }

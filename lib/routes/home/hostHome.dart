@@ -36,7 +36,7 @@ class HostRouterState extends State<HostRouter> {
   final _bottomNavBarKey = GlobalKey<ScaffoldState>();
 
   static const TextStyle navStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [Loading(), HostHomePage(), Map(), Map()];
+  final _navigationOptions = [Loading(), HostHomePage(), HostHomePage(), HostHomePage()];
 
   @override
   void initState() {

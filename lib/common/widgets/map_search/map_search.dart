@@ -40,8 +40,8 @@ class MapSearch extends SearchDelegate<String>{
                 leading: Icon(Icons.location_on),
                 title: Text(predLocation.description),
                 onTap: () async{
-                  Location location = await getLocationInfo(predLocation.placeId);
-                  close(context, "${location.lng} + ${location.lat}");
+                  String location = await getLocationInfo(predLocation.placeId);
+                  close(context, location);
                   //Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
                   
                   
@@ -65,10 +65,12 @@ class MapSearch extends SearchDelegate<String>{
     return null;
   }
 
-  Future<Location> getLocationInfo(String placeId) async{ 
+  Future<String> getLocationInfo(String placeId) async{ 
     PlacesDetailsResponse place = await _places.getDetailsByPlaceId(placeId);
     PlaceDetails placeDetail = place.result;
-    Location location = placeDetail.geometry.location;
+    String location = placeDetail.formattedAddress;
+    Location coords = placeDetail.geometry.location;
+    location += '| ${coords.lat} ${coords.lng}';
     //return placeDetail.geometry; 
     return location;
     //print(placeDetail.geometry.viewport);

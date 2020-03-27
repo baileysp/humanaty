@@ -161,6 +161,7 @@ class AuthService with ChangeNotifier {
   }
 
   _onException(String methodName, PlatformException error){
+    print(error);
     String errorString = error.code.toString();
     log.e('$methodName threw $errorString');
   }

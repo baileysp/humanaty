@@ -15,18 +15,19 @@ class DatabaseService{
    
   Future<void> createUserDoc(String displayName, String email) async{
     String currentYMD = DateTime.now().toString();
-    return await userCollection.document(uid).setData({
+    await userCollection.document(uid).setData({
       'aboutMe' : 'Tell future guests about your qualifications',
       'accessibilityAccommodations' : false,
       'allergies' : [],
       'birthday' : currentYMD.substring(0, currentYMD.indexOf(' ')),
-      'consumerRating' : 5,
       'displayName': displayName,
       'email' : email,
+      'guestRating' : 5,
       'hostRating' : 5,
       'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/humanaty-gatech.appspot.com/o/defaultProfilePic%2FdefaultProfilePic.jpg?alt=media&token=e87a7526-daf8-4466-b186-e8703b1da31b',
       'uid': uid
     });
+    await updateUserLocation(HumanatyLocation());
   }
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
@@ -35,10 +36,11 @@ class DatabaseService{
       accessibilityAccommodations: snapshot.data['accessibilityAccommodations'],
       allergies: Allergy().allergyMapFromList(snapshot.data['allergies'].cast<String>()),
       birthday: DateTime.parse(snapshot.data['birthday']),
-      guestRating: snapshot.data['guestRating'].toDouble(),
       displayName: snapshot.data['displayName'],
       email: snapshot.data['email'],
+      guestRating: snapshot.data['guestRating'].toDouble(),
       hostRating: snapshot.data['hostRating'].toDouble(),
+      location: HumanatyLocation().humanantyLocationFromMap(snapshot.data['location']),
       photoUrl: snapshot.data['photoUrl'],
       uid: uid,        
     );
@@ -66,5 +68,19 @@ class DatabaseService{
       'photoUrl' : url
     });
   }
+
+  Future<void> updateUserLocation(HumanatyLocation location) async{
+    print(location.address);
+    await userCollection.document(uid).updateData({
+      'location' : {
+        'address' : location.address,
+        'city' : location.city,
+        'coordinates' : location.geoPoint,
+        'state' : location.state,
+        'zip' : location.zip
+        }
+    });
+  }
+
 
 }//Database Service
