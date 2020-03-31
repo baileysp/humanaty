@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:humanaty/routes/_router.dart';
+import 'package:humanaty/models/user.dart';
 
 class MapSearch extends SearchDelegate<String>{
    GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: 'AIzaSyDKNJ1TI_zJnzqBEmMzjlpw3tUBdoCK66g');
@@ -23,7 +23,6 @@ class MapSearch extends SearchDelegate<String>{
   @override
   Widget buildResults(BuildContext context) {
     return buildSuggestions(context);
-    //return Divider();
   }
 
   @override
@@ -40,11 +39,8 @@ class MapSearch extends SearchDelegate<String>{
                 leading: Icon(Icons.location_on),
                 title: Text(predLocation.description),
                 onTap: () async{
-                  String location = await getLocationInfo(predLocation.placeId);
-                  close(context, location);
-                  //Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
-                  
-                  
+                  HumanatyLocation location = await getLocationInfo(predLocation.placeId);
+                  Navigator.of(context).pop(location.toString());             
                 },
               );
             },
@@ -65,15 +61,32 @@ class MapSearch extends SearchDelegate<String>{
     return null;
   }
 
-  Future<String> getLocationInfo(String placeId) async{ 
+  Future<HumanatyLocation> getLocationInfo(String placeId) async{ 
     PlacesDetailsResponse place = await _places.getDetailsByPlaceId(placeId);
     PlaceDetails placeDetail = place.result;
-    String location = placeDetail.formattedAddress;
+    String address = placeDetail.formattedAddress;
     Location coords = placeDetail.geometry.location;
-    location += '| ${coords.lat} ${coords.lng}';
-    //return placeDetail.geometry; 
+    
+    String city;
+    String state;
+    String zip;
+    
+    List components = placeDetail.addressComponents;
+    for(int i = 0; i < components.length; i++){
+      if(components[i].types.contains('administrative_area_level_1')) state = components[i].longName;
+      if(components[i].types.contains('locality')) city = components[i].longName;
+      if(components[i].types.contains('postal_code')) zip = components[i].longName;
+    }
+    
+    HumanatyLocation location = HumanatyLocation(
+      address: address, 
+      city: city,
+      geoPoint: GeoPoint(coords.lat, coords.lng),
+      state: state,
+      zip: zip);
+    
     return location;
-    //print(placeDetail.geometry.viewport);
+    
   }
   
 }

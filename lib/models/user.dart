@@ -73,11 +73,11 @@ class Allergy {
 }
 
 class HumanatyLocation {
-  final String address;
-  final String city;
-  final GeoPoint geoPoint;  
-  final String state;
-  final int zip;
+  String address;
+  String city;
+  GeoPoint geoPoint;  
+  String state;
+  String zip;
   
   HumanatyLocation({
     this.address,
@@ -86,6 +86,16 @@ class HumanatyLocation {
     this.state,  
     this.zip
   });
+
+  HumanatyLocation.fromString(String string){
+    List list = string.split('|');
+    this.address = list[0];
+    this.city = list[1];
+    List coords = list[2].split('--');
+    this.geoPoint = GeoPoint(double.parse(coords[0]), double.parse(coords[1]));
+    this.state = list[3];
+    this.zip = list[4];
+  }  
 
   humanantyLocationFromMap(Map<dynamic, dynamic> location){
     return HumanatyLocation(
@@ -96,8 +106,12 @@ class HumanatyLocation {
       zip: location['zip']
     );
   }
+
+  bool isEmpty() => address == null;
+
+  bool isNotEmpty() => address != null;
   
   @override
-  String toString() => '${geoPoint.latitude} + ${geoPoint.longitude}';
+  String toString() => '$address|$city|${geoPoint.latitude}-${geoPoint.longitude}|$state|$zip';
 
 }

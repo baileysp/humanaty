@@ -61,10 +61,12 @@ class Main extends StatelessWidget {
           theme: ThemeData(fontFamily: 'Nuninto_Sans'),
           home: LandingPage(),
           routes: {
+            '/create_event': (context) => CreateEvent(),
             '/home': (context) => GuestRouter(),
             '/login': (context) => LoginPage(),
             '/map': (context) => MapPage(),
             '/settings': (context) => Settings(),
+            
             '/events': (context) => Events(),
             '/registration': (context) => RegisterPage(),
                         //'/profile' : (context) => Profile()

@@ -3,6 +3,7 @@ Router to hook up all screens to main.dart
 Be sure to add new routes here
 */
 
+export 'event/create_event.dart';
 export 'events/events.dart';
 export 'home/guestHome.dart';
 export 'home/hostHome.dart';

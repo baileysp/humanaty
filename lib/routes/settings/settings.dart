@@ -42,29 +42,19 @@ class _SettingsState extends State<Settings> {
 
   Widget _currentLocation(BuildContext context, AuthService _auth, UserData userData){
     return ListTile(
+      isThreeLine: true,
       title: Text('Current Location'),
-      trailing: Row(
+      trailing: IconButton(icon: Icon(Icons.location_on), onPressed: null),
+      subtitle: Row(
       mainAxisSize: MainAxisSize.min,
        children: <Widget>[
           Text((userData.location.address == null) ? 'No Idea' : userData.location.address),
-          IconButton(
-            icon: Icon(Icons.location_on), 
-            onPressed: (){//get users location
-            },)
        ],
       ),
       onTap:() async{
-        String returnString = await showSearch(context: context, delegate: MapSearch());
-        if(returnString == null) return;
-
-        List<String> locationList = returnString.split('|');
-        String addr = locationList[0];
-        List coordsList = locationList[1].trim().split(' ');
-        GeoPoint coords = GeoPoint(double.parse(coordsList[0]), double.parse(coordsList[1]));
-        HumanatyLocation location = HumanatyLocation(address: addr, geoPoint: coords);
-        DatabaseService(uid: _auth.user.uid).updateUserLocation(location);
-                
-        print(userData.location);
+        String location = await showSearch(context: context, delegate: MapSearch());
+        if(location == null) return;
+        DatabaseService(uid: _auth.user.uid).updateUserLocation(HumanatyLocation.fromString(location));
       },
     );
   }

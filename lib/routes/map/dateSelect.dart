@@ -54,7 +54,7 @@ class _DateSelectState extends State<DateSelect> {
         todayButtonColor: Colors.transparent,
         todayTextStyle: TextStyle(color: Colors.black),
         weekendTextStyle: TextStyle(color: Colors.black),
-        headerTextStyle: TextStyle(fontSize: 20.0, color: Colors.black, fontFamily: 'NunitoSans'),
+        headerTextStyle: TextStyle(fontSize: 20.0, color: Colors.black, fontFamily: 'Nuninto_Sans'),
         iconColor: Pallete.humanGreen,
         weekdayTextStyle: TextStyle(color: Colors.black),
         //selectedDateTime: _currentDate,

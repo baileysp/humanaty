@@ -82,5 +82,28 @@ class DatabaseService{
     });
   }
 
+  Future<void> createEvent(bool accessibilityAccommodations, List eventAllergies, double costPerSeat, DateTime eventDate, String description, int eventCapacity, HumanatyLocation eventLocation, String eventMenu, String eventTitle) async{
+    String _eventDate = eventDate.toString();
+    await eventCollection.document().setData({
+      'accessibilityAccommodations': false,
+      'additionalInfo': '',
+      'allergies': eventAllergies,
+      'attendees': [],
+      'costPerSeat': costPerSeat,
+      'date': _eventDate.substring(0,_eventDate.lastIndexOf(':')),
+      'description': description,
+      'guestNum': eventCapacity,
+      'hostID': this.uid,
+      'location' : {
+        'address' : eventLocation.address,
+        'city' : eventLocation.city,
+        'coordinates' : eventLocation.geoPoint,
+        'state' : eventLocation.state,
+        'zip' : eventLocation.zip
+        },
+      'meal': eventMenu,
+      'title': eventTitle
+    });
+  }
 
 }//Database Service

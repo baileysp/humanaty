@@ -20,3 +20,12 @@ String confirmPassValidator(String confirmation, TextEditingController controlle
   String password = controller.text;
   return confirmation == password ? null : "Passwords do not match";
 }
+
+String notEmpty(String text){
+  return text.isEmpty ? '' : null;
+}
+
+String notZero(String number){
+  if(number.isEmpty) return '';
+  return (double.parse(number) == 0) ? '' : null;
+}

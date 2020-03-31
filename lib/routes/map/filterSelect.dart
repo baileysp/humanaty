@@ -97,7 +97,7 @@ class _FilterSelectState extends State<FilterSelect> {
               return AllergyPage(
                 userAllergies: Allergy().allergyMapFromList([]),
                 auth: _auth,
-                updateButton: false,
+                updateDatabase: false,
               );
             },
             backgroundColor: Colors.white);
