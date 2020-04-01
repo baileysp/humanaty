@@ -108,7 +108,6 @@ class DatabaseService{
   }
 
   List<HumanatyEvent> _eventsFromSnapshot(QuerySnapshot snapshot){
-    print('creating list');
     return snapshot.documents.map((doc){
       return HumanatyEvent(
         accessibilityAccommodations: doc.data['accessibilityAccommodations'],

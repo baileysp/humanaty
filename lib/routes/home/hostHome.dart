@@ -18,12 +18,14 @@ class HostHomePage extends StatefulWidget {
 class HostHomePageState extends State<HostHomePage> {
   DateTime _selectedDate;
   EventList<Event> _marked;
+  List<HumanatyEvent> _selectedDateEvents;
 
   @override
   void initState() {
     super.initState();
     _marked = EventList<Event>(events: {});
     _selectedDate = DateTime.now();
+    _selectedDateEvents = [];
   }
 
   @override
@@ -33,13 +35,15 @@ class HostHomePageState extends State<HostHomePage> {
     return StreamBuilder<List<HumanatyEvent>>(
       stream: DatabaseService(uid: _auth.user.uid).myEvents,
       builder: (context, snapshot) {
-        print(snapshot.hasData);
-        //if(snapshot.hasData) createMarked(snapshot.data);
+        if(snapshot.hasData){
+          _createMarked(snapshot.data);
+          _selectedDayEvents(snapshot.data);
+        } 
         return Scaffold(
           body: Column(
             children: <Widget>[
               Container(height: SizeConfig.screenHeight * .6,
-              child: _calendar(context)),
+              child:_calendar(context)),
               _eventDisplay(context)
             ],
           )
@@ -53,7 +57,7 @@ class HostHomePageState extends State<HostHomePage> {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0),
+            padding: EdgeInsets.only(left: 16.0, right: 8.0, top: 0.0, bottom: 0.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -76,11 +80,7 @@ class HostHomePageState extends State<HostHomePage> {
               ],
             ),
           ),
-          Text('Event Card 1'),
-          SizedBox(
-            height: 16.0,
-          ),
-          Text('Event Card 2')
+          _eventList()
         ],
       ),
     );
@@ -94,17 +94,17 @@ class HostHomePageState extends State<HostHomePage> {
         iconColor: Pallete.humanGreen,
         headerTextStyle: TextStyle(
             color: Colors.black, fontSize: 20.0, fontFamily: 'Nuninto_Sans'),
-        onDayLongPressed: (DateTime time) {},
+        onDayLongPressed: (DateTime time) {print('test');},
         onDayPressed: (DateTime date, List _) {
-          //if(_marked.removeAll(date).isEmpty) _marked.add(date, Event(date: date));
-          this.setState(() {
-            _selectedDate = date;
-          });
+          this.setState(() => _selectedDate = date);
         },
         markedDatesMap: _marked,
         markedDateShowIcon: false,
         markedDateWidget:
-            Container(height: 4, width: 4, color: Pallete.humanGreen),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2.0),
+              child: Container(height: 4, width: 4, color: Pallete.humanGreen),
+            ),
         selectedDateTime: _selectedDate,
         selectedDayBorderColor: Colors.transparent,
         selectedDayButtonColor: Pallete.humanGreen54,
@@ -119,15 +119,46 @@ class HostHomePageState extends State<HostHomePage> {
     );
   }
 
-  void createMarked(List<HumanatyEvent> events){
+  Widget _eventList(){
+    DateFormat f = DateFormat.jm();
+    return Container(
+      height: SizeConfig.screenHeight * .24,
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: 0.0),
+        itemCount: _selectedDateEvents.length,
+        itemBuilder: (context, index){
+          return ListTile(
+            title: Text('${_selectedDateEvents[index].title}'),
+            trailing: Text('${f.format(_selectedDateEvents[index].date)}'),
+            onTap: (){},
+          );
+        }),
+    );
+  }
+  void _createMarked(List<HumanatyEvent> events){
     EventList<Event> _newMarked = EventList<Event>(events: {});
     for(int i = 0; i < events.length; i++){
       DateTime _date = events[i].date;
+      _date = DateTime.parse(_date.toString().substring(0, _date.toString().indexOf(' ')));
       _newMarked.add(_date, Event(date: _date));
     }
-    setState(() => _marked = _newMarked);
-    print(_marked);
+    _marked = _newMarked;
   }
+
+  void _selectedDayEvents(List<HumanatyEvent> events){
+    List<HumanatyEvent> _newSelectedDateEvents = [];
+    for(int i = 0; i < events.length; i++){
+      if(_selectedDate.difference(events[i].date).inDays == 0){
+        _newSelectedDateEvents.add(events[i]);
+      }
+      _selectedDateEvents = _newSelectedDateEvents;
+      _selectedDateEvents.sort((event1, event2){
+        return event1.date.compareTo(event2.date);
+      });
+    }
+  }
+
+
 
 }
 
