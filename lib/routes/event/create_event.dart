@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
-import 'package:humanaty/models/user.dart';
+import 'package:humanaty/models/models.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
@@ -195,7 +195,7 @@ class _CreateEventState extends State<CreateEvent> {
           decoration: eventInputDecoration,
           focusNode: _capacityFocus,
           keyboardType: TextInputType.number,
-          onFieldSubmitted: (term) {_fieldFocusChange(context, _capacityFocus, _capacityFocus);},      
+          onFieldSubmitted: (term) {_fieldFocusChange(context, _capacityFocus, _pricePerGuestFocus);},      
           textAlign: TextAlign.right,
           textInputAction: TextInputAction.next,
           validator: notZero,
@@ -244,7 +244,9 @@ class _CreateEventState extends State<CreateEvent> {
   Widget _locationTile() {
     return ListTile(
       title: Text('Location'),
-      trailing: Text(_location.isEmpty() ? 'Event needs Location' : '${_location.address}'),
+      trailing: Text(_location.isEmpty() ? 'Event needs Location' : ''),
+      isThreeLine: _location.isEmpty(),
+      subtitle: Visibility(visible: _location.isNotEmpty(), child: Text('${_location.address}')),
       onTap: () async{
         String location = await showSearch(context: context, delegate: MapSearch());
         if(location == null) return;

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:humanaty/common/widgets.dart';
-import 'package:humanaty/models/user.dart';
+import 'package:humanaty/models/models.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
-import 'package:provider/provider.dart';
+
 
 class Settings extends StatefulWidget {
   final UserData prevUserData;

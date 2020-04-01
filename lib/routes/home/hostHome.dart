@@ -3,9 +3,13 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
+import 'package:humanaty/models/models.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:humanaty/services/auth.dart';
+import 'package:humanaty/services/database.dart';
 import 'package:humanaty/util/size_config.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HostHomePage extends StatefulWidget {
   HostHomePageState createState() => HostHomePageState();
@@ -13,63 +17,76 @@ class HostHomePage extends StatefulWidget {
 
 class HostHomePageState extends State<HostHomePage> {
   DateTime _selectedDate;
-  EventList<Event> _marked = EventList<Event>(events: {});
-  
+  EventList<Event> _marked;
+
   @override
   void initState() {
     super.initState();
+    _marked = EventList<Event>(events: {});
     _selectedDate = DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var f = DateFormat.yMMMMd("en_US");
-    return Scaffold(
-        body: Column(
-      children: <Widget>[
-        Container(
-            height: SizeConfig.screenHeight / 1.7, child: calendar(context)),
-        Expanded(
-          child: Column(
+    final _auth = Provider.of<AuthService>(context);
+    return StreamBuilder<List<HumanatyEvent>>(
+      stream: DatabaseService(uid: _auth.user.uid).myEvents,
+      builder: (context, snapshot) {
+        print(snapshot.hasData);
+        //if(snapshot.hasData) createMarked(snapshot.data);
+        return Scaffold(
+          body: Column(
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Align(
-                      child: Text(
-                        'Events on ' + f.format(_selectedDate),
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                      alignment: Alignment.centerLeft,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      color: Colors.black54,
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateEvent(eventDate: _selectedDate))),
-                    )
-                  ],
-                ),
-              ),
-              Text('Event Card 1'),
-              SizedBox(
-                height: 16.0,
-              ),
-              Text('Event Card 2')
+              Container(height: SizeConfig.screenHeight * .6,
+              child: _calendar(context)),
+              _eventDisplay(context)
             ],
-          ),
-        )
-      ],
-    ));
+          )
+        );
+      });
   }
 
-  Widget calendar(BuildContext context) {
+  Widget _eventDisplay(BuildContext context) {
+    var f = DateFormat.yMMMMd("en_US");
+    return Expanded(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Align(
+                  child: Text(
+                    'Events on ' + f.format(_selectedDate),
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+                IconButton(
+                  icon: Icon(Icons.add),
+                  color: Colors.black54,
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CreateEvent(eventDate: _selectedDate))),
+                )
+              ],
+            ),
+          ),
+          Text('Event Card 1'),
+          SizedBox(
+            height: 16.0,
+          ),
+          Text('Event Card 2')
+        ],
+      ),
+    );
+  }
+
+  Widget _calendar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
       child: CalendarCarousel(
@@ -100,6 +117,16 @@ class HostHomePageState extends State<HostHomePage> {
             TextStyle(color: Colors.black, fontFamily: 'Nuninto_Sans'),
       ),
     );
+  }
+
+  void createMarked(List<HumanatyEvent> events){
+    EventList<Event> _newMarked = EventList<Event>(events: {});
+    for(int i = 0; i < events.length; i++){
+      DateTime _date = events[i].date;
+      _newMarked.add(_date, Event(date: _date));
+    }
+    setState(() => _marked = _newMarked);
+    print(_marked);
   }
 
 }

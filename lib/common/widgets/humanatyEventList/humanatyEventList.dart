@@ -8,7 +8,7 @@ class HumanatyEventList extends StatelessWidget {
     }
   );
 
-  final List<HumanatyEvent> events;
+  final List<HumanatyEvent2> events;
   @override
   Widget build(BuildContext context) {
     return Column(children: events);

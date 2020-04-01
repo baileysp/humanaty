@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:humanaty/models/user.dart';
+import 'package:humanaty/models/models.dart';
 import 'package:humanaty/util/logger.dart';
 
 class DatabaseService{
@@ -12,23 +12,7 @@ class DatabaseService{
   final CollectionReference eventCollection = Firestore.instance.collection('events');
 
   Stream<UserData> get userData => userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
-   
-  Future<void> createUserDoc(String displayName, String email) async{
-    String currentYMD = DateTime.now().toString();
-    await userCollection.document(uid).setData({
-      'aboutMe' : 'Tell future guests about your qualifications',
-      'accessibilityAccommodations' : false,
-      'allergies' : [],
-      'birthday' : currentYMD.substring(0, currentYMD.indexOf(' ')),
-      'displayName': displayName,
-      'email' : email,
-      'guestRating' : 5,
-      'hostRating' : 5,
-      'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/humanaty-gatech.appspot.com/o/defaultProfilePic%2FdefaultProfilePic.jpg?alt=media&token=e87a7526-daf8-4466-b186-e8703b1da31b',
-      'uid': uid
-    });
-    await updateUserLocation(HumanatyLocation());
-  }
+  Stream<List<HumanatyEvent>> get myEvents => eventCollection.where('hostID', isEqualTo: '$uid').snapshots().map(_eventsFromSnapshot);
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
     return UserData(
@@ -44,6 +28,23 @@ class DatabaseService{
       photoUrl: snapshot.data['photoUrl'],
       uid: uid,        
     );
+  }
+
+  Future<void> createUserDoc(String displayName, String email) async{
+    String currentYMD = DateTime.now().toString();
+    await userCollection.document(uid).setData({
+      'aboutMe' : 'Tell future guests about your qualifications',
+      'accessibilityAccommodations' : false,
+      'allergies' : [],
+      'birthday' : currentYMD.substring(0, currentYMD.indexOf(' ')),
+      'displayName': displayName,
+      'email' : email,
+      'guestRating' : 5,
+      'hostRating' : 5,
+      'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/humanaty-gatech.appspot.com/o/defaultProfilePic%2FdefaultProfilePic.jpg?alt=media&token=e87a7526-daf8-4466-b186-e8703b1da31b',
+      'uid': uid
+    });
+    await updateUserLocation(HumanatyLocation());
   }
 
   Future<void> updateUserData(String aboutMe, bool accessibilityAccommodations, DateTime birthday,
@@ -106,4 +107,24 @@ class DatabaseService{
     });
   }
 
+  List<HumanatyEvent> _eventsFromSnapshot(QuerySnapshot snapshot){
+    print('creating list');
+    return snapshot.documents.map((doc){
+      return HumanatyEvent(
+        accessibilityAccommodations: doc.data['accessibilityAccommodations'],
+        additionalInfo: doc.data['additionalInfo'],
+        allergies: doc.data['allergies'],
+        attendees: doc.data['attendees'],
+        costPerSeat: doc.data['costPerSeat'],
+        date: DateTime.parse(doc.data['date']),
+        description: doc.data['description'],
+        guestNum: doc.data['guestNum'],
+        hostID: doc.data['hostID'],
+        location: HumanatyLocation().humanantyLocationFromMap(doc.data['location']),
+        meal: doc.data['meal'],
+        //photoGallery: doc.data['photoGallery'],
+        title: doc.data['title']
+      );
+    }).toList();
+  }
 }//Database Service

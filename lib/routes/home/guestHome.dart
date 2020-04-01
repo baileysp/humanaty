@@ -19,47 +19,47 @@ import 'package:provider/provider.dart';
 
 //Screen/Widget that is displayed for the Home page is the 'Current' class
 
-List<HumanatyEvent> testEvents = [
-  HumanatyEvent(
+List<HumanatyEvent2> testEvents = [
+  HumanatyEvent2(
       eventName: "Test Title",
       eventDate: "1/11/23",
       eventDescription: "Description goes here"),
-  HumanatyEvent(
+  HumanatyEvent2(
     eventName: "Indian Food",
     eventDate: "1/14/23",
     eventDescription: "Come enjoy cuisine of the east.",
   ),
-  HumanatyEvent(
+  HumanatyEvent2(
       eventName: "Chinese Cuisine",
       eventDate: "1/11/23",
       eventDescription: "Get lost in the szechuan sauce."),
-  HumanatyEvent(
+  HumanatyEvent2(
       eventName: "Pizza Night at Johnny's",
       eventDate: "1/11/23",
       eventDescription: "Don't get lost in the tomato sauce."),
-  HumanatyEvent(
+  HumanatyEvent2(
     eventName: "Delicious Dinner",
     eventDate: "1/17/24",
     eventDescription: "It's actually quite delicious",
   ),
-  HumanatyEvent(
+  HumanatyEvent2(
     eventName: "Not so Delicious Dinner",
     eventDate: "1/17/24",
     eventDescription: "Don't buy a seat here",
   ),
-  HumanatyEvent(
+  HumanatyEvent2(
     eventName: "Test huMANAty Event",
     eventDate: "1/17/24",
     eventDescription: "Testing for home display purposes.",
   ),
-  HumanatyEvent(
+  HumanatyEvent2(
     eventName: "Test huMANAty Event",
     eventDate: "1/17/24",
     eventDescription: "Testing for home display purposes.",
   )
 ];
 
-List<HumanatyEvent> displayedEvents = testEvents;
+List<HumanatyEvent2> displayedEvents = testEvents;
 
 class GuestHomePage extends StatefulWidget {
   GuestHomePage({Key key}) : super(key: key);
