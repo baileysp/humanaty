@@ -124,7 +124,7 @@ class HumanatyDrawer extends StatelessWidget {
     // SvgPicture.
     return Container(
       child: new InkWell(
-        child: _mode.mode == Mode.Consumer ? chefHat : Icon(Icons.local_dining),
+        child: _mode.mode == Mode.Consumer ? Icon(Icons.local_dining) : chefHat,
         onTap: () {
           print("Mode clicked");
           Navigator.pop(context);
