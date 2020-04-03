@@ -120,11 +120,12 @@ class HumanatyDrawer extends StatelessWidget {
     //     _mode.switchMode();}
     // );
 
-    SvgPicture chefHat = SvgPicture.asset('assets/images/chef.svg', width: 20,);
+    SvgPicture chefHat = SvgPicture.asset('assets/chef.svg', width: 20);
     // SvgPicture.
+    print("Current mode is ${_mode.mode}");
     return Container(
       child: new InkWell(
-        child: _mode.mode == Mode.Consumer ? Icon(Icons.local_dining) : chefHat,
+        child: _mode.mode == Mode.Host ? chefHat : Icon(Icons.local_dining),
         onTap: () {
           print("Mode clicked");
           Navigator.pop(context);

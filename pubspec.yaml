@@ -79,7 +79,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
+    - chef.svg
+
   
   fonts:
     - family: Nuninto_Sans
