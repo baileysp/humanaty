@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/common/widgets/humanatyEvent/humanatyEvent.dart';
+import 'package:humanaty/common/widgets/event/humanatyEvent.dart';
 
 class HumanatyEventList extends StatelessWidget {
   HumanatyEventList(
@@ -8,7 +8,7 @@ class HumanatyEventList extends StatelessWidget {
     }
   );
 
-  final List<HumanatyEvent> events;
+  final List<HumanatyEvent2> events;
   @override
   Widget build(BuildContext context) {
     return Column(children: events);

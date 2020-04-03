@@ -1,41 +1,129 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:humanaty/models/user.dart';
+import 'package:humanaty/models/models.dart';
+import 'package:humanaty/util/logger.dart';
 
 class DatabaseService{
+  final log = getLogger('DatabaseService');
   final String uid;
   DatabaseService({this.uid});
 
+  //final databaseReference = Firestore.instance;
   final CollectionReference userCollection = Firestore.instance.collection('users');
+  final CollectionReference eventCollection = Firestore.instance.collection('events');
 
-  Future<void> createUserDoc(String displayName, String email) async{
-    return await userCollection.document(uid).setData({
-      'displayName': displayName,
-      'email' : email,
-      'uid': uid
-    });
-  }
+  Stream<UserData> get userData => userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  Stream<List<HumanatyEvent>> get myEvents => eventCollection.where('hostID', isEqualTo: '$uid').snapshots().map(_eventsFromSnapshot);
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
     return UserData(
-      uid: uid,
+      aboutMe: snapshot.data['aboutMe'],
+      accessibilityAccommodations: snapshot.data['accessibilityAccommodations'],
+      allergies: Allergy().allergyMapFromList(snapshot.data['allergies'].cast<String>()),
+      birthday: DateTime.parse(snapshot.data['birthday']),
       displayName: snapshot.data['displayName'],
-      email: snapshot.data['email']
+      email: snapshot.data['email'],
+      guestRating: snapshot.data['guestRating'].toDouble(),
+      hostRating: snapshot.data['hostRating'].toDouble(),
+      location: HumanatyLocation().humanantyLocationFromMap(snapshot.data['location']),
+      photoUrl: snapshot.data['photoUrl'],
+      uid: uid,        
     );
   }
 
-  Stream<UserData> get userData{
-    return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  Future<void> createUserDoc(String displayName, String email) async{
+    String currentYMD = DateTime.now().toString();
+    await userCollection.document(uid).setData({
+      'aboutMe' : 'Tell future guests about your qualifications',
+      'accessibilityAccommodations' : false,
+      'allergies' : [],
+      'birthday' : currentYMD.substring(0, currentYMD.indexOf(' ')),
+      'displayName': displayName,
+      'email' : email,
+      'guestRating' : 5,
+      'hostRating' : 5,
+      'photoUrl' : 'https://firebasestorage.googleapis.com/v0/b/humanaty-gatech.appspot.com/o/defaultProfilePic%2FdefaultProfilePic.jpg?alt=media&token=e87a7526-daf8-4466-b186-e8703b1da31b',
+      'uid': uid
+    });
+    await updateUserLocation(HumanatyLocation());
   }
 
-  
-  // Future<void> updateUserData(String displayName, String photo, String aboutMe, String location, String birthday, List<String> dietaryRestrictions, bool wheelchairRequired) async {
-  //   return await userCollection.document(uid).setData({
-  //     'displayName' : displayName,
-  //     'photo' : photo,
-  //     'aboutMe'
-  //   }, merge: true);
-  // }
+  Future<void> updateUserData(String aboutMe, bool accessibilityAccommodations, DateTime birthday,
+    String displayName) async{
+    String _birthday = birthday.toString();
+    return await userCollection.document(uid).updateData({
+      'aboutMe': aboutMe.trim(),
+      'accessibilityAccommodations': accessibilityAccommodations,
+      'birthday' : _birthday.substring(0, _birthday.indexOf(" ")),
+      'displayName' : displayName.trim(),
+    });
+  }
+    
+  Future<void> updateAllergyData(Map<String, bool> userAllergies) async{
+    return await userCollection.document(uid).updateData({
+      'allergies' : Allergy().allergyListFromMap(userAllergies)
+    });
+  }
 
+  Future<void> updateProfilePic(String url) async{
+    await userCollection.document(uid).updateData({
+      'photoUrl' : url
+    });
+  }
 
+  Future<void> updateUserLocation(HumanatyLocation location) async{
+    print(location.address);
+    await userCollection.document(uid).updateData({
+      'location' : {
+        'address' : location.address,
+        'city' : location.city,
+        'coordinates' : location.geoPoint,
+        'state' : location.state,
+        'zip' : location.zip
+        }
+    });
+  }
 
-}
+  Future<void> createEvent(bool accessibilityAccommodations, List eventAllergies, double costPerSeat, DateTime eventDate, String description, int eventCapacity, HumanatyLocation eventLocation, String eventMenu, String eventTitle) async{
+    String _eventDate = eventDate.toString();
+    await eventCollection.document().setData({
+      'accessibilityAccommodations': false,
+      'additionalInfo': '',
+      'allergies': eventAllergies,
+      'attendees': [],
+      'costPerSeat': costPerSeat,
+      'date': _eventDate.substring(0,_eventDate.lastIndexOf(':')),
+      'description': description,
+      'guestNum': eventCapacity,
+      'hostID': this.uid,
+      'location' : {
+        'address' : eventLocation.address,
+        'city' : eventLocation.city,
+        'coordinates' : eventLocation.geoPoint,
+        'state' : eventLocation.state,
+        'zip' : eventLocation.zip
+        },
+      'meal': eventMenu,
+      'title': eventTitle
+    });
+  }
+
+  List<HumanatyEvent> _eventsFromSnapshot(QuerySnapshot snapshot){
+    return snapshot.documents.map((doc){
+      return HumanatyEvent(
+        accessibilityAccommodations: doc.data['accessibilityAccommodations'],
+        additionalInfo: doc.data['additionalInfo'],
+        allergies: doc.data['allergies'],
+        attendees: doc.data['attendees'],
+        costPerSeat: doc.data['costPerSeat'],
+        date: DateTime.parse(doc.data['date']),
+        description: doc.data['description'],
+        guestNum: doc.data['guestNum'],
+        hostID: doc.data['hostID'],
+        location: HumanatyLocation().humanantyLocationFromMap(doc.data['location']),
+        meal: doc.data['meal'],
+        //photoGallery: doc.data['photoGallery'],
+        title: doc.data['title']
+      );
+    }).toList();
+  }
+}//Database Service
