@@ -96,13 +96,21 @@ class HumanatyDrawer extends StatelessWidget {
   }
 
   Widget _loginTile(BuildContext context, AuthService _auth){
-    return ListTile(
-      title: Text(_auth.isAnonUser() ? 'Login' : 'Sign Out'),
-      onTap: () {
-        Navigator.pop(context);
-        _auth.signOut();
-      },
-    );
+    if (_auth.isAnonUser()) {
+      return ListTile(
+        title: Text('Login'),
+        onTap: () {
+          Navigator.pop(context);
+          _auth.signOut();
+        },
+        );
+    } else {
+      return ListTile(
+        title: Text(''),
+        onTap: () {
+        },
+        );
+    }
   }
 
   Widget _aboutTile(){
