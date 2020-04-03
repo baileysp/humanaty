@@ -120,7 +120,7 @@ class HumanatyDrawer extends StatelessWidget {
     //     _mode.switchMode();}
     // );
 
-    SvgPicture chefHat = SvgPicture.asset('assets/chef.svg', width: 20);
+    SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg', width: 20);
     // SvgPicture.
     print("Current mode is ${_mode.mode}");
     return Container(
