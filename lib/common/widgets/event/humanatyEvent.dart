@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/routes/events/events.dart';
 
-class HumanatyEvent extends StatelessWidget {
-  HumanatyEvent(
+class HumanatyEvent2 extends StatelessWidget {
+//TODO move to models folder
+  HumanatyEvent2(
     {
       this.eventName,
       this.eventDate,
@@ -14,7 +15,7 @@ class HumanatyEvent extends StatelessWidget {
   String eventDate;
   String eventDescription;
 
-  HumanatyEvent.fromJson(Map<String, dynamic> json) {
+  HumanatyEvent2.fromJson(Map<String, dynamic> json) {
     eventName = json['eventName'];
     eventDate = json['eventDate'];
     eventDescription = json['eventDescription'];

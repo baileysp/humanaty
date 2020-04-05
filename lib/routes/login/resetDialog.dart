@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'package:humanaty/common/design.dart';
-import 'package:humanaty/common/widgets/constants.dart';
+import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
-
+import 'package:humanaty/util/validator.dart';
+import 'package:provider/provider.dart';
 
 class ResetDialog extends StatefulWidget {
   @override
@@ -11,9 +12,9 @@ class ResetDialog extends StatefulWidget {
 }
 
 class _ResetDialog extends State<ResetDialog> {
-  final _forgotPasswordFormKey = GlobalKey<FormState>();
-  final _email = TextEditingController();
+  final _emailController = TextEditingController();
 
+  final _forgotPasswordFormKey = GlobalKey<FormState>();
   String _errorMessage;
   bool _linkSent = false;
 
@@ -26,87 +27,80 @@ class _ResetDialog extends State<ResetDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<AuthService>(context);
+    final auth = Provider.of<AuthService>(context);
 
     return AlertDialog(
-      title: Text("Forgot Password?"),
+      title: Text('Forgot Password?'),
       content: SingleChildScrollView(
-          child: Column(
-        children: !_linkSent ? preLink(user) : postLink(user),
+        child: Column(
+          children: !_linkSent ? _preLink(auth) : _postLink(auth),
       )),
     );
   }
 
-  List<Widget> preLink(user) {
-    return [
-      infoText(),
+  List<Widget> _preLink(user) {
+    return[
+      _infoText(),
       SizedBox(height: 20),
-      errorText(),
-      emailField(),
+      _errorText(),
+      _emailField(),
       SizedBox(height: 20),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[cancelButton(), resetButton(user)],
+        children: <Widget>[_cancelButton(), _resetButton(user)],
       )
     ];
   }
 
-  List<Widget> postLink(user){
+  List<Widget> _postLink(user) {
     return [
-      sentText(), 
+      _sentText(),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[cancelButton()],
+        children: <Widget>[_cancelButton()],
       )
     ];
   }
 
-  Widget infoText() {
-    return Text(
-        "Enter your email address and we will send you a link to reset your password.");
-  }
-
-  Widget sentText() {
-    return Text("Password reset link sent successfully.");
-  }
-
-  Widget errorText() {
+  Widget _infoText() => Text('Enter your email address and we will send you a link to reset your password.');
+  
+  Widget _sentText() => Text('Password reset link sent successfully.');
+  
+  Widget _errorText() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Text(_errorMessage != null ? _errorMessage : "",
+      child: Text(_errorMessage != null ? _errorMessage : '',
           style: TextStyle(color: Colors.red, fontSize: 13.0)),
     );
   }
 
-  Widget emailField() {
+  Widget _emailField() {
     return Form(
       key: _forgotPasswordFormKey,
       child: TextFormField(
+        controller: _emailController,
         keyboardType: TextInputType.emailAddress,
-        controller: _email,
         decoration: textInputDecoration.copyWith(
             hintText: "Email",
             prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
+        inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
         validator: emailValidator,
       ),
     );
   }
 
-  Widget cancelButton() {
-    //if (_linkSent == null) _linkSent = false;
+  Widget _cancelButton() {
     return RaisedButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: Text((_linkSent == false) ? "Cancel" : "Close",
-            style: TextStyle(color: Colors.black, fontSize: 16.0)));
+      onPressed:() => Navigator.of(context).pop(),      
+      child: Text((_linkSent == false) ? 'Cancel' : 'Close',
+        style: TextStyle(color: Colors.black, fontSize: 16.0)));
   }
 
-  Widget resetButton(user) {
+  Widget _resetButton(user) {
     return RaisedButton(
         onPressed: () async {
           if (_forgotPasswordFormKey.currentState.validate()) {
-            String email = _email.text.trim();
+            String email = _emailController.text;
             if (!await user.sendPasswordResetEmail(email)) {
               setState(() {
                 _errorMessage = user.error;
@@ -120,7 +114,14 @@ class _ResetDialog extends State<ResetDialog> {
           }
         },
         color: Pallete.humanGreen,
-        child: Text("Reset Password",
-            style: TextStyle(color: Colors.white, fontSize: 16.0)));
+        child: Text('Reset Password',
+          style: TextStyle(color: Colors.white, fontSize: 16.0)));
   }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
 }

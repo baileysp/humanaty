@@ -1,35 +1,70 @@
+import 'package:humanaty/models/models.dart';
 class User {
   final String uid;
   User({this.uid});
+
+  @override
+  String toString() => uid;
 }
 
-class UserData{
-  final String uid;
+class UserData {
+  final String aboutMe;
+  final bool accessibilityAccommodations;
+  final Map<String, bool> allergies;
+  final DateTime birthday;
+  //final List<String> guestEventHistory
+  final double guestRating;
+  //final List<String> guestUpcomingEvents
   final String displayName;
   final String email;
-  final String photo;
-  final String aboutMe;
-  final String location;
-  final String birthday;
-  final List<String> dietaryRestrictions;
-  final bool wheelchairRequired;
-  final int consumerRating;
-  final int chefRating;
+  //final List<String> hostEventHistory
+  final double hostRating;
+  //final List<String> hostUpcomingEvents
+  final bool hostVerified;
+  final HumanatyLocation location;
+  final String photoUrl;
+  final String uid;
 
   UserData(
-    {
-      this.uid,
+      {this.aboutMe,
+      this.accessibilityAccommodations,
+      this.allergies,
+      this.birthday,
+      //this.guestEventHistory,
+      this.guestRating,
+      //this.guestUpcomingEvents,
       this.displayName,
       this.email,
-      this.photo,
-      this.aboutMe = "This is an about me test",
+      //this.hostEventHistory,
+      this.hostRating,
+      //this.hostUpcomingEvents,
+      this.hostVerified,
       this.location,
-      this.birthday,
-      this.dietaryRestrictions,
-      this.wheelchairRequired,
-      this.consumerRating = 3,
-      this.chefRating = 3
-    }
-  );
+      this.photoUrl,
+      this.uid});
 
+  @override
+  String toString() => '$displayName $uid';
 }
+
+class Allergy {
+  allergyMapFromList(List<String> list) {
+    return {
+      'Eggs': list.contains("eggs"),
+      'Fish': list.contains("fish"),
+      'Milk': list.contains("milk"),
+      'Peanut': list.contains("peanut"),
+      'ShellFish': list.contains("shellfish"),
+      'SoyBean': list.contains("soybean"),
+      'TreeNut': list.contains("treenut"),
+      'Wheat': list.contains("wheat")
+    };
+  }
+  
+  allergyListFromMap(Map<String, bool> map){
+    List<String> allergyList = List();
+    map.forEach((k, v){if(v) allergyList.add(k.toLowerCase());});
+    return allergyList;
+  }
+}
+
