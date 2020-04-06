@@ -7,6 +7,7 @@ import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:humanaty/routes/profile/profile.dart';
+import 'package:flutter_svg/svg.dart';
 
 class HumanatyDrawer extends StatelessWidget {
   @override
@@ -95,13 +96,21 @@ class HumanatyDrawer extends StatelessWidget {
   }
 
   Widget _loginTile(BuildContext context, AuthService _auth){
-    return ListTile(
-      title: Text(_auth.isAnonUser() ? 'Login' : 'Sign Out'),
-      onTap: () {
-        Navigator.pop(context);
-        _auth.signOut();
-      },
-    );
+    if (_auth.isAnonUser()) {
+      return ListTile(
+        title: Text('Login'),
+        onTap: () {
+          Navigator.pop(context);
+          _auth.signOut();
+        },
+        );
+    } else {
+      return ListTile(
+        title: Text(''),
+        onTap: () {
+        },
+        );
+    }
   }
 
   Widget _aboutTile(){
@@ -112,11 +121,25 @@ class HumanatyDrawer extends StatelessWidget {
   }
 
   Widget _switchModeTile(BuildContext context, AppMode _mode){
-    return ListTile(
-      title: Text('Currently in ${_mode.mode}, Press to Switch'),
-      onTap:() {
-        Navigator.pop(context);
-        _mode.switchMode();}
+    // return ListTile(
+    //   title: Text('Currently in ${_mode.mode}, Press to Switch'),
+    //   onTap:() {
+    //     Navigator.pop(context);
+    //     _mode.switchMode();}
+    // );
+
+    SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg', width: 20);
+    // SvgPicture.
+    print("Current mode is ${_mode.mode}");
+    return Container(
+      child: new InkWell(
+        child: _mode.mode == Mode.Host ? chefHat : Icon(Icons.local_dining),
+        onTap: () {
+          print("Mode clicked");
+          Navigator.pop(context);
+          _mode.switchMode();
+        }
+      ),
     );
   }
 }
