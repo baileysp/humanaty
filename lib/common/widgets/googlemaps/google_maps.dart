@@ -22,7 +22,7 @@ class MapSampleState extends State<MapsWidget> {
   @override
   void initState() {
     super.initState();
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 7.5), 'assets/event_pin.png').then((onValue) {
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/event_pin.png').then((onValue) {
       eventLocationPin = onValue;
     });
   }
