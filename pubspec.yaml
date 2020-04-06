@@ -80,6 +80,7 @@ flutter:
 
   assets:
     - chef-hat.svg
+    - event_pin.png
 
   
   fonts:
