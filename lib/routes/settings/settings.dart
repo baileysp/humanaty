@@ -34,10 +34,23 @@ class _SettingsState extends State<Settings> {
           title: 'Settings',
       ),
       body: Column(
-        children: <Widget>[
-          _currentLocation(context, _auth, userData)
-        ],
-      )
+        children:[
+          _currentLocation(context, _auth, userData),
+          Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(left: 10.0, right: 10.0, top:250.0, bottom: 10.0),
+            child: RaisedButton(
+              textColor: Colors.deepPurple,
+              color: Colors.greenAccent,
+              child:Text("Log Out"),
+              onPressed: (){
+                     Navigator.pop(context);
+                     _auth.signOut();
+              },
+            )
+          )
+        ],  
+      ),
     );
   }
 
