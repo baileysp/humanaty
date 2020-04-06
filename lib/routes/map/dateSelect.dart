@@ -4,25 +4,25 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:humanaty/common/design.dart';
 
 class DateSelect extends StatefulWidget {
+  List<DateTime> selectedDates;
+  DateSelect({this.selectedDates});
   _DateSelectState createState() => _DateSelectState();
 }
 
 class _DateSelectState extends State<DateSelect> {
   DateTime _currentDate;
-  EventList<Event> _marked = EventList<Event>(events: {});
+  EventList<Event> _marked;
   
-
   @override
   void initState() {
     super.initState();
     _currentDate = DateTime.now();
+    _marked = _createMarked();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      //height: 350,
-      //width: 100,
       child: Column(
         children: <Widget>[
           Padding(
@@ -36,17 +36,17 @@ class _DateSelectState extends State<DateSelect> {
                 Text('Selected Dates', style: TextStyle(fontSize: 20, color: Colors.black)),
                 IconButton(
                   icon: Icon(Icons.check, color: Colors.black54,),
-                  onPressed:() => Navigator.of(context).pop(getMarkedDates()),)],),
+                  onPressed:() => Navigator.of(context).pop(markedDates))],),
           ),
           Container(
             height: 300, 
             width: double.infinity,
-            child: calendar(context))],
+            child: _calendar(context))],
       ),
     );
   }
 
-  Widget calendar(BuildContext context){
+  Widget _calendar(BuildContext context){
     return Padding(
       padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
       child: CalendarCarousel(
@@ -57,8 +57,6 @@ class _DateSelectState extends State<DateSelect> {
         headerTextStyle: TextStyle(fontSize: 20.0, color: Colors.black, fontFamily: 'Nuninto_Sans'),
         iconColor: Pallete.humanGreen,
         weekdayTextStyle: TextStyle(color: Colors.black),
-        //selectedDateTime: _currentDate,
-        onDayLongPressed:(DateTime time){},
         onDayPressed: (DateTime date, List _){
           if(_marked.removeAll(date).isEmpty) _marked.add(date, Event(date: date));  
           this.setState((){_currentDate = date;});
@@ -67,12 +65,12 @@ class _DateSelectState extends State<DateSelect> {
         markedDatesMap: _marked,
         showIconBehindDayText: true,
         markedDateCustomTextStyle: TextStyle(color: Colors.white),  
-        markedDateIconBuilder: markedDate,
+        markedDateIconBuilder: _markedDate,
       ),
     ); 
   }
 
-  Widget markedDate(Event event){
+  Widget _markedDate(Event event){
     return Container(
       decoration: BoxDecoration(
         color: Pallete.humanGreen,
@@ -81,7 +79,18 @@ class _DateSelectState extends State<DateSelect> {
     );
   }
   
-  String getMarkedDates() => _marked.events.keys.toString();
+  List<DateTime> get markedDates => _marked.events.keys.toList();
   
+  EventList<Event> _createMarked(){
+    EventList<Event> _intialMarked = EventList<Event>(events: {});
+    if(widget.selectedDates == null) return _intialMarked;
+    for(int i = 0; i < widget.selectedDates.length; i++){
+      DateTime _date = widget.selectedDates[i];
+      _intialMarked.add(_date, Event(date: _date));
+    }
+    print('test');
+    print(_intialMarked.events);
+    return _intialMarked;
+  }
 
 }
