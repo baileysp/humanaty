@@ -19,7 +19,7 @@ class HumanatyLocation {
     List list = string.split('|');
     this.address = list[0];
     this.city = list[1];
-    List coords = list[2].split('--');
+    List coords = list[2].split('*');
     this.geoPoint = GeoPoint(double.parse(coords[0]), double.parse(coords[1]));
     this.state = list[3];
     this.zip = list[4];
@@ -40,6 +40,6 @@ class HumanatyLocation {
   bool isNotEmpty() => address != null;
   
   @override
-  String toString() => '$address|$city|${geoPoint.latitude}-${geoPoint.longitude}|$state|$zip';
+  String toString() => '$address|$city|${geoPoint.latitude}*${geoPoint.longitude}|$state|$zip';
 
 }
