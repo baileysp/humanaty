@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:humanaty/routes/event/event_page.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:humanaty/models/models.dart';
@@ -36,7 +37,15 @@ class MapSampleState extends State<MapsWidget> {
     return StreamBuilder<List<HumanatyEvent>>(
       stream: DatabaseService(uid: _auth.user.uid).getEvents(),
       builder: (context, snapshot){
-        if (snapshot.hasData) _createPins(snapshot.data);
+        if (snapshot.hasData) {
+          List<HumanatyEvent> tempList = snapshot.data;
+          for (HumanatyEvent e in tempList) {
+            print(e.title);
+            print("\n\n\n");
+          }
+          _createPins(tempList);
+          print(tempList.length);
+        }
         print(_markers.length);
         return Scaffold(
           body: GoogleMap(
@@ -62,14 +71,15 @@ class MapSampleState extends State<MapsWidget> {
       markers.add(Marker(
         markerId: id,
         position: LatLng(event.location.geoPoint.latitude, event.location.geoPoint.longitude),
-        icon: BitmapDescriptor.defaultMarkerWithHue(164)
+        icon: BitmapDescriptor.defaultMarkerWithHue(164),
+        consumeTapEvents: true,
+        onTap: () {
+          // Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EventPage(event: event)));
+        }
         ));
       _markers = markers;
-      setState(() {
-        //_markers = markers;
-      });
     }
-    //print(_markers);
   }
 
   void _moveCamera(GeoPoint geopoint) async {
