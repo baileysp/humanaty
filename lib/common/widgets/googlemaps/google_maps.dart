@@ -20,16 +20,21 @@ class MapsWidget extends StatefulWidget {
   State<MapsWidget> createState() => MapSampleState();
 }
 
-// Set<Marker> getPins() {
-//    = myEvents;
-// }
+
 
 class MapSampleState extends State<MapsWidget> {
+  // BitmapDescriptor pin; For customizing pin vector image
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {}; 
   // Set<Circle> _circles = {};
   
   CameraPosition _startPosition = CameraPosition(target: LatLng(33.774745,-84.397445), zoom: 14.476);
+
+  // void setPin() {
+  //  BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 3.75), 'assets/event_pin.png').then((onValue) {
+  //    pin = onValue;
+  //  });
+  // }
 
   @override
   Widget build(BuildContext context) {
