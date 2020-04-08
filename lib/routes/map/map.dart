@@ -10,7 +10,12 @@ class MapPage extends StatefulWidget{
   _MapPageState createState() => _MapPageState();
 }
 class _MapPageState extends State<MapPage> {
+
   HumanatyLocation _location;
+
+  List<DateTime> filterDates;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,11 @@ class _MapPageState extends State<MapPage> {
           children: <Widget>[MapsWidget(location: _location), filter(context),],
         ),
         appBar:
+
             HumanatyAppBar(displayBackBtn: true, title: _location?.city ?? 'Atlanta', actions: [search(context)],));
+
+         
+
   }
 
   Widget search(BuildContext context) {
@@ -48,13 +57,11 @@ class _MapPageState extends State<MapPage> {
               child: Text("Date", style: TextStyle(fontSize: 16),),
               color: Colors.white, 
               onPressed:() async{
-                 String markedDates = await showModalBottomSheet(context: context, builder: (context){ return DateSelect();},
+                 List<DateTime> selectedDates = await showModalBottomSheet(context: context, builder: (context){ return DateSelect(selectedDates: filterDates,);},
                      backgroundColor: Colors.white);
-                 if(markedDates != null){
-                   List<String> markedDatesList = markedDates.split(' ');
+                 if(selectedDates != null){
+                   filterDates = selectedDates;
                  }
-
-
               }),),
           SizedBox(width: 8),
           Expanded(

@@ -136,3 +136,4 @@ class MapSampleState extends State<MapsWidget> {
   }
 
 }
+

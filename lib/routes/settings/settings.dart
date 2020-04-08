@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/models.dart';
 import 'package:humanaty/services/auth.dart';
@@ -20,9 +21,9 @@ class _SettingsState extends State<Settings> {
 
     return StreamBuilder<UserData>(
         stream: DatabaseService(uid: _auth.user.uid).userData,
-        builder: (context, snapshot) {
+        builder: (context, snapshot) {        
           UserData userData =
-              (snapshot.hasData) ? snapshot.data : widget.prevUserData;
+              (snapshot.hasData) ? snapshot.data : null;
           return _settings(context, _auth, userData);
         });
   }
@@ -36,18 +37,17 @@ class _SettingsState extends State<Settings> {
       body: Column(
         children:[
           _currentLocation(context, _auth, userData),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(left: 10.0, right: 10.0, top:250.0, bottom: 10.0),
-            child: RaisedButton(
-              textColor: Colors.deepPurple,
-              color: Colors.greenAccent,
-              child:Text("Log Out"),
-              onPressed: (){
-                     Navigator.pop(context);
-                     _auth.signOut();
-              },
-            )
+          Expanded(
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              child: FlatButton(
+                child:Text("Log Out", style: TextStyle(fontSize: 16.0),),
+                onPressed: (){
+                  Navigator.pop(context);
+                  _auth.signOut();
+                },
+              )
+            ),
           )
         ],  
       ),
@@ -58,11 +58,11 @@ class _SettingsState extends State<Settings> {
     return ListTile(
       isThreeLine: true,
       title: Text('Current Location'),
-      trailing: IconButton(icon: Icon(Icons.location_on), onPressed: null),
+      trailing: IconButton(icon: Icon(Icons.location_on), onPressed: (){}),
       subtitle: Row(
       mainAxisSize: MainAxisSize.min,
        children: <Widget>[
-          Text((userData.location.address == null) ? 'No Idea' : userData.location.address),
+          Text((userData?.location?.address == null) ? 'No Location Set' : userData?.location?.address),
        ],
       ),
       onTap:() async{
@@ -72,4 +72,15 @@ class _SettingsState extends State<Settings> {
       },
     );
   }
+
+  void location() async{
+    GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+    if(geolocationStatus == GeolocationStatus.granted){
+      Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
+      print(placemark);
+    }
+  }
+
+
 }

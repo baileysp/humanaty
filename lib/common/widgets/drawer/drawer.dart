@@ -37,7 +37,6 @@ class HumanatyDrawer extends StatelessWidget {
           _profileTile(context, _auth.status, userData),
           _settingsTile(context, userData),
           _loginTile(context, _auth),
-          Divider(),
           _aboutTile(),
           _switchModeTile(context, _mode)
         ],
@@ -91,7 +90,7 @@ class HumanatyDrawer extends StatelessWidget {
   Widget _settingsTile(BuildContext context, UserData userData){
     return ListTile(
       title: Text('Settings'),
-      onTap: (){Navigator.of(context).pushNamed('/settings', arguments: userData);},
+      onTap: (){Navigator.of(context).pushNamed('/settings');},
     );
   }
 
@@ -105,11 +104,7 @@ class HumanatyDrawer extends StatelessWidget {
         },
         );
     } else {
-      return ListTile(
-        title: Text(''),
-        onTap: () {
-        },
-        );
+      return Container();
     }
   }
 
@@ -121,19 +116,11 @@ class HumanatyDrawer extends StatelessWidget {
   }
 
   Widget _switchModeTile(BuildContext context, AppMode _mode){
-    // return ListTile(
-    //   title: Text('Currently in ${_mode.mode}, Press to Switch'),
-    //   onTap:() {
-    //     Navigator.pop(context);
-    //     _mode.switchMode();}
-    // );
-
     SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg', width: 20);
-    // SvgPicture.
     print("Current mode is ${_mode.mode}");
     return Container(
       child: new InkWell(
-        child: _mode.mode == Mode.Host ? chefHat : Icon(Icons.local_dining),
+        child: _mode.isHostMode() ? chefHat : Icon(Icons.local_dining),
         onTap: () {
           print("Mode clicked");
           Navigator.pop(context);
