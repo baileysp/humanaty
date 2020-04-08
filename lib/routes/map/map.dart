@@ -1,33 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/common/widgets/googlemaps/google_maps.dart';
+import 'package:humanaty/models/models.dart';
 import 'package:humanaty/routes/map/dateSelect.dart';
 import 'package:humanaty/routes/map/filterSelect.dart';
 
 class MapPage extends StatefulWidget{
-  const MapPage({Key key}): super(key:key);
-  
-  
+  const MapPage({Key key}): super(key:key); 
   _MapPageState createState() => _MapPageState();
 }
 class _MapPageState extends State<MapPage> {
+
+  HumanatyLocation _location;
+
   List<DateTime> filterDates;
+
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-          children: <Widget>[MapsWidget(), filter(context),],
+          children: <Widget>[MapsWidget(location: _location), filter(context),],
         ),
         appBar:
-            HumanatyAppBar(displayBackBtn: false, title: 'Atlanta', actions: [search(context)],));
+
+            HumanatyAppBar(displayBackBtn: true, title: _location?.city ?? 'Atlanta', actions: [search(context)],));
+
+         
+
   }
 
   Widget search(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.search, color: Colors.grey),
-      onPressed: () => showSearch(context: context, delegate: MapSearch()),
+      onPressed: () async{
+        String location = await showSearch(context: context, delegate: MapSearch());
+        print(location);
+        if(location != null){
+          setState(() {
+            _location = HumanatyLocation.fromString(location);
+          });
+        print(_location);
+        }},
     );
   }
 
