@@ -71,9 +71,9 @@ class GuestHomePageState extends State<GuestHomePage> {
   Widget build(BuildContext context) {
     //final _auth = Provider.of<AuthService>(context);
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-            child: Column(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Column(
           children: <Widget>[
             title,
             searchBar(context),
@@ -89,7 +89,9 @@ class GuestHomePageState extends State<GuestHomePage> {
               },
             )
           ],
-        )));
+        )
+      )
+    );
   }
 
   Widget logout(AuthService _auth) {
