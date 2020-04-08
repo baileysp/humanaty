@@ -19,20 +19,24 @@ class HumanatyLocation {
     List list = string.split('|');
     this.address = list[0];
     this.city = list[1];
-    List coords = list[2].split('--');
+    List coords = list[2].split('*');
     this.geoPoint = GeoPoint(double.parse(coords[0]), double.parse(coords[1]));
     this.state = list[3];
     this.zip = list[4];
   }  
 
   humanantyLocationFromMap(Map<dynamic, dynamic> location){
-    return HumanatyLocation(
+    try{
+      return HumanatyLocation(
       address: location['address'].toString(),
       city: location['city'].toString(),
-      geoPoint: location['coordinates'],
+      geoPoint: location['coordinates'] ?? GeoPoint(33.774745,-84.397445),
       state: location['state'],
       zip: location['zip']
     );
+    } catch(error){
+      print(error);
+    }
   }
 
   bool isEmpty() => address == null;
@@ -40,6 +44,6 @@ class HumanatyLocation {
   bool isNotEmpty() => address != null;
   
   @override
-  String toString() => '$address|$city|${geoPoint.latitude}-${geoPoint.longitude}|$state|$zip';
+  String toString() => '$address|$city|${geoPoint.latitude}*${geoPoint.longitude}|$state|$zip';
 
 }

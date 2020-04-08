@@ -13,6 +13,11 @@ class DatabaseService{
 
   Stream<UserData> get userData => userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   Stream<List<HumanatyEvent>> get myEvents => eventCollection.where('hostID', isEqualTo: '$uid').snapshots().map(_eventsFromSnapshot);
+  
+  //parameters will need to be added for filtering
+  Stream<List<HumanatyEvent>> getEvents(){
+    return eventCollection.where('hostID', isGreaterThan: '0').snapshots().map(_eventsFromSnapshot);
+  }
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
     return UserData(
@@ -108,13 +113,16 @@ class DatabaseService{
   }
 
   List<HumanatyEvent> _eventsFromSnapshot(QuerySnapshot snapshot){
+    print(snapshot.documents.length);
     return snapshot.documents.map((doc){
-      return HumanatyEvent(
+      HumanatyEvent event;
+      try{
+        event = HumanatyEvent(
         accessibilityAccommodations: doc.data['accessibilityAccommodations'],
         additionalInfo: doc.data['additionalInfo'],
         allergies: doc.data['allergies'],
-        attendees: doc.data['attendees'],
-        costPerSeat: doc.data['costPerSeat'],
+        //attendees: doc.data['attendees'],
+        costPerSeat: double.parse(doc.data['costPerSeat'].toString()),
         date: DateTime.parse(doc.data['date']),
         description: doc.data['description'],
         guestNum: doc.data['guestNum'],
@@ -124,6 +132,13 @@ class DatabaseService{
         //photoGallery: doc.data['photoGallery'],
         title: doc.data['title']
       );
+      } catch(e){
+        
+        print(e.toString());
+        print(doc.data['title']);
+      }
+      print(event);
+      return event;
     }).toList();
   }
 }//Database Service
