@@ -9,7 +9,7 @@ import 'package:humanaty/models/models.dart';
 
 class MapsWidget extends StatefulWidget {
   final CollectionReference eventCollection = Firestore.instance.collection('events');
-  Stream<List<HumanatyEvent>> get myEvents => eventCollection.snapshots().map(getLocations);
+  Stream<List<HumanatyEvent>> get myEvents => eventCollection.where('guestNum', isGreaterThan: 0).snapshots().map(getLocations);
   HumanatyLocation location;
   MapsWidget({this.location});
   
@@ -54,8 +54,16 @@ class MapSampleState extends State<MapsWidget> {
       stream: DatabaseService().myEvents,
       builder: (context, snapshot){
         if (snapshot.hasData) {
-          print("This do have DATA \n");
-          _createPins(snapshot.data);
+          List<HumanatyEvent> tempList = snapshot.data;
+          print(tempList.length);
+          print(tempList.toString() + "\n\n\n\n");
+          print("This do have DATA: " + snapshot.hasData.toString());
+          for (HumanatyEvent e in tempList) {
+            print(e.location.geoPoint);
+            print("END\n\n\n\n");
+            // print("END\n\n\n\");
+          }
+          // _createPins(snapshot.data);
         }
         // print(_markers);
         // print("\n\n\n\n\n");
@@ -68,8 +76,8 @@ class MapSampleState extends State<MapsWidget> {
           initialCameraPosition: _startPosition,
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
-            print(_markers);
-            print("\n\n\n\n");
+            // print(_markers);
+            // print("\n\n\n\n");
             // _createPins(snapshot.data);
             // int i = 3001;
             // setState(() {
@@ -90,7 +98,7 @@ class MapSampleState extends State<MapsWidget> {
       });
   }
 
-  void _createPins(List<HumanatyEvent> events) {
+  Set<Marker> _createPins(List<HumanatyEvent> events) {
     int i = 3001;
     Set<Marker> markers = {};
     for (HumanatyEvent e in events) {
@@ -104,9 +112,10 @@ class MapSampleState extends State<MapsWidget> {
         ));
       i++;
     }
-    setState(() {
-        _markers = markers;
-      });
+    return markers;
+    // setState(() {
+    //     _markers = markers;
+    //   });
   }
 
   void _moveCamera(GeoPoint geopoint) async {
