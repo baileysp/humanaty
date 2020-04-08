@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:humanaty/common/design.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:humanaty/common/widgets.dart';
@@ -36,18 +37,25 @@ class _SettingsState extends State<Settings> {
       ),
       body: Column(
         children:[
+          //_header('Location'),
           _currentLocation(context, _auth, userData),
+          Divider(),
+          //_header('App'),
+          _logout(_auth),
+          //_version(),
+          Divider(),
+          //_header('Legal'),
+          //_nonFunctional('Terms of Service'),
+          _nonFunctional('IP License'),
+          //_nonFunctional('Software Licenses'),
           Expanded(
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: FlatButton(
-                child:Text("Log Out", style: TextStyle(fontSize: 16.0),),
-                onPressed: (){
-                  Navigator.pop(context);
-                  _auth.signOut();
-                },
-              )
-            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text('huMANAty iOS App v1.0', style: TextStyle(color: Colors.black54))
+              ),
+            )
           )
         ],  
       ),
@@ -70,6 +78,46 @@ class _SettingsState extends State<Settings> {
         if(location == null) return;
         DatabaseService(uid: _auth.user.uid).updateUserLocation(HumanatyLocation.fromString(location));
       },
+    );
+  }
+
+  Widget _logout(AuthService _auth){
+    return ListTile(
+      title: Text('Logout', ),//style: TextStyle(color: Pallete.humanGreen),),
+      onTap: (){
+        Navigator.pop(context);
+        _auth.signOut();
+      },
+    );
+  }
+
+  Widget _version(){
+    return ListTile(
+      title: Text('huMANAty iOS App'),
+      trailing: Text('v1.0'),
+    );
+  }
+
+  Widget _header(String header){
+    return Container(
+      width: double.infinity,
+      height: 50,
+      //color: Colors.grey[300],
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(header, 
+            style:TextStyle(fontSize: 18.0, )))//fontWeight: FontWeight.w600),))
+      ),
+    );
+  }
+
+  Widget _nonFunctional(String title){
+    return ListTile(
+      title: Text(title),
+      trailing: Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: (){},
     );
   }
 

@@ -26,13 +26,17 @@ class HumanatyLocation {
   }  
 
   humanantyLocationFromMap(Map<dynamic, dynamic> location){
-    return HumanatyLocation(
+    try{
+      return HumanatyLocation(
       address: location['address'].toString(),
       city: location['city'].toString(),
-      geoPoint: location['coordinates'],
+      geoPoint: location['coordinates'] ?? GeoPoint(33.774745,-84.397445),
       state: location['state'],
       zip: location['zip']
     );
+    } catch(error){
+      print(error);
+    }
   }
 
   bool isEmpty() => address == null;
