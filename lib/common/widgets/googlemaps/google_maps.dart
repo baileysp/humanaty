@@ -44,14 +44,9 @@ class MapSampleState extends State<MapsWidget> {
       builder: (context, snapshot){
         if (snapshot.hasData) {
           List<HumanatyEvent> tempList = snapshot.data;
-          for (HumanatyEvent e in tempList) {
-            print(e.title);
-            print("\n\n\n");
-          }
           _createPins(tempList);
           print(tempList.length);
         }
-        print(_markers.length);
         return Scaffold(
           body: GoogleMap(
           myLocationButtonEnabled: true,
