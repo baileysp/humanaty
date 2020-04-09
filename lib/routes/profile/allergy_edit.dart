@@ -4,16 +4,16 @@ import 'package:humanaty/common/widgets/AppBar/appbar.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
-class AllergyPage extends StatefulWidget{
+class AllergyEdit extends StatefulWidget{
   final AuthService auth;
   final Map userAllergies;
   final bool updateDatabase;
-  const AllergyPage({Key key, this.auth, this.userAllergies, this.updateDatabase=true}): super(key: key);
+  const AllergyEdit({Key key, this.auth, this.userAllergies, this.updateDatabase=true}): super(key: key);
   
   @override
-  _AllergyPageState createState() => _AllergyPageState();
+  _AllergyEditState createState() => _AllergyEditState();
 }
-class _AllergyPageState extends State<AllergyPage> {
+class _AllergyEditState extends State<AllergyEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

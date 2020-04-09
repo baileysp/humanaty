@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
-import 'package:humanaty/common/widgets/googlemaps/google_maps.dart';
 import 'package:humanaty/models/models.dart';
-import 'package:humanaty/routes/map/dateSelect.dart';
-import 'package:humanaty/routes/map/filterSelect.dart';
+import 'package:humanaty/routes/map/filter_date.dart';
+import 'package:humanaty/routes/map/filter.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key key}) : super(key: key);
@@ -20,7 +19,7 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
         body: Stack(
           children: <Widget>[
-            MapsWidget(location: _location),
+            GoogleMaps(location: _location),
             filter(context),
           ],
         ),
@@ -65,7 +64,7 @@ class _MapPageState extends State<MapPage> {
                   List<DateTime> selectedDates = await showModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return DateSelect(
+                        return FilterDate(
                           selectedDates: filterDates,
                         );
                       },
@@ -84,7 +83,7 @@ class _MapPageState extends State<MapPage> {
                     String filters = await showModalBottomSheet(
                         context: context,
                         builder: (context) {
-                          return FilterSelect();
+                          return Filter();
                         },
                         backgroundColor: Colors.white);
                   }))

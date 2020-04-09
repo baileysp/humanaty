@@ -3,13 +3,13 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:humanaty/common/design.dart';
 
-class DateSelect extends StatefulWidget {
+class FilterDate extends StatefulWidget {
   List<DateTime> selectedDates;
-  DateSelect({this.selectedDates});
-  _DateSelectState createState() => _DateSelectState();
+  FilterDate({this.selectedDates});
+  _FilterDateState createState() => _FilterDateState();
 }
 
-class _DateSelectState extends State<DateSelect> {
+class _FilterDateState extends State<FilterDate> {
   DateTime _currentDate;
   EventList<Event> _marked;
   

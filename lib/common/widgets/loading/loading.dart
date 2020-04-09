@@ -5,17 +5,15 @@ import 'package:humanaty/common/design.dart';
 class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 100, height: 100,
-        //color: Pallete.humanGreen,
-        child: Center(
-          child: SpinKitWanderingCubes(
-            color: Pallete.humanGreen,
-            size: 50.0,
-          ),
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      color: Colors.white,
+      child: Center(
+        child: SpinKitDoubleBounce(
+          color: Pallete.humanGreen
         ),
-      ),
+      )
     );
   }
 }

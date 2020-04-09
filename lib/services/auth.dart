@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:humanaty/services/firebase_error.dart';

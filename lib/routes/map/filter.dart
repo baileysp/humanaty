@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/models/user.dart';
-import 'package:humanaty/routes/profile/allergy.dart';
+import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:provider/provider.dart';
 
-class FilterSelect extends StatefulWidget {
-  _FilterSelectState createState() => _FilterSelectState();
+class Filter extends StatefulWidget {
+  _FilterState createState() => _FilterState();
 }
 
-class _FilterSelectState extends State<FilterSelect> {
+class _FilterState extends State<Filter> {
   RangeValues _values;
 
   @override
@@ -94,7 +94,7 @@ class _FilterSelectState extends State<FilterSelect> {
         showModalBottomSheet(
             context: context,
             builder: (context) {
-              return AllergyPage(
+              return AllergyEdit(
                 userAllergies: Allergy().allergyMapFromList([]),
                 auth: _auth,
                 updateDatabase: false,

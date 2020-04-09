@@ -170,7 +170,7 @@ class _CreateEventState extends State<CreateEvent> {
         List<String> selectedAllergies = await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => AllergyPage(
+              builder: (context) => AllergyEdit(
                   userAllergies: Allergy().allergyMapFromList(_allergies),
                   auth: _auth,
                   updateDatabase: false)),

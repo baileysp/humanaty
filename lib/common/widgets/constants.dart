@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:humanaty/common/design.dart';
 
 const textInputDecoration = InputDecoration(
@@ -17,3 +18,6 @@ const eventInputDecoration = InputDecoration(
     filled: true,
     focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Pallete.humanGreen, width: 2.0)));
+
+const errorBorderOutline =
+    UnderlineInputBorder(borderSide: BorderSide(color: Colors.red));
