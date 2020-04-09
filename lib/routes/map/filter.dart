@@ -95,9 +95,8 @@ class _FilterState extends State<Filter> {
             context: context,
             builder: (context) {
               return AllergyEdit(
-                userAllergies: Allergy().allergyMapFromList([]),
-                auth: _auth,
-                updateDatabase: false,
+                allergyMap: Allergy().allergyMapFromList([]),
+                updateUserProfile: false,
               );
             },
             backgroundColor: Colors.white);

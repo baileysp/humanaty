@@ -1,33 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
-import 'package:humanaty/common/widgets/AppBar/appbar.dart';
+import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
+import 'package:provider/provider.dart';
 class AllergyEdit extends StatefulWidget{
-  final AuthService auth;
-  final Map userAllergies;
-  final bool updateDatabase;
-  const AllergyEdit({Key key, this.auth, this.userAllergies, this.updateDatabase=true}): super(key: key);
+  final Map allergyMap;
+  final bool updateUserProfile;
+  const AllergyEdit({Key key, this.allergyMap, this.updateUserProfile=true}): super(key: key);
   
   @override
   _AllergyEditState createState() => _AllergyEditState();
 }
 class _AllergyEditState extends State<AllergyEdit> {
+  AuthService auth;
+
   @override
   Widget build(BuildContext context) {
+    auth = Provider.of<AuthService>(context);
+
     return Scaffold(
-      appBar: HumanatyAppBar(displayBackBtn: true, title: 'Edit Allergies', actions: widget.updateDatabase ? [updateAllergiesBtn(context, widget.auth, widget.userAllergies)] : [returnAllergiesBtn(context, widget.userAllergies)]),
+      appBar: HumanatyAppBar(displayCloseBtn: true, title: 'Edit Allergies', actions: widget.updateUserProfile ? [updateAllergiesBtn(context, auth, widget.allergyMap)] : [returnAllergiesBtn(widget.allergyMap)]),
       body: ListView.builder(
-        itemCount: widget.userAllergies.length,
+        itemCount: widget.allergyMap.length,
         itemBuilder: (context, index){
-          String _key = widget.userAllergies.keys.elementAt(index);
+          String _key = widget.allergyMap.keys.elementAt(index);
           return ListTile(
             title: Text(_key),
             trailing: Visibility(
-              visible: widget.userAllergies[_key],
+              visible: widget.allergyMap[_key],
               child: Icon(Icons.check, color: Pallete.humanGreen)),
-            onTap:() {setState((){widget.userAllergies[_key] = !widget.userAllergies[_key];});},
+            onTap:() {setState((){widget.allergyMap[_key] = !widget.allergyMap[_key];});},
           );
         }
     ));
@@ -35,13 +39,13 @@ class _AllergyEditState extends State<AllergyEdit> {
 }
 
 
-Widget returnAllergiesBtn(BuildContext context, Map userAllergies){
+Widget returnAllergiesBtn(Map userAllergies){
   return FlatButton(
     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     onPressed: () async{
-      Navigator.of(context).pop(Allergy().allergyListFromMap(userAllergies));
+      Navigator.pop(Allergy().allergyListFromMap(userAllergies));
     },
-    child: Text('update', style: TextStyle(color: Colors.black))
+    child: Text('UPDATE', style: TextStyle(color: Pallete.humanGreen))
   );
 }
 
@@ -52,5 +56,5 @@ Widget updateAllergiesBtn(BuildContext context, AuthService auth, Map userAllerg
       
       await DatabaseService(uid: auth.user.uid).updateAllergyData(userAllergies);
       Navigator.of(context).pop();},
-    child: Text('update', style: TextStyle(color: Colors.black)));
+    child: Text('UPDATE', style: TextStyle(color: Pallete.humanGreen)));
 }

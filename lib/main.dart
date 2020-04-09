@@ -4,6 +4,7 @@ import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/humanaty_mode.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/routes/_router.dart';
+import 'package:humanaty/util/route_generator.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -60,19 +61,7 @@ class Main extends StatelessWidget {
           title: "Humanaty",
           theme: ThemeData(fontFamily: 'Nuninto_Sans'),
           home: LandingPage(),
-          routes: {
-            '/create_event': (context) => CreateEvent(),
-            '/home': (context) => GuestRouter(),
-            '/login': (context) => Login(),
-            '/map': (context) => MapPage(),
-            '/profile' : (context) => Profile(),
-            '/settings': (context) => Settings(),
-            
-            '/events': (context) => Events(),
-            '/registration': (context) => Register(),
-                        //'/profile' : (context) => Profile()
-            //'/imageEdit' : (context) => ImageEdit(),
-          },
+          onGenerateRoute: RouteGenerator.generateRoute
         ));
   }
 }
@@ -80,9 +69,9 @@ class Main extends StatelessWidget {
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context);
-    final _mode = Provider.of<HumanatyMode>(context);
-    switch (_auth.status) {
+    final auth = Provider.of<AuthService>(context);
+    final mode = Provider.of<HumanatyMode>(context);
+    switch (auth.status) {
       case Status.Uninitialized:
         return Loading();
       case Status.Unauthenticated:
@@ -90,10 +79,11 @@ class LandingPage extends StatelessWidget {
         return Login();
       case Status.Anon:
       case Status.Authenticated:
-        if (_mode.isConsumerMode())
+        if (mode.isConsumerMode())
           return GuestRouter();
         else
           return HostRouter();
+      
     }
   }
 }

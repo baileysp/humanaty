@@ -171,9 +171,8 @@ class _CreateEventState extends State<CreateEvent> {
           context,
           MaterialPageRoute(
               builder: (context) => AllergyEdit(
-                  userAllergies: Allergy().allergyMapFromList(_allergies),
-                  auth: _auth,
-                  updateDatabase: false)),
+                  allergyMap: Allergy().allergyMapFromList(_allergies),
+                  updateUserProfile: false)),
         );
         if (selectedAllergies != null) {
           setState(() {

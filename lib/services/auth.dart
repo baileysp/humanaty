@@ -18,8 +18,7 @@ class AuthService with ChangeNotifier {
   User _user;
   Status _status = Status.Uninitialized;
   String _error = '';
-  final Duration _timeoutDuration = Duration(seconds: 5);
-
+  
   AuthService.instance() : _firebaseAuth = FirebaseAuth.instance {
     _firebaseAuth.onAuthStateChanged.listen(_onAuthStateChanged);
   }
@@ -132,6 +131,18 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  Future<bool> changeEmail(String newEmail) async{
+    var user = await _firebaseAuth.currentUser();
+    user.updateEmail(newEmail).then((_){
+      DatabaseService(uid: _user.uid).updateUserEmail(newEmail);
+      return true;
+    }).catchError((){
+      return false;
+    });
+
+  }
+
+
   Future signOut() async {
     log.d('Logging Out $_user');
     _firebaseAuth.signOut();
@@ -156,15 +167,10 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
-  _onTimeOut(String methodName){
-    log.w('$methodName timed out');
-    return null;
-  }
-
   _onException(String methodName, PlatformException error){
     print(error);
     String errorString = error.code.toString();
     log.e('$methodName threw $errorString');
   }
 
-}//User
+}
