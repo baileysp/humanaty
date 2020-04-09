@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:humanaty/routes/event/event_page.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:humanaty/models/models.dart';
@@ -18,16 +19,23 @@ class GoogleMaps extends StatefulWidget {
   _GoogleMapsState createState() => _GoogleMapsState();
 }
 
-// Set<Marker> getPins() {
-//    = myEvents;
-// }
+
+
 
 class _GoogleMapsState extends State<GoogleMaps> {
+
+
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {}; 
   // Set<Circle> _circles = {};
   
   CameraPosition _startPosition = CameraPosition(target: LatLng(33.774745,-84.397445), zoom: 14.476);
+
+  // void setPin() {
+  //  BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 3.75), 'assets/event_pin.png').then((onValue) {
+  //    pin = onValue;
+  //  });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +43,11 @@ class _GoogleMapsState extends State<GoogleMaps> {
     return StreamBuilder<List<HumanatyEvent>>(
       stream: DatabaseService(uid: _auth.user.uid).getEvents(),
       builder: (context, snapshot){
-        if (snapshot.hasData) _createPins(snapshot.data);
-        print(_markers.length);
+        if (snapshot.hasData) {
+          List<HumanatyEvent> tempList = snapshot.data;
+          _createPins(tempList);
+          print(tempList.length);
+        }
         return Scaffold(
           body: GoogleMap(
           myLocationButtonEnabled: true,
@@ -61,14 +72,15 @@ class _GoogleMapsState extends State<GoogleMaps> {
       markers.add(Marker(
         markerId: id,
         position: LatLng(event.location.geoPoint.latitude, event.location.geoPoint.longitude),
-        icon: BitmapDescriptor.defaultMarkerWithHue(164)
+        icon: BitmapDescriptor.defaultMarkerWithHue(164),
+        consumeTapEvents: true,
+        onTap: () {
+          // Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EventPage(event: event)));
+        }
         ));
       _markers = markers;
-      setState(() {
-        //_markers = markers;
-      });
     }
-    //print(_markers);
   }
 
   void _moveCamera(GeoPoint geopoint) async {
