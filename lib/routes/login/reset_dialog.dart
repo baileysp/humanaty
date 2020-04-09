@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:humanaty/util/size_config.dart';
 import 'package:humanaty/util/validator.dart';
-import 'package:provider/provider.dart';
+
 
 class ResetDialog extends StatefulWidget {
   @override
@@ -13,7 +16,6 @@ class ResetDialog extends StatefulWidget {
 
 class _ResetDialog extends State<ResetDialog> {
   final _emailController = TextEditingController();
-
   final _forgotPasswordFormKey = GlobalKey<FormState>();
   String _errorMessage;
   bool _linkSent = false;
@@ -28,6 +30,7 @@ class _ResetDialog extends State<ResetDialog> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
+    SizeConfig().init(context);
 
     return AlertDialog(
       title: Text('Forgot Password?'),
@@ -41,10 +44,10 @@ class _ResetDialog extends State<ResetDialog> {
   List<Widget> _preLink(user) {
     return[
       _infoText(),
-      SizedBox(height: 20),
+      SizedBox(height: SizeConfig.screenHeight * .035),
       _errorText(),
       _emailField(),
-      SizedBox(height: 20),
+      SizedBox(height: SizeConfig.screenHeight * .035),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[_cancelButton(), _resetButton(user)],

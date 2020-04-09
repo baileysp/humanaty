@@ -1,8 +1,9 @@
+export 'widgets/appBar/humanaty_appBar.dart';
 export 'widgets/constants.dart';
-export 'widgets/AppBar/appBar.dart';
-export 'widgets/drawer/drawer.dart';
+export 'widgets/drawer/humanaty_drawer.dart';
 export 'widgets/event/humanatyEvent.dart';
+export 'widgets/google_maps/google_maps.dart';
 export 'widgets/humanatyEventList/humanatyEventList.dart';
-export 'widgets/rating/rating.dart';
 export 'widgets/loading/loading.dart';
 export 'widgets/map_search/map_search.dart';
+export 'widgets/rating/humanaty_rating.dart';

@@ -1,44 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:humanaty/util/logger.dart';
+import 'package:provider/provider.dart';
+
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
-import 'package:humanaty/models/app_mode.dart';
+import 'package:humanaty/models/humanaty_mode.dart';
 import 'package:humanaty/models/user.dart';
+import 'package:humanaty/routes/profile/profile.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
-import 'package:provider/provider.dart';
-import 'package:humanaty/routes/profile/profile.dart';
-import 'package:flutter_svg/svg.dart';
 
 class HumanatyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context);
-    final _mode = Provider.of<AppMode>(context);
-    print(_mode.mode);    
+    final auth = Provider.of<AuthService>(context);
+    final mode = Provider.of<HumanatyMode>(context);
+    final log = getLogger('HumanatyDrawer');
+    
     return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: _auth.user.uid).userData,
+      stream: DatabaseService(uid: auth.user.uid).userData,
       builder: (context, snapshot) {
-        if (snapshot.hasData || _auth.isAnonUser()) {
+        if (snapshot.hasData || auth.isAnonUser()) {
           UserData userData = snapshot.data;
-          return drawer(context, _auth, userData, _mode);
+          return _drawer(context, auth, userData, mode);
         }
-        print(snapshot);
         //Navigator.pop(context);
         //_auth.signOut();
         return Loading();
       });
   }
 
-  Widget drawer(BuildContext context, AuthService _auth, UserData userData, AppMode _mode) {
+  Widget _drawer(BuildContext context, AuthService auth, UserData userData, HumanatyMode mode) {
     return Drawer(
         child: ListView(
         children: <Widget>[
-          DrawerHeader(child: _auth.isAnonUser() ? _anonHeader() : _userHeader(context, userData)),
-          _profileTile(context, _auth.status, userData),
+          DrawerHeader(child: auth.isAnonUser() ? _anonHeader() : _userHeader(context, userData)),
+          _profileTile(context, auth.status, userData),
           _settingsTile(context, userData),
-          _loginTile(context, _auth),
+          _loginTile(context, auth),
           _aboutTile(),
-          _switchModeTile(context, _mode)
+          _switchModeTile(context, mode)
         ],
     ));
   }
@@ -46,11 +48,10 @@ class HumanatyDrawer extends StatelessWidget {
   Widget _anonHeader(){
     return Container(
       padding: EdgeInsets.only(top: 32.0),
-      child: Text('Welcome to huMANAty', style: TextStyle(fontSize: 16)));
+      child: Text('Welcome to huMANAty', style: TextStyle(fontSize: 20)));
   }
 
   Widget _userHeader(BuildContext context, UserData userData){
-    //print(userData.photoUrl);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
@@ -59,7 +60,7 @@ class HumanatyDrawer extends StatelessWidget {
           splashColor: Colors.transparent,
           onTap: (){
             Navigator.pop(context);
-            Navigator.push(context,MaterialPageRoute(builder: (context) => Profile(prevUserData: userData)));
+            Navigator.of(context).pushNamed('/profile');
           },
           child: CircleAvatar(radius: 70, 
             backgroundColor: Pallete.humanGreen,
@@ -83,7 +84,7 @@ class HumanatyDrawer extends StatelessWidget {
         status == Status.Anon ? 
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('Please Log-In to view your profile'))) :
-          Navigator.push(context,MaterialPageRoute(builder: (context) => Profile(prevUserData: userData)));
+          Navigator.of(context).pushNamed('/profile');
       },);
   }
 
@@ -115,16 +116,14 @@ class HumanatyDrawer extends StatelessWidget {
     );
   }
 
-  Widget _switchModeTile(BuildContext context, AppMode _mode){
+  Widget _switchModeTile(BuildContext context, HumanatyMode mode){
     SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg', width: 20);
-    print("Current mode is ${_mode.mode}");
     return Container(
-      child: new InkWell(
-        child: _mode.isHostMode() ? chefHat : Icon(Icons.local_dining),
+      child: InkWell(
+        child: mode.isHostMode() ? chefHat : Icon(Icons.local_dining),
         onTap: () {
-          print("Mode clicked");
           Navigator.pop(context);
-          _mode.switchMode();
+          mode.switchMode();
         }
       ),
     );

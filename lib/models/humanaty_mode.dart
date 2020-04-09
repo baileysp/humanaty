@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 enum Mode{Consumer, Host}
 
-class AppMode with ChangeNotifier{
+class HumanatyMode with ChangeNotifier{
   //defaults to 'Consumer Mode' on start up, could store user's current mode in database
   //unlikely they will log out and care that it defaults to preference. Not sure what
   //restarting the app will mean for the mode

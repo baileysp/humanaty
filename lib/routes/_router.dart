@@ -5,13 +5,20 @@ Be sure to add new routes here
 
 export 'event/create_event.dart';
 export 'events/events.dart';
-export 'home/guestHome.dart';
-export 'home/hostHome.dart';
+export 'home/guest_home.dart';
+export 'home/host_home.dart';
 export 'login/login.dart';
 export 'map/map.dart';
-export 'settings/settings.dart';
-export 'register/register.dart';
+export 'profile/aboutMe_edit.dart';
+export 'profile/allergy_edit.dart';
+export 'profile/email_edit.dart';
+export 'profile/image_edit.dart';
+export 'profile/image_options.dart';
 export 'profile/profile.dart';
-export 'profile/allergy.dart';
-export 'profile/imageOptions.dart';
-export 'profile/imageEdit.dart';
+export 'register/register.dart';
+export 'settings/settings.dart';
+
+
+
+
+

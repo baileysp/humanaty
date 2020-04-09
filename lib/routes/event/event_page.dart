@@ -27,7 +27,7 @@ class EventPageState extends State<EventPage> {
     // final _auth = Provider.of<AuthService>(context);
     SizeConfig().init(context);
     return Scaffold(
-        appBar: HumanatyAppBar(backgroundColor: Pallete.humanGreen ,fontColor: TextStyle(color: Colors.white), displayBackBtn: true, title: event.title),
+        appBar: HumanatyAppBar(backgroundColor: Pallete.humanGreen, displayBackBtn: true, title: '${event.title}', titleStyle: TextStyle(color: Colors.white)),
         body: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(0,15,0,0),
           child: Column(

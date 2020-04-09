@@ -10,20 +10,21 @@ import 'package:humanaty/services/database.dart';
 import 'package:humanaty/models/models.dart';
 import 'package:provider/provider.dart';
 
-class MapsWidget extends StatefulWidget {
+class GoogleMaps extends StatefulWidget {
   
   
   HumanatyLocation location;
-  MapsWidget({this.location});
-  
+  GoogleMaps({this.location});
   @override
-  State<MapsWidget> createState() => MapSampleState();
+  _GoogleMapsState createState() => _GoogleMapsState();
 }
 
 
 
-class MapSampleState extends State<MapsWidget> {
-  // BitmapDescriptor pin; For customizing pin vector image
+
+class _GoogleMapsState extends State<GoogleMaps> {
+
+
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {}; 
   // Set<Circle> _circles = {};
@@ -92,7 +93,7 @@ class MapSampleState extends State<MapsWidget> {
   }
 
   @override 
-  void didUpdateWidget(MapsWidget oldWidget) {
+  void didUpdateWidget(GoogleMaps oldWidget) {
     if(widget.location != oldWidget.location){
       _moveCamera(widget.location.geoPoint);
     }

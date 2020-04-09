@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:provider/provider.dart';
+
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
-import 'package:humanaty/routes/login/resetDialog.dart';
+import 'package:humanaty/routes/login/reset_dialog.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/util/size_config.dart';
 import 'package:humanaty/util/validator.dart';
-import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+
+class Login extends StatefulWidget {
+  Login({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginState createState() => _LoginState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   
@@ -35,10 +38,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context);
+    final auth = Provider.of<AuthService>(context);
     SizeConfig().init(context);
+
     return Scaffold(
-      appBar: HumanatyAppBar(actions: <Widget>[_continueAnonymously(_auth)],),
+      appBar: HumanatyAppBar(actions: <Widget>[_continueAnonymously(auth)],),
       body: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(16.0),
@@ -48,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Text('Sign in with huMANAty', 
               style: TextStyle(fontSize: 16)),
-            SizedBox(height: 50),
+            SizedBox(height: SizeConfig.screenHeight * .10),
             _errorText(),
             Form(
                 key: _signInFormKey,
@@ -60,11 +64,11 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[_forgotPassword()],
                     ),
-                    SizedBox(height: 80.0),
-                    _loginButton(_auth),
-                    SizedBox(height: 16.0),
-                    _googleSignIn(_auth),
-                    SizedBox(height: 40.0),
+                    SizedBox(height: SizeConfig.screenHeight * .11),
+                    _loginButton(auth),
+                    SizedBox(height: SizeConfig.screenHeight * .025),
+                    _googleSignIn(auth),
+                    SizedBox(height: SizeConfig.screenHeight * .06),
                     _newUser()
                   ],
                 ))
@@ -92,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
             prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
         inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
         validator: emailValidator,
-        onFieldSubmitted: (term) {_fieldFocusChange(context, _emailFocus, _passwordFocus);},
+        onFieldSubmitted: (term) {_fieldFocusChange(_emailFocus, _passwordFocus);},
       ),
     );
   }
@@ -124,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _loginButton(AuthService _auth) {
+  Widget _loginButton(AuthService auth) {
     return Container(
       width: double.infinity,
       height: 50.0,
@@ -135,25 +139,25 @@ class _LoginPageState extends State<LoginPage> {
               String email = _emailController.text.trim();
               String password = _passwordController.text;
 
-              if (!await _auth.signInWithEmailAndPassword(email, password)) {
+              if (!await auth.signInWithEmailAndPassword(email, password)) {
                 setState(() {
-                  _errorMessage = _auth.error;
+                  _errorMessage = auth.error;
                   _signInFormKey.currentState.reset();
                 });
               }
             }
           },
-          child: Text(_auth.status == Status.Authenticating ? 'Logging In' : 'Login',
+          child: Text(auth.status == Status.Authenticating ? 'Logging In' : 'Login',
             style: TextStyle(color: Colors.white, fontSize: 16.0))),
     );
   }
 
-  Widget _googleSignIn(AuthService _auth) {
+  Widget _googleSignIn(AuthService auth) {
     return Container(
       height: 50.0,
       child: RaisedButton(
           onPressed: () async {
-            if (!await _auth.signInWithGoogle()) {}
+            if (!await auth.signInWithGoogle()) {}
           },
           color: Colors.white,
           //shape: RoundedRectangleBorder(side: BorderSide(width: 2.0)),
@@ -181,15 +185,15 @@ class _LoginPageState extends State<LoginPage> {
       child: Text('Forgot Password?'));
   }
 
-  Widget _continueAnonymously(AuthService _auth) {
+  Widget _continueAnonymously(AuthService auth) {
     return FlatButton(
-      onPressed:() => _auth.signinAnon(),
+      onPressed:() => auth.signinAnon(),
       child: Text('Skip for now',
         style: TextStyle(color: Colors.black))
     );
   }
 
-  _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  _fieldFocusChange(FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }

@@ -52,6 +52,31 @@ class DatabaseService{
     await updateUserLocation(HumanatyLocation());
   }
 
+  Future<void> updateUserEmail(String email) async{
+    await userCollection.document(uid).updateData({
+      'email': email
+    });
+  }
+
+  Future<void> updateUserBirthday(DateTime birthday) async{
+    String _birthday = birthday.toString();
+    await userCollection.document(uid).updateData({
+      'birthday' : _birthday.substring(0, _birthday.indexOf(" "))
+    });
+  }
+  
+  Future<void> updateAboutMe(String aboutMe) async{
+    await userCollection.document(uid).updateData({
+      'aboutMe' : aboutMe
+    });
+  }
+
+  Future<void> updateAccessibility(bool accessibility) async{
+    await userCollection.document(uid).updateData({
+      'accessibilityAccommodations' : accessibility
+    });
+  }
+
   Future<void> updateUserData(String aboutMe, bool accessibilityAccommodations, DateTime birthday,
     String displayName) async{
     String _birthday = birthday.toString();

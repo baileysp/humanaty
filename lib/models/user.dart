@@ -66,5 +66,24 @@ class Allergy {
     map.forEach((k, v){if(v) allergyList.add(k.toLowerCase());});
     return allergyList;
   }
+
+  formattedString(Map<String, bool> map){
+    List<String> allergyList = List();
+    map.forEach((k, v){if(v) allergyList.add(k);});
+    String formattedString = '';
+
+    for(int i = 0; i < allergyList.length; i++){
+      if(formattedString.length < 40){
+         formattedString += allergyList[i];
+         if(i < allergyList.length - 1) formattedString += ', ';
+      }
+      else{
+        formattedString += '...';
+        break;
+      }
+    }
+    
+    return allergyList.isNotEmpty ? formattedString : 'No Allergies';
+  }
 }
 

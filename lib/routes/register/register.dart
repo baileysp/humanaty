@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:humanaty/util/size_config.dart';
 import 'package:humanaty/util/validator.dart';
-import 'package:provider/provider.dart';
 
-class RegisterPage extends StatefulWidget {
-  RegisterPage({Key key}) : super(key: key);
+class Register extends StatefulWidget {
+  Register({Key key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _RegisterState createState() => _RegisterState();
 }
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterState extends State<Register> {
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _emailController = TextEditingController();  
   final _passwordController = TextEditingController();
   
   final FocusNode _nameFocus = FocusNode();
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _confirmPassFocus = FocusNode();
-  
+    
   final _registrationFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
   String _errorMessage;
@@ -35,7 +37,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context);
+    final auth = Provider.of<AuthService>(context);
+    SizeConfig().init(context);
+
     return Scaffold(
         appBar: HumanatyAppBar(displayBackBtn: true),
         body: ListView(
@@ -46,7 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),),
             Text("Create an account with huMANAty",
               style: TextStyle(fontSize: 16)),
-            SizedBox(height: 50),
+            SizedBox(height: SizeConfig.screenHeight * .07),
             _errorText(),
             Form(
               key: _registrationFormKey,
@@ -56,9 +60,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   _emailField(),
                   _passwordField(),
                   _confirmPasswordField(),
-                  SizedBox(height: 30),
-                  _registerButton(_auth),
-                  SizedBox(height: 30),
+                  SizedBox(height: SizeConfig.screenHeight * .07),
+                  _registerButton(auth),
+                  SizedBox(height: SizeConfig.screenHeight * .05),
                   _alreadyUser()
                 ],
               )
