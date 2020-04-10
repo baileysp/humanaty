@@ -3,7 +3,7 @@ export 'widgets/constants.dart';
 export 'widgets/drawer/humanaty_drawer.dart';
 export 'widgets/event/humanatyEvent.dart';
 export 'widgets/google_maps/google_maps.dart';
+export 'widgets/google_maps/map_search.dart';
 export 'widgets/humanatyEventList/humanatyEventList.dart';
 export 'widgets/loading/loading.dart';
-export 'widgets/map_search/map_search.dart';
 export 'widgets/rating/humanaty_rating.dart';

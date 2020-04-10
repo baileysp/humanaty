@@ -2,12 +2,15 @@
 Router to hook up all screens to main.dart
 Be sure to add new routes here
 */
-
+export 'about/about.dart';
+export 'contact/contact.dart';
 export 'event/create_event.dart';
 export 'events/events.dart';
 export 'home/guest_home.dart';
 export 'home/host_home.dart';
 export 'login/login.dart';
+export 'map/filter.dart';
+export 'map/filter_date.dart';
 export 'map/map.dart';
 export 'profile/aboutMe_edit.dart';
 export 'profile/allergy_edit.dart';

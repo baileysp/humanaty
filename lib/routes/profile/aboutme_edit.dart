@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
-import 'package:humanaty/util/validator.dart';
-import 'package:provider/provider.dart';
 
 class AboutMeEdit extends StatefulWidget {
   final String aboutMe;

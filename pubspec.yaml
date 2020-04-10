@@ -19,10 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # SearchBar plugin
-  loader_search_bar: ^1.0.3+3
-
-  # SVG plugin
+  
+    # SVG plugin
   flutter_svg: ^0.17.3+1
 
   # Add the dependency for the Firebase Core Flutter SDK
@@ -48,11 +46,7 @@ dependencies:
   #loading indicators
   flutter_spinkit: "^4.1.1"
 
-  #enum to string
-  enum_to_string: ^1.0.8
-  
   flutter_datetime_picker: ^1.3.4
-  table_calendar: 2.2.2
   flutter_calendar_carousel: 1.4.11
   
   #select image from gallery or take new picture
@@ -61,6 +55,9 @@ dependencies:
   
   #better logging
   logger: ^0.6.0
+
+  #launch websites
+  url_launcher:
 
 dev_dependencies:
   flutter_test:

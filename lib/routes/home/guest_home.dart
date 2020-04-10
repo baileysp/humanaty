@@ -6,7 +6,6 @@ import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
-import 'package:loader_search_bar/loader_search_bar.dart';
 import 'package:provider/provider.dart';
 
 /**
@@ -61,12 +60,13 @@ List<HumanatyEvent2> testEvents = [
 
 List<HumanatyEvent2> displayedEvents = testEvents;
 
-class GuestHomePage extends StatefulWidget {
-  GuestHomePage({Key key}) : super(key: key);
-  GuestHomePageState createState() => GuestHomePageState();
+class GuestHome extends StatefulWidget {
+  GuestHome({Key key}) : super(key: key);
+  @override
+  _GuestHomeState createState() => _GuestHomeState();
 }
 
-class GuestHomePageState extends State<GuestHomePage> {
+class _GuestHomeState extends State<GuestHome> {
   @override
   Widget build(BuildContext context) {
     //final _auth = Provider.of<AuthService>(context);
@@ -75,8 +75,8 @@ class GuestHomePageState extends State<GuestHomePage> {
         body: SingleChildScrollView(
             child: Column(
           children: <Widget>[
-            title,
-            searchBar(context),
+            _title(),
+            searchBar(),
             // HumanatyEventList(events: testEvents),
             ListView.builder(
               padding: EdgeInsets.all(0),
@@ -92,22 +92,18 @@ class GuestHomePageState extends State<GuestHomePage> {
         )));
   }
 
-  Widget logout(AuthService _auth) {
-    Navigator.pop(context);
-    _auth.signOut();
-  }
-
-  Widget title = Container(
-      padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+  Widget _title(){
+    return Container(
+      padding: EdgeInsets.fromLTRB(0, 70, 0, 0),
       child: Align(
         alignment: Alignment.topCenter,
         child: Text(
           "HuMANAty",
           style: TextStyle(fontSize: 34),
         ),
-      ));
+      ));}
 
-  Widget searchBar(BuildContext context) {
+  Widget searchBar() {
     return Container(
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(8, 20, 8, 10),
@@ -125,11 +121,8 @@ class GuestHomePageState extends State<GuestHomePage> {
             onPressed: () async {
               String location = await showSearch(context: context, delegate: MapSearch());
               if(location != null){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
-                //Navigator.of(context).pushNamed('/map');
-                                
-              }
-               //Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
+                Navigator.of(context).pushNamed('/map');          
+              }               
             }));
   }
 }
@@ -140,26 +133,23 @@ class GuestRouter extends StatefulWidget {
 }
 
 class GuestRouterState extends State<GuestRouter>{
-  int _navIndex = 0;
-  ScrollController _scrollController = ScrollController();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _navIndex;
+  GlobalKey<ScaffoldState> _scaffoldKey;  
+  final PageStorageBucket _bucket = PageStorageBucket();
   
-  static const TextStyle navStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
- 
+  final List<Widget> _pages = [
+    Loading(),
+    GuestHome(key: PageStorageKey('GuestHome')),
+    MapPage(key: PageStorageKey('MapPage')),
+    Loading() //key: PageStorageKey('MapPage'))
+  ];
+  
   @override
   void initState() {
-    super.initState();
     _navIndex = 1;
+    _scaffoldKey = GlobalKey<ScaffoldState>();
+    super.initState();
   }
-
-  final List<Widget> pages = [
-    Loading(),
-    GuestHomePage(key: PageStorageKey('GuestHome')),
-    MapPage(key: PageStorageKey('MapPage')),
-    Settings() //key: PageStorageKey('MapPage'))
-  ];
-  final PageStorageBucket bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +157,7 @@ class GuestRouterState extends State<GuestRouter>{
         key: _scaffoldKey,
         drawer: HumanatyDrawer(),
         bottomNavigationBar: bottomNavBar(),
-        body: PageStorage(child: pages[_navIndex], bucket: bucket));
+        body: PageStorage(child: _pages[_navIndex], bucket: _bucket));
   }
 
   Widget bottomNavBar() {
@@ -175,7 +165,7 @@ class GuestRouterState extends State<GuestRouter>{
       currentIndex: _navIndex,
       onTap: selectNav,
       type: BottomNavigationBarType.fixed,
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
         BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
         BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
@@ -183,21 +173,13 @@ class GuestRouterState extends State<GuestRouter>{
       ],
       selectedItemColor: Pallete.humanGreen,
     );
-  }    
-    
+  }        
 
   void selectNav(int index) {
-    print(index);
     setState(() {
       index != 0
           ? _navIndex = index
           : _scaffoldKey.currentState.openDrawer();
     });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }

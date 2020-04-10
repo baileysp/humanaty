@@ -14,19 +14,13 @@ class Uploader{
   Future<void> uploadProfilePic(File imageFile) async {
     assert(imageFile != null);
     
-    String filePath = 'users/$uid/profilePicture.png';
+    String filePath = '/users/$uid/profilePicture.png';
     StorageReference storageRef = _storage.ref().child(filePath);
     storageRef.putFile(imageFile);
-    String url = await storageRef.getDownloadURL() as String;
+    String url = (await storageRef.getDownloadURL()) as String;
     if(url != null) 
       log.v('Uploaded Profile Pic successfully');
       DatabaseService(uid: uid).updateProfilePic(url);
   }
-
-  _onTimeOut(){
-    print('Uploading profilePic timed out');
-    return null;}
-
-
 }//Uploader
 

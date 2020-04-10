@@ -11,14 +11,17 @@ import 'package:humanaty/util/size_config.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class HostHomePage extends StatefulWidget {
-  HostHomePageState createState() => HostHomePageState();
+class HostHome extends StatefulWidget {
+  HostHome({Key key}) : super(key: key);
+  @override
+  _HostHomeState createState() => _HostHomeState();
 }
 
-class HostHomePageState extends State<HostHomePage> {
+class _HostHomeState extends State<HostHome> {
   DateTime _selectedDate;
   EventList<Event> _marked;
   List<HumanatyEvent> _selectedDateEvents;
+  AuthService auth;
 
   @override
   void initState() {
@@ -30,10 +33,11 @@ class HostHomePageState extends State<HostHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    final _auth = Provider.of<AuthService>(context);
+    auth = Provider.of<AuthService>(context);
+    SizeConfig().init(context);    
+
     return StreamBuilder<List<HumanatyEvent>>(
-      stream: DatabaseService(uid: _auth.user.uid).myEvents,
+      stream: DatabaseService(uid: auth.user.uid).myEvents,
       builder: (context, snapshot) {
         if(snapshot.hasData){
           _createMarked(snapshot.data);
@@ -43,15 +47,15 @@ class HostHomePageState extends State<HostHomePage> {
           body: Column(
             children: <Widget>[
               Container(height: SizeConfig.screenHeight * .6,
-              child:_calendar(context)),
-              _eventDisplay(context)
+              child:_calendar()),
+              _eventDisplay()
             ],
           )
         );
       });
   }
 
-  Widget _eventDisplay(BuildContext context) {
+  Widget _eventDisplay() {
     var f = DateFormat.yMMMMd("en_US");
     return Expanded(
       child: Column(
@@ -86,7 +90,7 @@ class HostHomePageState extends State<HostHomePage> {
     );
   }
 
-  Widget _calendar(BuildContext context) {
+  Widget _calendar() {
     return Padding(
       padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
       child: CalendarCarousel(
@@ -168,32 +172,30 @@ class HostRouter extends StatefulWidget {
 }
 
 class HostRouterState extends State<HostRouter> {
-  int _navIndex = 0;
-  ScrollController _scrollController = ScrollController();
-  final _bottomNavBarKey = GlobalKey<ScaffoldState>();
-
-  static const TextStyle navStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _navigationOptions = [
+  int _navIndex;
+  GlobalKey<ScaffoldState> _scaffoldKey;  
+  final PageStorageBucket _bucket = PageStorageBucket();
+  
+  final List<Widget> pages = [
     Loading(),
-    HostHomePage(),
-    HostHomePage(),
-    HostHomePage()
+    HostHome(key: PageStorageKey('HostHome')),
+    MapPage(key: PageStorageKey('MapPage')),
+    Loading() //key: PageStorageKey('MapPage'))
   ];
-
   @override
   void initState() {
     _navIndex = 1;
+    _scaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _bottomNavBarKey,
+        key: _scaffoldKey,
         drawer: HumanatyDrawer(),
         bottomNavigationBar: bottomNavBar(),
-        body: _navigationOptions[_navIndex]);
+        body: PageStorage(child: pages[_navIndex], bucket: _bucket));
   }
 
   Widget bottomNavBar() {
@@ -201,7 +203,7 @@ class HostRouterState extends State<HostRouter> {
       currentIndex: _navIndex,
       onTap: selectNav,
       type: BottomNavigationBarType.fixed,
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
         BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
         BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
@@ -213,17 +215,10 @@ class HostRouterState extends State<HostRouter> {
   }
 
   void selectNav(int index) {
-    print(index);
     setState(() {
       index != 0
           ? _navIndex = index
-          : _bottomNavBarKey.currentState.openDrawer();
+          : _scaffoldKey.currentState.openDrawer();
     });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }

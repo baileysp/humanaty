@@ -7,7 +7,6 @@ import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/humanaty_mode.dart';
 import 'package:humanaty/models/user.dart';
-import 'package:humanaty/routes/profile/profile.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 
@@ -25,24 +24,32 @@ class HumanatyDrawer extends StatelessWidget {
           UserData userData = snapshot.data;
           return _drawer(context, auth, userData, mode);
         }
-        //Navigator.pop(context);
-        //_auth.signOut();
-        return Loading();
+        //Navigator.pop(context); _auth.signOut();
+        return Drawer();
       });
   }
 
   Widget _drawer(BuildContext context, AuthService auth, UserData userData, HumanatyMode mode) {
     return Drawer(
-        child: ListView(
-        children: <Widget>[
-          DrawerHeader(child: auth.isAnonUser() ? _anonHeader() : _userHeader(context, userData)),
-          _profileTile(context, auth.status, userData),
-          _settingsTile(context, userData),
-          _loginTile(context, auth),
-          _aboutTile(),
-          _switchModeTile(context, mode)
-        ],
-    ));
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Column(
+              children: <Widget>[
+                DrawerHeader(child: auth.isAnonUser() ? _anonHeader() : _userHeader(context, userData),),            
+                _profileTile(context, auth, userData),
+                _settingsTile(context, userData),
+                _loginTile(context, auth),
+                _aboutTile(context),
+                _contactTile(context),
+              ],
+        ), Expanded(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: _switchModeTile(context, mode)))
+            ],
+          ),
+      ));
   }
 
   Widget _anonHeader(){
@@ -69,19 +76,19 @@ class HumanatyDrawer extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(userData.displayName, style: TextStyle(fontSize: 16)),
+            Text(userData.displayName, style: TextStyle(fontSize: 24)),
             HumanatyRating(rating: userData.guestRating, starSize: 15)
         ],)
       ],
     );
   }
 
-  Widget _profileTile(BuildContext context, Status status, UserData userData){
+  Widget _profileTile(BuildContext context, AuthService auth, UserData userData){
     return ListTile(
-      title: Text('Profile'),
+      title: Text('Profile', style: TextStyle(fontSize: 16)),
       onTap: (){
         Navigator.pop(context);
-        status == Status.Anon ? 
+        auth.isAnonUser() ? 
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('Please Log-In to view your profile'))) :
           Navigator.of(context).pushNamed('/profile');
@@ -90,7 +97,7 @@ class HumanatyDrawer extends StatelessWidget {
 
   Widget _settingsTile(BuildContext context, UserData userData){
     return ListTile(
-      title: Text('Settings'),
+      title: Text('Settings', style: TextStyle(fontSize: 16)),
       onTap: (){Navigator.of(context).pushNamed('/settings');},
     );
   }
@@ -109,22 +116,31 @@ class HumanatyDrawer extends StatelessWidget {
     }
   }
 
-  Widget _aboutTile(){
+  Widget _aboutTile(BuildContext context){
     return ListTile(
-      title: Text('About'),
-      onTap:() {},
+      title: Text('About', style: TextStyle(fontSize: 16)),
+      onTap:() => Navigator.of(context).pushNamed('/about'),
+    );
+  }
+
+  Widget _contactTile(BuildContext context){
+    return ListTile(
+      title: Text('Contact Us', style: TextStyle(fontSize: 16)),
+      onTap:() => Navigator.of(context).pushNamed('/contact'),
     );
   }
 
   Widget _switchModeTile(BuildContext context, HumanatyMode mode){
-    SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg', width: 20);
+    SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg', width: 24, color: Colors.black54);
     return Container(
-      child: InkWell(
-        child: mode.isHostMode() ? chefHat : Icon(Icons.local_dining),
-        onTap: () {
+      color: Pallete.humanGreen54,
+      child: ListTile(
+        trailing: mode.isHostMode() ? chefHat : Icon(Icons.local_dining),
+        title: Text(mode.isHostMode() ? 'Switch to Guest' : mode.isConsumerMode() ? 'Switch to Host': '', 
+          style: TextStyle(fontSize: 16)),
+        onTap:() {
           Navigator.pop(context);
-          mode.switchMode();
-        }
+          mode.switchMode();},
       ),
     );
   }

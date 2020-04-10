@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:humanaty/routes/_router.dart';
-import 'dart:async';
-import 'package:image_picker/image_picker.dart';
 
+import 'package:image_picker/image_picker.dart';
 class ImageOptions extends StatefulWidget {
+  @override
   _ImageOptionsState createState() => _ImageOptionsState();
 }
 class _ImageOptionsState extends State<ImageOptions>{
@@ -55,8 +53,7 @@ class _ImageOptionsState extends State<ImageOptions>{
     catch(error){}
     
     if (selected != null)
-      _imageEditReturn = await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ImageEdit(file: selected)));
+      _imageEditReturn = await Navigator.of(context).pushNamed('/image_edit', arguments: {'file': selected});
     if (_imageEditReturn != 'cancelled') Navigator.pop(context);
   }
 

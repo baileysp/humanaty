@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/models.dart';
-import 'package:humanaty/routes/map/filter_date.dart';
-import 'package:humanaty/routes/map/filter.dart';
+import 'package:humanaty/routes/_router.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key key}) : super(key: key);
+  @override
   _MapPageState createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
   HumanatyLocation _location;
-
   List<DateTime> filterDates;
 
   @override
@@ -20,17 +19,17 @@ class _MapPageState extends State<MapPage> {
         body: Stack(
           children: <Widget>[
             GoogleMaps(location: _location),
-            filter(context),
+            _filter(context),
           ],
         ),
         appBar: HumanatyAppBar(
           displayBackBtn: true,
           title: _location?.city ?? 'Atlanta',
-          actions: [search(context)],
+          actions: [_search(context)],
         ));
   }
 
-  Widget search(BuildContext context) {
+  Widget _search(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.search, color: Colors.grey),
       onPressed: () async {
@@ -47,7 +46,7 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Widget filter(BuildContext context) {
+  Widget _filter(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Row(

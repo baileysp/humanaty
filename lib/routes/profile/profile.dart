@@ -1,6 +1,5 @@
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +10,7 @@ import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:humanaty/util/size_config.dart';
-import 'package:humanaty/util/validator.dart';
+
 
 class Profile extends StatefulWidget {
   @override
@@ -19,16 +18,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _aboutMeController = TextEditingController();
-
-  final FocusNode _emailFocus = FocusNode();
-  final _updateProfileFormKey = GlobalKey<FormState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  bool error = false;
-
   AuthService auth;
   DatabaseService database;
 
@@ -49,12 +38,11 @@ class _ProfileState extends State<Profile> {
 
   Widget _profile(BuildContext context, UserData userData) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: HumanatyAppBar(displayBackBtn: true, title: 'Edit Profile'),
       body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           children: <Widget>[
-            _header1(userData.displayName, userData.photoUrl),
+            _header(userData.displayName, userData.photoUrl),
             _name(userData.displayName),
             Divider(),
             _email(userData.email),
@@ -66,21 +54,28 @@ class _ProfileState extends State<Profile> {
             _access(userData.accessibilityAccommodations),
             Divider(),
             _allergyBtn(userData.allergies)
-            
-            
           ]),
     );
   }
 
-  Widget _header1(String displayName, String photoUrl) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+  Widget _header(String displayName, String photoUrl) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        CircleAvatar(
-          radius: 75,
-          backgroundImage: NetworkImage(photoUrl),
-          backgroundColor: Pallete.humanGreen,
-        ),
+        ClipOval(
+          child: Material(
+            child: InkWell(
+              onTap: () => showModalBottomSheet(context: context, builder: (_){return ImageOptions();},
+                     backgroundColor: Colors.transparent),
+              child: CircleAvatar(
+                radius: 75,
+                backgroundImage: NetworkImage(photoUrl),
+                backgroundColor: Pallete.humanGreen,
+              ),
+            ),
+          ),
+        ), 
       ],
     );
   }
@@ -102,15 +97,22 @@ class _ProfileState extends State<Profile> {
 
   Widget _email(String email) {
     return InkWell(
-      onTap: () =>
-          Navigator.of(context).pushNamed('/email_edit', arguments: {'email': email}),
+      splashColor: Pallete.humanGreen54,
+      onTap: () => Navigator.of(context)
+          .pushNamed('/email_edit', arguments: {'email': email}),
       child: SizedBox(
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('Email Address', style: TextStyle(color: Colors.black54)),
-              Text('$email'),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Email Address', style: TextStyle(color: Colors.black54)),
+                  Text('$email'),
+                ],
+              ),
+              _edit()  
             ],
           )),
     );
@@ -119,13 +121,20 @@ class _ProfileState extends State<Profile> {
   Widget _birthdayField(DateTime birthday) {
     DateFormat f = DateFormat.yMMMMd("en_US");
     return InkWell(
+      splashColor: Pallete.humanGreen54,
       child: SizedBox(
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('Birthday', style: TextStyle(color: Colors.black54)),
-              Text('${f.format(birthday)}'),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Birthday', style: TextStyle(color: Colors.black54)),
+                  Text('${f.format(birthday)}'),
+                ],
+              ),
+              _edit()
             ],
           )),
       onTap: () {
@@ -141,7 +150,9 @@ class _ProfileState extends State<Profile> {
 
   Widget _aboutMe(String aboutMe) {
     return InkWell(
-      onTap: () => Navigator.of(context).pushNamed('/aboutMe_edit', arguments: {'aboutMe': aboutMe}),
+      splashColor: Pallete.humanGreen54,
+      onTap: () => Navigator.of(context)
+          .pushNamed('/aboutMe_edit', arguments: {'aboutMe': aboutMe}),
       child: SizedBox(
           width: double.infinity,
           child: Column(
@@ -171,9 +182,10 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget _allergyBtn(Map<String, bool> allergies){
+  Widget _allergyBtn(Map<String, bool> allergies) {
     return InkWell(
-      onTap:() => Navigator.of(context).pushNamed('/allergy_edit', arguments: {'allergyMap' : allergies}),
+      onTap: () => Navigator.of(context)
+          .pushNamed('/allergy_edit', arguments: {'allergyMap': allergies}),
       child: SizedBox(
           width: double.infinity,
           child: Row(
@@ -191,4 +203,18 @@ class _ProfileState extends State<Profile> {
           )),
     );
   }
+
+  Widget _edit(){
+    return InkWell(
+      onTap: null,
+      splashColor: Pallete.humanGreen54,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Pallete.humanGreen)),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                child: Text('EDIT', style: TextStyle(color: Pallete.humanGreen),))));  
+  }
+
 }

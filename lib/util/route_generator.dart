@@ -7,20 +7,25 @@ class RouteGenerator {
     var args = settings.arguments as Map<String, Object>;
 
     switch (settings.name) {
+      case '/about':
+        return MaterialPageRoute(builder: (_) => About());
       case '/aboutMe_edit':
         return MaterialPageRoute(builder: (_) => AboutMeEdit(aboutMe: args['aboutMe']));
      
       case '/allergy_edit':
-        //args = args as Map<String, Object>;
-        
-        //print(args.runtimeType);
         return MaterialPageRoute(builder: (_) => AllergyEdit(allergyMap: args['allergyMap']));
+      case '/contact':
+        return MaterialPageRoute(builder: (_) => Contact());
       case '/create_event':
         return MaterialPageRoute(builder: (_) => CreateEvent());
       case '/email_edit':
         return MaterialPageRoute(builder: (_) => EmailEdit(email: args['email']));
       case '/guest_home':
         return MaterialPageRoute(builder: (_) => GuestRouter());
+      case '/image_edit':
+        return MaterialPageRoute(builder: (_) => ImageEdit(file: args['file']));
+      case '/image_options':
+        return MaterialPageRoute(builder: (_) => ImageOptions());
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
       case '/map':

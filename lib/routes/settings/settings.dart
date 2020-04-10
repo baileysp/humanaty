@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:provider/provider.dart';
@@ -7,29 +6,31 @@ import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/models.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class Settings extends StatefulWidget {
-  final UserData prevUserData;
-  const Settings({Key key, this.prevUserData}) : super(key: key);
+  @override
   _SettingsState createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context);
+    final auth = Provider.of<AuthService>(context);
 
     return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: _auth.user.uid).userData,
+        stream: DatabaseService(uid: auth.user.uid).userData,
         builder: (context, snapshot) {        
-          UserData userData =
-              (snapshot.hasData) ? snapshot.data : null;
-          return _settings(context, _auth, userData);
+          if(snapshot.hasData){
+            UserData userData = snapshot.data;
+            return _settings(auth, userData);
+          }
+          return Loading();
         });
   }
 
-  Widget _settings(BuildContext context, AuthService _auth, UserData userData) {
+  Widget _settings(AuthService auth, UserData userData) {
     return Scaffold(
       appBar: HumanatyAppBar(
           displayBackBtn: true,
@@ -37,23 +38,24 @@ class _SettingsState extends State<Settings> {
       ),
       body: Column(
         children:[
-          //_header('Location'),
-          _currentLocation(context, _auth, userData),
-          Divider(),
-          //_header('App'),
-          _logout(_auth),
-          //_version(),
-          Divider(),
-          //_header('Legal'),
+          _currentLocation(context, auth, userData),
+          Divider(height: 30),
+          _header('Legal'),
           //_nonFunctional('Terms of Service'),
           _nonFunctional('IP License'),
           //_nonFunctional('Software Licenses'),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text('huMANAty iOS App v1.0', style: TextStyle(color: Colors.black54))
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _logout(auth),
+                    Text('huMANAty iOS App v1.0', style: TextStyle(color: Colors.black54)),
+                  ],
+                )
               ),
             )
           )
@@ -62,7 +64,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget _currentLocation(BuildContext context, AuthService _auth, UserData userData){
+  Widget _currentLocation(BuildContext context, AuthService auth, UserData userData){
     return ListTile(
       isThreeLine: true,
       title: Text('Current Location'),
@@ -76,25 +78,23 @@ class _SettingsState extends State<Settings> {
       onTap:() async{
         String location = await showSearch(context: context, delegate: MapSearch());
         if(location == null) return;
-        DatabaseService(uid: _auth.user.uid).updateUserLocation(HumanatyLocation.fromString(location));
+        DatabaseService(uid: auth.user.uid).updateUserLocation(HumanatyLocation.fromString(location));
       },
     );
   }
 
-  Widget _logout(AuthService _auth){
-    return ListTile(
-      title: Text('Logout', ),//style: TextStyle(color: Pallete.humanGreen),),
-      onTap: (){
-        Navigator.pop(context);
-        _auth.signOut();
-      },
-    );
-  }
-
-  Widget _version(){
-    return ListTile(
-      title: Text('huMANAty iOS App'),
-      trailing: Text('v1.0'),
+  Widget _logout(AuthService auth){
+    return Container(
+      width: double.infinity,
+      height: 50.0,
+      child: RaisedButton(
+        onPressed: (){
+          Navigator.pop(context);
+          auth.signOut();
+        },
+        color: Pallete.humanGreen,
+        child: Text('Log out', style: TextStyle(color: Colors.white, fontSize: 16.0))
+      ),
     );
   }
 
@@ -114,10 +114,15 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget _nonFunctional(String title){
+    var url = 'https://github.com/bspencer30/humanaty';
     return ListTile(
       title: Text(title),
       trailing: Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: (){},
+      onTap:() async{
+        if(await canLaunch(url)){
+          await launch(url);
+        }
+      },
     );
   }
 
