@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:humanaty/util/logger.dart';
+import 'package:humanaty/util/upload_farms.dart';
 import 'package:provider/provider.dart';
 
 import 'package:humanaty/common/design.dart';
@@ -126,7 +127,8 @@ class HumanatyDrawer extends StatelessWidget {
   Widget _contactTile(BuildContext context){
     return ListTile(
       title: Text('Contact Us', style: TextStyle(fontSize: 16)),
-      onTap:() => Navigator.of(context).pushNamed('/contact'),
+      onTap:() => Navigator.of(context).pushNamed('/contact')
+      //uploadFarms()
     );
   }
 

@@ -249,12 +249,7 @@ class DatabaseService {
     return snapshot.documents.map((doc){
       return Farm(
         contact: doc.data['contact'],
-        location: HumanatyLocation().humanatyLocationNoCoords(
-          doc.data['address'],
-          doc.data['city'],
-          doc.data['state'],
-          doc.data['zip']
-        ),
+        
         name: doc.data['name'],
         telephone: doc.data['telephone'],
         website: doc.data['website']

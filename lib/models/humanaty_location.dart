@@ -16,8 +16,8 @@ class HumanatyLocation {
     this.zip
   });
 
-  humanatyLocationNoCoords(String address, String city, String state, String zip) async{
-    GeoPoint geoPoint = await _lookup(address);
+  Future<HumanatyLocation> humanatyLocationNoCoords(String address, String city, String state, String zip) async{
+    GeoPoint geoPoint = await _lookup(address, city);
     HumanatyLocation location = HumanatyLocation(
       address: address,
       city: city,
@@ -28,9 +28,11 @@ class HumanatyLocation {
     return location;
   }
 
-  Future<GeoPoint> _lookup(String address)async{
+  Future<GeoPoint> _lookup(String address, String city)async{
+    if(address.isEmpty) return GeoPoint(0,0);
     GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: 'AIzaSyDKNJ1TI_zJnzqBEmMzjlpw3tUBdoCK66g');
-    PlacesSearchResponse _response = await _places.searchByText(address + city + state);
+    String query = address + city;
+    PlacesSearchResponse _response = await _places.searchByText(query);
     List<PlacesSearchResult> _results = _response.results;
     if(_results.isNotEmpty){
       PlacesSearchResult _result = _results[0];
