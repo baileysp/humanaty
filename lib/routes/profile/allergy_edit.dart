@@ -21,7 +21,7 @@ class _AllergyEditState extends State<AllergyEdit> {
     auth = Provider.of<AuthService>(context);
 
     return Scaffold(
-      appBar: HumanatyAppBar(displayCloseBtn: true, title: 'Edit Allergies', actions: widget.updateUserProfile ? [updateAllergiesBtn(context, auth, widget.allergyMap)] : [returnAllergiesBtn(widget.allergyMap)]),
+      appBar: HumanatyAppBar(displayCloseBtn: true, title: 'Edit Allergies', actions: widget.updateUserProfile ? [updateAllergiesBtn(context, auth, widget.allergyMap)] : [returnAllergiesBtn(context, widget.allergyMap)]),
       body: ListView.builder(
         itemCount: widget.allergyMap.length,
         itemBuilder: (context, index){
@@ -39,13 +39,13 @@ class _AllergyEditState extends State<AllergyEdit> {
 }
 
 
-Widget returnAllergiesBtn(Map userAllergies){
+Widget returnAllergiesBtn(BuildContext context, Map userAllergies){
   return FlatButton(
     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     onPressed: () async{
-      Navigator.pop(Allergy().allergyListFromMap(userAllergies));
+      Navigator.of(context).pop(Allergy().allergyListFromMap(userAllergies));
     },
-    child: Text('UPDATE', style: TextStyle(color: Pallete.humanGreen))
+    child: Text('SAVE', style: TextStyle(color: Pallete.humanGreen))
   );
 }
 
@@ -56,5 +56,5 @@ Widget updateAllergiesBtn(BuildContext context, AuthService auth, Map userAllerg
       
       await DatabaseService(uid: auth.user.uid).updateAllergyData(userAllergies);
       Navigator.of(context).pop();},
-    child: Text('UPDATE', style: TextStyle(color: Pallete.humanGreen)));
+    child: Text('SAVE', style: TextStyle(color: Pallete.humanGreen)));
 }

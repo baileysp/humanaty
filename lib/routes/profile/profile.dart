@@ -195,7 +195,7 @@ class _ProfileState extends State<Profile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text('Allergies', style: TextStyle(color: Colors.black54)),
-                  Text('${Allergy().formattedString(allergies)}'),
+                  Text('${Allergy().formattedStringFromMap(allergies)}'),
                 ],
               ),
               Icon(Icons.arrow_forward_ios, size: 20)

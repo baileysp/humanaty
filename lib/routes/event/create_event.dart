@@ -167,13 +167,9 @@ class _CreateEventState extends State<CreateEvent> {
       title: Text('Allergens present'),
       trailing: Icon(Icons.arrow_forward),
       onTap: () async {
-        List<String> selectedAllergies = await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AllergyEdit(
-                  allergyMap: Allergy().allergyMapFromList(_allergies),
-                  updateUserProfile: false)),
-        );
+        List<String> selectedAllergies = await Navigator.of(context).pushNamed('/allergy_edit', 
+        arguments: {'allergyMap': Allergy().allergyMapFromList(_allergies),
+                    'updateUserProfile': false});
         if (selectedAllergies != null) {
           setState(() {
             _allergies = selectedAllergies;

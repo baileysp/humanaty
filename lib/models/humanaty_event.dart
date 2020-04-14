@@ -8,11 +8,13 @@ class HumanatyEvent{
   final double costPerSeat;
   final DateTime date;
   final String description;
+  final String eventID;
   final int guestNum;
   final String hostID;
   final HumanatyLocation location;
   final String meal;
   final List photoGallery;
+  final int seatsAvailable;
   final String title;
 
   HumanatyEvent({
@@ -23,11 +25,13 @@ class HumanatyEvent{
     this.costPerSeat,
     this.date,
     this.description,
+    this.eventID,
     this.guestNum,
     this.hostID,
     this.location,
     this.meal,
     this.photoGallery,
+    this.seatsAvailable,
     this.title
   });
 }

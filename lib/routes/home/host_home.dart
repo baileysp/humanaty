@@ -206,7 +206,7 @@ class HostRouterState extends State<HostRouter> {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
         BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
-        BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
+        BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Farms")),
         BottomNavigationBarItem(
             icon: Icon(Icons.library_books), title: Text("My Events")),
       ],

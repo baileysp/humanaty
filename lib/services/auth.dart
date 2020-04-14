@@ -132,13 +132,26 @@ class AuthService with ChangeNotifier {
   }
 
   Future<bool> changeEmail(String newEmail) async{
-    var user = await _firebaseAuth.currentUser();
-    user.updateEmail(newEmail).then((_){
-      DatabaseService(uid: _user.uid).updateUserEmail(newEmail);
-      return true;
-    }).catchError((){
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    try{
+      await user.updateEmail(newEmail);
+      if(user.email == newEmail){
+        DatabaseService(uid: _user.uid).updateUserEmail(newEmail);
+        return true;
+      }
       return false;
-    });
+    }catch(error){
+      log.e(error.toString());
+      return false;
+    }
+   
+   
+    // user.updateEmail(newEmail).then((_){
+    //   DatabaseService(uid: _user.uid).updateUserEmail(newEmail);
+    //   return true;
+    // }).catchError((_){
+    //   return false;
+    // });
 
   }
 

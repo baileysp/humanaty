@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:humanaty/common/design.dart';
 import 'package:humanaty/routes/event/event_page.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
@@ -11,8 +13,7 @@ import 'package:humanaty/models/models.dart';
 import 'package:provider/provider.dart';
 
 class GoogleMaps extends StatefulWidget {
-  
-  
+    
   HumanatyLocation location;
   GoogleMaps({this.location});
   @override
@@ -27,7 +28,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
 
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {}; 
-  // Set<Circle> _circles = {};
+  Set<Circle> _circles = {};
   
   CameraPosition _startPosition = CameraPosition(target: LatLng(33.774745,-84.397445), zoom: 14.476);
 
@@ -39,20 +40,20 @@ class _GoogleMapsState extends State<GoogleMaps> {
 
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context);
+    final auth = Provider.of<AuthService>(context);
     return StreamBuilder<List<HumanatyEvent>>(
-      stream: DatabaseService(uid: _auth.user.uid).getEvents(),
+      stream: DatabaseService(uid: auth.user.uid).getEvents(),
       builder: (context, snapshot){
         if (snapshot.hasData) {
-          List<HumanatyEvent> tempList = snapshot.data;
-          _createPins(tempList);
-          print(tempList.length);
+          List<HumanatyEvent> events = snapshot.data;
+          _createPins(events);
+          _createCircle(events);
         }
         return Scaffold(
           body: GoogleMap(
           myLocationButtonEnabled: true,
           markers: _markers,
-          // circles: _circles,
+          //circles: _circles,
           mapType: MapType.normal,
           initialCameraPosition: _startPosition,
           onMapCreated: (GoogleMapController controller) {
@@ -67,8 +68,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
     Set<Marker> markers = {};
     for(int i = 0; i < events.length; i++){
       HumanatyEvent event = events[i];
-      MarkerId id = MarkerId(event.hashCode.toString());
-      print(id);
+      MarkerId id = MarkerId(i.toString());
       markers.add(Marker(
         markerId: id,
         position: LatLng(event.location.geoPoint.latitude, event.location.geoPoint.longitude),
@@ -76,11 +76,39 @@ class _GoogleMapsState extends State<GoogleMaps> {
         consumeTapEvents: true,
         onTap: () {
           // Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EventPage(event: event)));
+          //Navigator.of(context).pushNamed('/event', arguments: {'event': event});
+          Navigator.of(context).pushNamed('/event_info', arguments: {'eventID': event.eventID});
         }
         ));
       _markers = markers;
     }
+  }
+
+  void _createCircle(List<HumanatyEvent> events){
+    Set<Circle> circles = {};
+    for(int i = 0; i < events.length; i++){
+      HumanatyEvent event = events[i];
+      CircleId id = CircleId(i.toString());
+      circles.add(Circle(
+        circleId: id,
+        consumeTapEvents: true,
+        fillColor: Pallete.humanGreen54,
+        center: _offset(event.location.geoPoint),
+        radius: 1609,
+        //strokeColor: Pallete.humanGreen,
+        strokeWidth: 1,
+        zIndex: i
+      ));
+    _circles = circles;
+    }
+  }
+
+  LatLng _offset(GeoPoint center){
+    Random _rand = Random(DateTime.now().millisecond);
+    double _offset = .5; //max offset in miles of lat and lang
+    double _latoff = (_rand.nextDouble() * (2*_offset) - _offset)/69;
+    double _lngoff = (_rand.nextDouble() * (2*_offset) - _offset)/69; 
+    return LatLng(center.latitude + _latoff, center.longitude + _lngoff);    
   }
 
   void _moveCamera(GeoPoint geopoint) async {

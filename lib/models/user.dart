@@ -47,6 +47,23 @@ class UserData {
   String toString() => '$displayName $uid';
 }
 
+class Profile{
+  final String aboutMe;
+  final double guestRating;
+  final String displayName;
+  //final List<String> hostEventHistory
+  final double hostRating;
+  //final List<String> hostUpcomingEvents
+  final String photoUrl;
+  
+  Profile({
+    this.aboutMe,
+    this.guestRating,
+    this.displayName,
+    this.hostRating,
+    this.photoUrl
+  });
+}
 class Allergy {
   allergyMapFromList(List<String> list) {
     return {
@@ -67,7 +84,12 @@ class Allergy {
     return allergyList;
   }
 
-  formattedString(Map<String, bool> map){
+
+  formattedStringFromList(List list){
+    return formattedStringFromMap(allergyMapFromList(list));
+  }
+
+  formattedStringFromMap(Map<String, bool> map){
     List<String> allergyList = List();
     map.forEach((k, v){if(v) allergyList.add(k);});
     String formattedString = '';

@@ -54,10 +54,9 @@ class _EmailEditState extends State<EmailEdit> {
     return FlatButton(
         onPressed: () async {
           if (_formKey.currentState.validate()) {
-            if (await auth.changeEmail(_emailController.text)) {
-              Navigator.pop(context);
-            }
-            showDialog(
+            bool _status = await auth.changeEmail(_emailController.text);
+            if(_status) Navigator.pop(context);
+            else showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return _alertDialog();

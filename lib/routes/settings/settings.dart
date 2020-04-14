@@ -40,7 +40,7 @@ class _SettingsState extends State<Settings> {
         children:[
           _currentLocation(context, auth, userData),
           Divider(height: 30),
-          _header('Legal'),
+          //_header('Legal'),
           //_nonFunctional('Terms of Service'),
           _nonFunctional('IP License'),
           //_nonFunctional('Software Licenses'),
