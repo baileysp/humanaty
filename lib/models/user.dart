@@ -85,7 +85,7 @@ class Allergy {
   }
 
 
-  formattedStringFromList(List list){
+  formattedStringFromList(List<String> list){
     return formattedStringFromMap(allergyMapFromList(list));
   }
 

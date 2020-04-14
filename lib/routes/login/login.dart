@@ -45,14 +45,19 @@ class _LoginState extends State<Login> {
       appBar: HumanatyAppBar(actions: <Widget>[_continueAnonymously(auth)],),
       body: ListView(
           shrinkWrap: true,
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           children: <Widget>[
+            Image(
+              alignment: Alignment.centerLeft,
+              height: 100,
+              image: AssetImage('assets/images/logo/temporary_logo.png'), 
+              color: Pallete.humanGreen,),
             Text('Welcome Back,',
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30.0),
             ),
             Text('Sign in with huMANAty', 
               style: TextStyle(fontSize: 16)),
-            SizedBox(height: SizeConfig.screenHeight * .10),
+            SizedBox(height: SizeConfig.screenHeight * .05),
             _errorText(),
             Form(
                 key: _signInFormKey,
@@ -64,11 +69,11 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[_forgotPassword()],
                     ),
-                    SizedBox(height: SizeConfig.screenHeight * .11),
+                    SizedBox(height: SizeConfig.screenHeight * .05),
                     _loginButton(auth),
                     SizedBox(height: SizeConfig.screenHeight * .025),
                     _googleSignIn(auth),
-                    SizedBox(height: SizeConfig.screenHeight * .06),
+                    SizedBox(height: SizeConfig.screenHeight * .05),
                     _newUser()
                   ],
                 ))
@@ -160,10 +165,13 @@ class _LoginState extends State<Login> {
             if (!await auth.signInWithGoogle()) {}
           },
           color: Colors.white,
-          //shape: RoundedRectangleBorder(side: BorderSide(width: 2.0)),
+          // shape: RoundedRectangleBorder(side: BorderSide(
+          //   color: Pallete.googleBlue,
+          //   width: 2.0)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Image(image: AssetImage('assets/images/logo/google_logo.png')),
               Text("Sign in with Google", style: TextStyle(fontSize: 16.0))
             ],
           )),
@@ -174,7 +182,7 @@ class _LoginState extends State<Login> {
     return FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         onPressed: () {
-          Navigator.pushNamed(context, '/registration');
+          Navigator.pushNamed(context, '/register');
         },
         child: Text('Don\'t have an account? Sign up'));
   }

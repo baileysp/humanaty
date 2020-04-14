@@ -4,17 +4,17 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+
 import 'package:humanaty/common/design.dart';
-import 'package:humanaty/routes/event/event_page.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:humanaty/models/models.dart';
-import 'package:provider/provider.dart';
+
 
 class GoogleMaps extends StatefulWidget {
     
-  HumanatyLocation location;
+  final HumanatyLocation location;
   GoogleMaps({this.location});
   @override
   _GoogleMapsState createState() => _GoogleMapsState();
@@ -29,14 +29,17 @@ class _GoogleMapsState extends State<GoogleMaps> {
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {}; 
   Set<Circle> _circles = {};
-  
+  BitmapDescriptor _customIcon;
   CameraPosition _startPosition = CameraPosition(target: LatLng(33.774745,-84.397445), zoom: 14.476);
 
-  // void setPin() {
-  //  BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 3.75), 'assets/event_pin.png').then((onValue) {
-  //    pin = onValue;
-  //  });
-  // }
+  @override
+  void initState() {
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(48,48)), 'assets/images/event_pin.png')
+      .then((onValue){
+        _customIcon = onValue;
+      });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +66,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
       });
   }
 
-  void _createPins(List<HumanatyEvent> events) {
+  Future<void> _createPins(List<HumanatyEvent> events)async {
     print(events.length);
     Set<Marker> markers = {};
     for(int i = 0; i < events.length; i++){
@@ -73,10 +76,9 @@ class _GoogleMapsState extends State<GoogleMaps> {
         markerId: id,
         position: LatLng(event.location.geoPoint.latitude, event.location.geoPoint.longitude),
         icon: BitmapDescriptor.defaultMarkerWithHue(164),
+        //icon: _customIcon,
         consumeTapEvents: true,
         onTap: () {
-          // Navigator.pop(context);
-          //Navigator.of(context).pushNamed('/event', arguments: {'event': event});
           Navigator.of(context).pushNamed('/event_info', arguments: {'eventID': event.eventID});
         }
         ));

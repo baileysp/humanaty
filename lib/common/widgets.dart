@@ -2,6 +2,7 @@ export 'widgets/appBar/humanaty_appBar.dart';
 export 'widgets/constants.dart';
 export 'widgets/drawer/humanaty_drawer.dart';
 export 'widgets/event/humanatyEvent.dart';
+export 'widgets/google_maps/farm_maps.dart';
 export 'widgets/google_maps/google_maps.dart';
 export 'widgets/google_maps/map_search.dart';
 export 'widgets/humanatyEventList/humanatyEventList.dart';

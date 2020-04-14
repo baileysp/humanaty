@@ -17,132 +17,165 @@ class HumanatyDrawer extends StatelessWidget {
     final auth = Provider.of<AuthService>(context);
     final mode = Provider.of<HumanatyMode>(context);
     final log = getLogger('HumanatyDrawer');
-    
+
     return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: auth.user.uid).userData,
-      builder: (context, snapshot) {
-        if (snapshot.hasData || auth.isAnonUser()) {
-          UserData userData = snapshot.data;
-          return _drawer(context, auth, userData, mode);
-        }
-        //Navigator.pop(context); _auth.signOut();
-        return Drawer();
-      });
+        stream: DatabaseService(uid: auth.user.uid).userData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData || auth.isAnonUser()) {
+            UserData userData = snapshot.data;
+            return _drawer(context, auth, userData, mode);
+          }
+          //Navigator.pop(context); _auth.signOut();
+          return Drawer();
+        });
   }
 
-  Widget _drawer(BuildContext context, AuthService auth, UserData userData, HumanatyMode mode) {
+  Widget _drawer(BuildContext context, AuthService auth, UserData userData,
+      HumanatyMode mode) {
     return Drawer(
         child: Container(
-          child: Column(
+      child: Column(
+        children: <Widget>[
+          Column(
             children: <Widget>[
-              Column(
-              children: <Widget>[
-                DrawerHeader(child: auth.isAnonUser() ? _anonHeader() : _userHeader(context, userData),),            
-                _profileTile(context, auth, userData),
-                _settingsTile(context, userData),
-                _loginTile(context, auth),
-                _aboutTile(context),
-                _contactTile(context),
-              ],
-        ), Expanded(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: _switchModeTile(context, mode)))
+              DrawerHeader(
+                child: auth.isAnonUser()
+                    ? _anonHeader()
+                    : _userHeader(context, userData),
+              ),
+              _profileTile(context, auth, userData),
+              _settingsTile(context, userData),
+              _aboutTile(context),
+              _contactTile(context),
+              auth.isAnonUser() 
+                ? _loginTile(context, auth)
+                : SizedBox.shrink(),
             ],
           ),
-      ));
+          Expanded(
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _switchModeTile(context, mode)))
+        ],
+      ),
+    ));
   }
 
-  Widget _anonHeader(){
+  Widget _anonHeader() {
     return Container(
-      padding: EdgeInsets.only(top: 32.0),
-      child: Text('Welcome to huMANAty', style: TextStyle(fontSize: 20)));
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Image(image: AssetImage('assets/images/logo/temporary_logo.png'), color: Pallete.humanGreen,),
+          Text('Welcome to huMANAty', style: TextStyle(fontSize: 20)),
+        ],
+      )
+    );
   }
 
-  Widget _userHeader(BuildContext context, UserData userData){
+  Widget _userHeader(BuildContext context, UserData userData) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         InkWell(
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
             Navigator.of(context).pushNamed('/profile');
           },
-          child: CircleAvatar(radius: 70, 
-            backgroundColor: Pallete.humanGreen,
-            backgroundImage : NetworkImage(userData.photoUrl)),),
+          child: CircleAvatar(
+              radius: 70,
+              backgroundColor: Pallete.humanGreen54,
+              backgroundImage: NetworkImage(userData.photoUrl)),
+        ),
         SizedBox(width: 8),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Text(userData.displayName, style: TextStyle(fontSize: 24)),
             HumanatyRating(rating: userData.guestRating, starSize: 15)
-        ],)
+          ],
+        )
       ],
     );
   }
 
-  Widget _profileTile(BuildContext context, AuthService auth, UserData userData){
+  Widget _profileTile(
+      BuildContext context, AuthService auth, UserData userData) {
     return ListTile(
       title: Text('Profile', style: TextStyle(fontSize: 16)),
-      onTap: (){
+      onTap: () {
         Navigator.pop(context);
-        auth.isAnonUser() ? 
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text('Please Log-In to view your profile'))) :
-          Navigator.of(context).pushNamed('/profile');
-      },);
+        auth.isAnonUser()
+            ? Scaffold.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.red.withOpacity(.54),
+                content: Text('Please Log-In to view your profile')))
+            : Navigator.of(context).pushNamed('/profile');
+      },
+    );
   }
 
-  Widget _settingsTile(BuildContext context, UserData userData){
+  Widget _settingsTile(BuildContext context, UserData userData) {
     return ListTile(
       title: Text('Settings', style: TextStyle(fontSize: 16)),
-      onTap: (){Navigator.of(context).pushNamed('/settings');},
+      onTap: () {
+        Navigator.of(context).pushNamed('/settings');
+      },
     );
   }
 
-  Widget _loginTile(BuildContext context, AuthService _auth){
-    if (_auth.isAnonUser()) {
-      return ListTile(
-        title: Text('Login'),
-        onTap: () {
-          Navigator.pop(context);
-          _auth.signOut();
-        },
-        );
-    } else {
-      return Container();
-    }
+  Widget _loginTile(BuildContext context, AuthService auth) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        children: <Widget>[
+          RaisedButton(
+            color: Pallete.humanGreen,
+            child: Text('Login',
+                style: TextStyle(fontSize: 16, color: Colors.white)),
+            onPressed: () {
+              Navigator.pop(context);
+              auth.signOut();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _aboutTile(BuildContext context){
+  Widget _aboutTile(BuildContext context) {
     return ListTile(
       title: Text('About', style: TextStyle(fontSize: 16)),
-      onTap:() => Navigator.of(context).pushNamed('/about'),
+      onTap: () => Navigator.of(context).pushNamed('/about'),
     );
   }
 
-  Widget _contactTile(BuildContext context){
+  Widget _contactTile(BuildContext context) {
     return ListTile(
-      title: Text('Contact Us', style: TextStyle(fontSize: 16)),
-      onTap:() => Navigator.of(context).pushNamed('/contact')
-      //uploadFarms()
-    );
+        title: Text('Contact Us', style: TextStyle(fontSize: 16)),
+        onTap: () => Navigator.of(context).pushNamed('/contact')
+        //uploadFarms()
+        );
   }
 
-  Widget _switchModeTile(BuildContext context, HumanatyMode mode){
-    SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg', width: 24, color: Colors.black54);
+  Widget _switchModeTile(BuildContext context, HumanatyMode mode) {
+    SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg',
+        width: 24, color: Colors.black54);
     return Container(
       color: Pallete.humanGreen54,
       child: ListTile(
         trailing: mode.isHostMode() ? chefHat : Icon(Icons.local_dining),
-        title: Text(mode.isHostMode() ? 'Switch to Guest' : mode.isConsumerMode() ? 'Switch to Host': '', 
-          style: TextStyle(fontSize: 16)),
-        onTap:() {
+        title: Text(
+            mode.isHostMode()
+                ? 'Switch to Guest'
+                : mode.isConsumerMode() ? 'Switch to Host' : '',
+            style: TextStyle(fontSize: 16)),
+        onTap: () {
           Navigator.pop(context);
-          mode.switchMode();},
+          mode.switchMode();
+        },
       ),
     );
   }

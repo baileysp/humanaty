@@ -121,7 +121,7 @@ class _GuestHomeState extends State<GuestHome> {
             onPressed: () async {
               String location = await showSearch(context: context, delegate: MapSearch());
               if(location != null){
-                Navigator.of(context).pushNamed('/map');          
+                Navigator.of(context).pushNamed('/map_events', arguments: {'displayBackBtn': true});          
               }               
             }));
   }
@@ -140,8 +140,8 @@ class GuestRouterState extends State<GuestRouter>{
   final List<Widget> _pages = [
     Loading(),
     GuestHome(key: PageStorageKey('GuestHome')),
-    MapPage(key: PageStorageKey('MapPage')),
-    Loading() //key: PageStorageKey('MapPage'))
+    MapEvents(key: PageStorageKey('MapEvents')),
+    Loading()
   ];
   
   @override
@@ -169,7 +169,7 @@ class GuestRouterState extends State<GuestRouter>{
         BottomNavigationBarItem(icon: Icon(Icons.menu), title: Text("Menu")),
         BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
         BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Map")),
-        BottomNavigationBarItem(icon: Icon(Icons.library_books), title: Text("My Events")),
+        BottomNavigationBarItem(icon: Icon(Icons.library_books), title: Text("TBD")),
       ],
       selectedItemColor: Pallete.humanGreen,
     );

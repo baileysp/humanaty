@@ -15,22 +15,27 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  AuthService auth;
+
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context);
-
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: auth.user.uid).userData,
-        builder: (context, snapshot) {        
-          if(snapshot.hasData){
-            UserData userData = snapshot.data;
-            return _settings(auth, userData);
-          }
-          return Loading();
-        });
+    auth = Provider.of<AuthService>(context);
+    if(auth.isAnonUser()){
+      return _anonSettings();
+    }else{
+      return StreamBuilder<UserData>(
+          stream: DatabaseService(uid: auth.user.uid).userData,
+          builder: (context, snapshot) {        
+            if(snapshot.hasData){
+              UserData userData = snapshot.data;
+              return _settings(userData);
+            }
+            return Loading();
+      });
+    }
   }
 
-  Widget _settings(AuthService auth, UserData userData) {
+  Widget _settings(UserData userData) {
     return Scaffold(
       appBar: HumanatyAppBar(
           displayBackBtn: true,
@@ -52,7 +57,37 @@ class _SettingsState extends State<Settings> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    _logout(auth),
+                    _logout(),
+                    Text('huMANAty iOS App v1.0', style: TextStyle(color: Colors.black54)),
+                  ],
+                )
+              ),
+            )
+          )
+        ],  
+      ),
+    );
+  }
+
+  Widget _anonSettings(){
+    return Scaffold(
+      appBar: HumanatyAppBar(
+          displayBackBtn: true,
+          title: 'Settings',
+      ),
+      body: Column(
+        children:[
+          _nonFunctional('IP License'),
+          //_nonFunctional('Software Licenses'),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _logout(),
                     Text('huMANAty iOS App v1.0', style: TextStyle(color: Colors.black54)),
                   ],
                 )
@@ -83,7 +118,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget _logout(AuthService auth){
+  Widget _logout(){
     return Container(
       width: double.infinity,
       height: 50.0,
@@ -93,7 +128,7 @@ class _SettingsState extends State<Settings> {
           auth.signOut();
         },
         color: Pallete.humanGreen,
-        child: Text('Log out', style: TextStyle(color: Colors.white, fontSize: 16.0))
+        child: Text(auth.isAnonUser() ? 'Sign In' : 'Log out', style: TextStyle(color: Colors.white, fontSize: 16.0))
       ),
     );
   }

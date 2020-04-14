@@ -13,38 +13,22 @@ class DatabaseService {
   final CollectionReference eventCollection = _databaseRef.collection('events');
   final CollectionReference farmCollection = _databaseRef.collection('farmers');
 
-  Stream<UserData> get userData =>
-      userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
-  Stream<Profile> getProfile(String userID) {
-    return userCollection
-        .document(userID)
-        .snapshots()
-        .map(_profileFromSnapshot);
-  }
-
-  Stream<List<HumanatyEvent>> get myEvents => eventCollection
-      .where('hostID', isEqualTo: '$uid')
-      .snapshots()
-      .map(_eventsFromSnapshot);
-  Stream<HumanatyEvent> getEvent(String eventID) {
-    print('called');
-    return eventCollection
-        .document(eventID)
-        .snapshots()
-        .map(_eventFromSnapshot);
-  }
+  Stream<UserData> get userData => userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  
+  Stream<Profile> getProfile(String userID) => userCollection.document(userID).snapshots().map(_profileFromSnapshot);
+  Stream<List<HumanatyEvent>> get myEvents => eventCollection.where('hostID', isEqualTo: '$uid').snapshots().map(_eventsFromSnapshot);
+  Stream<HumanatyEvent> getEvent(String eventID) => eventCollection.document(eventID).snapshots().map(_eventFromSnapshot);
+  
 
   //parameters will need to be added for filtering
-  Stream<List<HumanatyEvent>> getEvents() {
+  Stream<List<HumanatyEvent>> getEvents(){
     return eventCollection
         .where('hostID', isGreaterThan: '0')
         .snapshots()
         .map(_eventsFromSnapshot);
   }
 
-  Stream<List<Farm>> getFarms(){
-    return farmCollection.where('address', isGreaterThan: '0').snapshots().map(_farmsFromSnapshot);
-  }
+  Stream<List<HumanatyFarm>> getFarms() => farmCollection.where('farmID', isGreaterThan: '0').snapshots().map(_farmsFromSnapshot);
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
@@ -245,11 +229,11 @@ class DatabaseService {
     }).toList();
   }
 
-  List<Farm> _farmsFromSnapshot(QuerySnapshot snapshot){
+  List<HumanatyFarm> _farmsFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
-      return Farm(
+      return HumanatyFarm(
         contact: doc.data['contact'],
-        
+        location: HumanatyLocation().humanantyLocationFromMap(doc.data['location']),
         name: doc.data['name'],
         telephone: doc.data['telephone'],
         website: doc.data['website']

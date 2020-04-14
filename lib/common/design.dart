@@ -9,4 +9,6 @@ class Pallete {
   static Color light2 = Color(0xFF709425);
   static Color light3 = Color(0xFF387F3F); 
 
+  static Color googleBlue = Color(0xFF4285F4);
+
 }

@@ -35,7 +35,7 @@ class _FilterDateState extends State<FilterDate> {
                   onPressed:() => Navigator.of(context).pop(),),
                 Text('Selected Dates', style: TextStyle(fontSize: 20, color: Colors.black)),
                 IconButton(
-                  icon: Icon(Icons.check, color: Colors.black54,),
+                  icon: Icon(Icons.check, color: Pallete.humanGreen,),
                   onPressed:() => Navigator.of(context).pop(markedDates))],),
           ),
           Container(

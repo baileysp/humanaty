@@ -16,7 +16,7 @@ class HumanatyAppBar extends StatelessWidget implements PreferredSizeWidget{
     this.displayBackBtn = false,
     this.displayCloseBtn = false,
     this.elevation,   
-    this.title,    
+    this.title = '',    
     this.titleStyle
   }) : preferredSize = Size.fromHeight(60.0);
 
@@ -25,7 +25,7 @@ class HumanatyAppBar extends StatelessWidget implements PreferredSizeWidget{
 
   @override 
   Widget build(BuildContext context){
-    assert(displayBackBtn && !displayCloseBtn || !displayBackBtn && displayCloseBtn);
+    assert(!(displayBackBtn && displayCloseBtn));
 
     return AppBar(
       title: Text('$title', style: titleStyle ?? TextStyle(color: Colors.black)),

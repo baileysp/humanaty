@@ -1,13 +1,13 @@
 import 'package:humanaty/models/models.dart';
 
-class Farm{
+class HumanatyFarm{
   final String contact;
   final HumanatyLocation location;
   final String name;
   final String telephone;
   final String website;
 
-  Farm({
+  HumanatyFarm({
     this.contact,
     this.location,
     this.name,

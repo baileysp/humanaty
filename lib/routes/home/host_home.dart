@@ -75,11 +75,13 @@ class _HostHomeState extends State<HostHome> {
                 IconButton(
                   icon: Icon(Icons.add),
                   color: Colors.black54,
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              CreateEvent(eventDate: _selectedDate))),
+                  onPressed: () {
+                    auth.isAnonUser() ?
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red.withOpacity(.54),
+                          content: Text('Please Log-In to create events'))):
+                      Navigator.of(context).pushNamed('/create_event', arguments: {'eventDate': _selectedDate});}
                 )
               ],
             ),
@@ -139,6 +141,7 @@ class _HostHomeState extends State<HostHome> {
         }),
     );
   }
+  
   void _createMarked(List<HumanatyEvent> events){
     EventList<Event> _newMarked = EventList<Event>(events: {});
     for(int i = 0; i < events.length; i++){
@@ -161,9 +164,6 @@ class _HostHomeState extends State<HostHome> {
       });
     }
   }
-
-
-
 }
 
 class HostRouter extends StatefulWidget {
@@ -179,8 +179,8 @@ class HostRouterState extends State<HostRouter> {
   final List<Widget> pages = [
     Loading(),
     HostHome(key: PageStorageKey('HostHome')),
-    MapPage(key: PageStorageKey('MapPage')),
-    Loading() //key: PageStorageKey('MapPage'))
+    MapFarms(key: PageStorageKey('MapFarms')),
+    Loading()
   ];
   @override
   void initState() {
@@ -208,7 +208,7 @@ class HostRouterState extends State<HostRouter> {
         BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
         BottomNavigationBarItem(icon: Icon(Icons.map), title: Text("Farms")),
         BottomNavigationBarItem(
-            icon: Icon(Icons.library_books), title: Text("My Events")),
+            icon: Icon(Icons.library_books), title: Text("TBD")),
       ],
       selectedItemColor: Pallete.humanGreen,
     );

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/models.dart';
-import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
 import 'package:humanaty/util/size_config.dart';
 import 'package:humanaty/util/validator.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class CreateEvent extends StatefulWidget {
   final DateTime eventDate;
@@ -53,7 +53,7 @@ class _CreateEventState extends State<CreateEvent> {
 
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<AuthService>(context);
+    final auth = Provider.of<AuthService>(context);
     SizeConfig().init(context);
     return Scaffold(
         appBar: HumanatyAppBar(displayBackBtn: true, title: 'Create Event'),
@@ -67,12 +67,12 @@ class _CreateEventState extends State<CreateEvent> {
                 _descriptionTile(),
                 _dateTile(),
                 _menuTile(),
-                _allergiesTile(_auth),
+                _allergiesTile(auth),
                 _capacityTile(),
                 _costTile(),
                 _accessibilityTile(),
                 _locationTile(),
-                _createEvent(context,  _auth)
+                _createEvent(context,  auth)
               ],
             ))
           ],

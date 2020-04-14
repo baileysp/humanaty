@@ -76,10 +76,12 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/event_pin.png
+    - assets/images/logo/google_logo.png
+    - assets/images/logo/temporary_logo.png
     - assets/images/world_central_kitchen/wck_horizontal.png
     - assets/farms/farms.json
     - chef-hat.svg
-    - event_pin.png
 
   
   fonts:

@@ -9,20 +9,21 @@ import 'package:humanaty/util/size_config.dart';
 import 'package:humanaty/util/validator.dart';
 
 class Register extends StatefulWidget {
-  Register({Key key}) : super(key: key);
+  //Register({Key key}) : super(key: key);
 
   @override
   _RegisterState createState() => _RegisterState();
 }
 class _RegisterState extends State<Register> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();  
-  final _passwordController = TextEditingController();
-  
-  final FocusNode _nameFocus = FocusNode();
-  final FocusNode _emailFocus = FocusNode();
-  final FocusNode _passwordFocus = FocusNode();
-  final FocusNode _confirmPassFocus = FocusNode();
+  TextEditingController _nameController;
+  TextEditingController _emailController;  
+  TextEditingController _passwordController;
+  TextEditingController _confirmPassController;
+
+  FocusNode _nameFocus;
+  FocusNode _emailFocus;
+  FocusNode _passwordFocus;
+  FocusNode _confirmPassFocus;
     
   final _registrationFormKey = GlobalKey<FormState>();
   bool _passwordObscured;
@@ -30,8 +31,16 @@ class _RegisterState extends State<Register> {
 
   @override
   void initState() {
-    _passwordObscured = true;
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPassController = TextEditingController();
+    _nameFocus = FocusNode();
+    _emailFocus = FocusNode();
+    _passwordFocus = FocusNode();
+    _confirmPassFocus = FocusNode();
     _errorMessage = '';
+    _passwordObscured = true;
     super.initState();
   }
 
@@ -84,12 +93,12 @@ class _RegisterState extends State<Register> {
       height: 70.0,
       child: TextFormField(
         controller: _nameController,
-        textInputAction: TextInputAction.next,
+        //textInputAction: TextInputAction.next,
         focusNode: _nameFocus,
           decoration: textInputDecoration.copyWith(
             hintText: 'Name',
             prefixIcon: Icon(Icons.person_outline, color: Colors.grey)),
-        onFieldSubmitted: (term) {_fieldFocusChange(context, _nameFocus, _emailFocus);}),
+        )//onFieldSubmitted: (term) {_fieldFocusChange(context, _nameFocus, _emailFocus);}),
     );
   }
 
@@ -99,14 +108,14 @@ class _RegisterState extends State<Register> {
       child: TextFormField(
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
-        textInputAction: TextInputAction.next,
+        //textInputAction: TextInputAction.next,
         focusNode: _emailFocus,
         decoration: textInputDecoration.copyWith(
           hintText: 'Email',
           prefixIcon: Icon(Icons.mail_outline, color: Colors.grey)),
         inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
         validator: emailValidator,
-        onFieldSubmitted: (term) {_fieldFocusChange(context, _emailFocus, _passwordFocus);},),
+        )//onFieldSubmitted: (term) {_fieldFocusChange(context, _emailFocus, _passwordFocus);},),
     );
   }
 
@@ -116,7 +125,7 @@ class _RegisterState extends State<Register> {
       child: TextFormField(
         controller: _passwordController,
         obscureText: _passwordObscured,
-        textInputAction: TextInputAction.next,
+        //textInputAction: TextInputAction.next,
         focusNode: _passwordFocus,
         decoration: textInputDecoration.copyWith(
           hintText: 'Password',
@@ -128,7 +137,7 @@ class _RegisterState extends State<Register> {
           )),
         inputFormatters: [BlacklistingTextInputFormatter(RegExp('[ ]'))],
         validator: passwordValidator,
-        onFieldSubmitted: _fieldFocusChange(context, _passwordFocus, _confirmPassFocus),),
+        )//onFieldSubmitted: _fieldFocusChange(context, _passwordFocus, _confirmPassFocus),),
     );
   }
 
@@ -136,8 +145,8 @@ class _RegisterState extends State<Register> {
     return SizedBox(
       height: 70.0,
       child: TextFormField(
+        controller: _confirmPassController,
         obscureText: _passwordObscured,
-        textInputAction: TextInputAction.done,
         focusNode: _confirmPassFocus,
         decoration: textInputDecoration.copyWith(
           hintText: 'Confirm Password',

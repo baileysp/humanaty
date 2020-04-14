@@ -19,11 +19,9 @@ class RouteGenerator {
       case '/contact':
         return MaterialPageRoute(builder: (_) => Contact());
       case '/create_event':
-        return MaterialPageRoute(builder: (_) => CreateEvent());
+        return MaterialPageRoute(builder: (_) => CreateEvent(eventDate: args['eventDate'],));
       case '/email_edit':
         return MaterialPageRoute(builder: (_) => EmailEdit(email: args['email']));
-      case '/event':
-        return MaterialPageRoute(builder: (_) => EventPage(event: args['event']));
       case '/event_info':
         return MaterialPageRoute(builder: (_) => EventInfo(eventID: args['eventID']));
       case '/guest_home':
@@ -34,8 +32,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ImageOptions());
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
-      case '/map':
-        return MaterialPageRoute(builder: (_) => MapPage());
+      case '/map_events':
+        return MaterialPageRoute(builder: (_) => MapEvents(displayBackBtn: args.isNotEmpty ? args['displayBackBtn'] : false));
+      case '/map_farms':
+        return MaterialPageRoute(builder: (_) => MapFarms());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());  
       case '/register':
