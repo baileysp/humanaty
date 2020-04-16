@@ -79,11 +79,9 @@ class LandingPage extends StatelessWidget {
         return Login();
       case Status.Anon:
       case Status.Authenticated:
-        if (mode.isConsumerMode())
-          return GuestRouter();
-        else
-          return HostRouter();
-      
+        return mode.isConsumerMode() ? GuestRouter() : HostRouter();
+      default:
+        return Loading();
     }
   }
 }

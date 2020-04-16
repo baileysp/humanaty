@@ -167,7 +167,7 @@ class _ProfileState extends State<Profile> {
 
   Widget _access(bool access) {
     return InkWell(
-      onTap: () => database.updateAccessibility(!access),
+      onTap: () => database.updateUserAccess(!access),
       child: SizedBox(
           width: double.infinity,
           child: Row(
@@ -185,7 +185,7 @@ class _ProfileState extends State<Profile> {
   Widget _allergyBtn(Map<String, bool> allergies) {
     return InkWell(
       onTap: () => Navigator.of(context)
-          .pushNamed('/allergy_edit', arguments: {'allergyMap': allergies}),
+          .pushNamed('/allergy_edit', arguments: {'allergyMap': allergies, 'updateUserProfile': true}),
       child: SizedBox(
           width: double.infinity,
           child: Row(

@@ -55,15 +55,32 @@ class Profile{
   final double hostRating;
   //final List<String> hostUpcomingEvents
   final String photoUrl;
+  final String userID;
   
   Profile({
     this.aboutMe,
     this.guestRating,
     this.displayName,
     this.hostRating,
-    this.photoUrl
+    this.photoUrl,
+    this.userID
+  });
+
+  @override 
+  String toString() => 'Profile: $displayName';
+}
+
+class Attendee{
+  final Profile profile;
+  final int guests;
+  
+  Attendee({
+    this.profile,
+    this.guests,
   });
 }
+
+
 class Allergy {
   allergyMapFromList(List<String> list) {
     return {

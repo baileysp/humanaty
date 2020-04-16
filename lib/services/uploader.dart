@@ -20,7 +20,7 @@ class Uploader{
     String url = (await storageRef.getDownloadURL()) as String;
     if(url != null) 
       log.v('Uploaded Profile Pic successfully');
-      DatabaseService(uid: uid).updateProfilePic(url);
+      DatabaseService(uid: uid).updateUserPicture(url);
   }
 }//Uploader
 

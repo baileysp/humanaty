@@ -1,46 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:humanaty/routes/events/events.dart';
+import 'package:intl/intl.dart';
+import 'package:humanaty/models/models.dart';
 
-class HumanatyEvent2 extends StatelessWidget {
-//TODO move to models folder
-  HumanatyEvent2(
-    {
-      this.eventName,
-      this.eventDate,
-      this.eventDescription,
-    }
-  );
-
-  String eventName;
-  String eventDate;
-  String eventDescription;
-
-  HumanatyEvent2.fromJson(Map<String, dynamic> json) {
-    eventName = json['eventName'];
-    eventDate = json['eventDate'];
-    eventDescription = json['eventDescription'];
-  }
-
-  String getName() {
-    return eventName;
-  }
+class HumanatyCard extends StatelessWidget {
+  final HumanatyEvent event;
+  HumanatyCard({this.event});
 
   @override
   Widget build(BuildContext context) {
+    DateFormat f = DateFormat.yMMMMd("en_US");
     return Card(
       margin: EdgeInsets.fromLTRB(24, 8, 24, 8),
       child: new InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Events(
-                eventName: this.eventName,
-                eventDate: this.eventDate,
-                eventDescription: this.eventDescription)
-            )
-          );
-          print(eventName + " was clicked");
+          Navigator.of(context).pushNamed('/event_info', arguments:{'eventID': event.eventID});
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -64,14 +37,14 @@ class HumanatyEvent2 extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(eventName, style: TextStyle(fontSize: 18)),
+                        Text(event.title, style: TextStyle(fontSize: 18)),
                         Container(
                           margin: EdgeInsets.fromLTRB(0, 0, 24, 0),
-                          child: Text(eventDate)
+                          child: Text('${f.format(event.date)}')
                         ),
                       ],
                     ),
-                    Text(eventDescription, style: TextStyle(fontWeight: FontWeight.w300)),
+                    Text(event.description, style: TextStyle(fontWeight: FontWeight.w300)),
                   ],
                 )
               ),

@@ -80,7 +80,7 @@ class _MapEventsState extends State<MapEvents> {
                   child: Text("Filters", style: TextStyle(fontSize: 16)),
                   color: Colors.white,
                   onPressed: () async {
-                    var filters = await showModalBottomSheet(
+                    showModalBottomSheet(
                         context: context,
                         builder: (context) {
                           return Filter();

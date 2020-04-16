@@ -133,10 +133,18 @@ class _HostHomeState extends State<HostHome> {
         padding: EdgeInsets.only(top: 0.0),
         itemCount: _selectedDateEvents.length,
         itemBuilder: (context, index){
-          return ListTile(
-            title: Text('${_selectedDateEvents[index].title}'),
-            trailing: Text('${f.format(_selectedDateEvents[index].date)}'),
-            onTap: (){},
+          HumanatyEvent _event = _selectedDateEvents[index];
+          return Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Card(
+              elevation: 2,
+              borderOnForeground: false,
+                        child: ListTile(
+                title: Text('${_event.title}'),
+                trailing: Text('${f.format(_event.date)}'),
+                onTap:() => Navigator.of(context).pushNamed('/host_event_info', arguments: {'eventID': _event.eventID}),
+              ),
+            ),
           );
         }),
     );
