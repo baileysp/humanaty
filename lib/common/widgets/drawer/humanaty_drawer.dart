@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:humanaty/util/size_config.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ class HumanatyDrawer extends StatelessWidget {
     AuthService auth = Provider.of<AuthService>(context);
     HumanatyMode mode = Provider.of<HumanatyMode>(context);
     Logger log = getLogger('HumanatyDrawer');
+    SizeConfig().init(context);
 
     return StreamBuilder<UserData>(
         stream: DatabaseService(uid: auth.user.uid).userData,
@@ -74,6 +76,10 @@ class HumanatyDrawer extends StatelessWidget {
   }
 
   Widget _userHeader(BuildContext context, UserData userData) {
+    String _displayName = userData.displayName;
+    String _firstName = _displayName.substring(0, _displayName.contains(' ') ? _displayName.indexOf(' ') : _displayName.length);
+    int cutoff = _firstName.length > 20 ? 20 : _firstName.length;
+    _firstName = _firstName.substring(0, cutoff);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
@@ -93,7 +99,11 @@ class HumanatyDrawer extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(userData.displayName, style: TextStyle(fontSize: 24)),
+            Container(
+              alignment: Alignment.center,
+              width: SizeConfig.screenWidth * .3,
+              child: FittedBox(child: Text(_firstName, style: TextStyle(fontSize: 24), textAlign: TextAlign.center,)),
+            ),
             HumanatyRating(rating: userData.guestRating, starSize: 15)
           ],
         )
