@@ -38,7 +38,7 @@ class _ProfileState extends State<Profile> {
 
   Widget _profile(BuildContext context, UserData userData) {
     return Scaffold(
-      appBar: HumanatyAppBar(displayBackBtn: true, title: 'Edit Profile'),
+      appBar: HumanatyAppBar(displayBackBtn: true, title: 'Edit Profile', backgroundColor: Pallete.humanGreen, titleStyle: TextStyle(color: Colors.white),),
       body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           children: <Widget>[
