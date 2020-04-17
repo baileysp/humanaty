@@ -26,8 +26,8 @@ class _AllergyEditState extends State<AllergyEdit> {
   Widget build(BuildContext context) {
     auth = Provider.of<AuthService>(context);
     database = DatabaseService(uid: auth.user.uid);
-     assert(widget.updateEvent && widget.eventID.isNotEmpty);
-
+    if(widget.updateEvent) assert(widget.eventID.isNotEmpty);
+    
     return Scaffold(
         appBar: HumanatyAppBar(
             displayCloseBtn: true,

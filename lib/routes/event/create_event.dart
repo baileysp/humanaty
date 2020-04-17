@@ -166,13 +166,15 @@ class _CreateEventState extends State<CreateEvent> {
     return ListTile(
       title: Text('Allergens present'),
       trailing: Icon(Icons.arrow_forward),
+      isThreeLine: _allergies.isNotEmpty,
+      subtitle: Text(Allergy().formattedStringFromList(_allergies)),
       onTap: () async {
-        List<String> selectedAllergies = await Navigator.of(context).pushNamed('/allergy_edit', 
+        var selectedAllergies = await Navigator.of(context).pushNamed('/allergy_edit', 
         arguments: {'allergyMap': Allergy().allergyMapFromList(_allergies),
                     'updateUserProfile': false});
         if (selectedAllergies != null) {
           setState(() {
-            _allergies = selectedAllergies;
+            _allergies = selectedAllergies as List<String>;
           });
         }
       },

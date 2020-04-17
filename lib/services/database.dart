@@ -136,7 +136,7 @@ class DatabaseService {
       'accessibilityAccommodations': false,
       'additionalInfo': '',
       'allergies': eventAllergies,
-      'attendees': [],
+      'attendees': Map<dynamic, dynamic>(),
       'costPerSeat': costPerSeat,
       'date': _eventDate.substring(0, _eventDate.lastIndexOf(':')),
       'description': description,
