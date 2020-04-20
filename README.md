@@ -2,10 +2,24 @@
 
 ## Release Notes
 - New Software Features
+    - Separate host and consumer modes
+    - Users don't have to make another account for host
+    - Users can set a profile picture on their account
+    - Host can view events from calendar page
+    - Host can edit event description and menu
+    - Host can find farms via the farm map
+    - Consumer can find events through the event map
+    - Consumer can register for events
 
 - Bug Fixes
+    - App crash when host creates an event
+    - App crash for consumers when viewing a glitched event
 
 - Known Bugs and Defects
+    - Host cannot delete event
+    - My Events page not working for consumers
+    - Host currently unable to set allergies for an event
+    - Event date filter doesn't work
 
 ## Install Guide
 
