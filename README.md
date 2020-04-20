@@ -25,6 +25,10 @@
 - [Visual Studio Code](https://code.visualstudio.com/)
 
 ### Download Instructions
+Navigate to [Github](https://github.com/bspencer30/humanaty) and download ZIP
+<img src="readme_img/github_download.PNG" width=500/>
+
+Double click on the downloaded ZIP and extract entire 'humanaty-master' folder to a location of your choice. We recommend the desktop for ease of navigation in further steps.
 ### Build Instructions
 ### Installation
 ### Run Instructions
