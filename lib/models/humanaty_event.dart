@@ -4,7 +4,7 @@ class HumanatyEvent{
   final bool accessibilityAccommodations;
   final String additionalInfo;
   final List allergies;
-  final List attendees;
+  final List<Attendee> attendees;
   final double costPerSeat;
   final DateTime date;
   final String description;

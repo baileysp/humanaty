@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:humanaty/util/logger.dart';
-import 'package:humanaty/util/upload_farms.dart';
+import 'package:humanaty/util/size_config.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'package:humanaty/common/design.dart';
@@ -10,36 +10,37 @@ import 'package:humanaty/models/humanaty_mode.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
-
+import 'package:humanaty/util/logger.dart';
 class HumanatyDrawer extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context);
-    final mode = Provider.of<HumanatyMode>(context);
-    final log = getLogger('HumanatyDrawer');
+    AuthService auth = Provider.of<AuthService>(context);
+    HumanatyMode mode = Provider.of<HumanatyMode>(context);
+    Logger log = getLogger('HumanatyDrawer');
+    SizeConfig().init(context);
 
     return StreamBuilder<UserData>(
         stream: DatabaseService(uid: auth.user.uid).userData,
         builder: (context, snapshot) {
           if (snapshot.hasData || auth.isAnonUser()) {
             UserData userData = snapshot.data;
-            return _drawer(context, auth, userData, mode);
+            return _drawer(context, auth, userData, mode, log);
           }
-          //Navigator.pop(context); _auth.signOut();
-          return Drawer();
+          else return Drawer();
         });
   }
 
   Widget _drawer(BuildContext context, AuthService auth, UserData userData,
-      HumanatyMode mode) {
+      HumanatyMode mode, Logger log) {
     return Drawer(
-        child: Container(
-      child: Column(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              DrawerHeader(
-                child: auth.isAnonUser()
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                DrawerHeader(
+                  child: auth.isAnonUser()
                     ? _anonHeader()
                     : _userHeader(context, userData),
               ),
@@ -55,7 +56,7 @@ class HumanatyDrawer extends StatelessWidget {
           Expanded(
               child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: _switchModeTile(context, mode)))
+                  child: _switchModeTile(context, mode, log)))
         ],
       ),
     ));
@@ -75,6 +76,10 @@ class HumanatyDrawer extends StatelessWidget {
   }
 
   Widget _userHeader(BuildContext context, UserData userData) {
+    String _displayName = userData.displayName;
+    String _firstName = _displayName.substring(0, _displayName.contains(' ') ? _displayName.indexOf(' ') : _displayName.length);
+    int cutoff = _firstName.length > 20 ? 20 : _firstName.length;
+    _firstName = _firstName.substring(0, cutoff);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
@@ -94,7 +99,11 @@ class HumanatyDrawer extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(userData.displayName, style: TextStyle(fontSize: 24)),
+            Container(
+              alignment: Alignment.center,
+              width: SizeConfig.screenWidth * .3,
+              child: FittedBox(child: Text(_firstName, style: TextStyle(fontSize: 24), textAlign: TextAlign.center,)),
+            ),
             HumanatyRating(rating: userData.guestRating, starSize: 15)
           ],
         )
@@ -160,7 +169,7 @@ class HumanatyDrawer extends StatelessWidget {
         );
   }
 
-  Widget _switchModeTile(BuildContext context, HumanatyMode mode) {
+  Widget _switchModeTile(BuildContext context, HumanatyMode mode, Logger log) {
     SvgPicture chefHat = SvgPicture.asset('assets/chef-hat.svg',
         width: 24, color: Colors.black54);
     return Container(
@@ -173,6 +182,7 @@ class HumanatyDrawer extends StatelessWidget {
                 : mode.isConsumerMode() ? 'Switch to Host' : '',
             style: TextStyle(fontSize: 16)),
         onTap: () {
+          log.v('User switching mode');
           Navigator.pop(context);
           mode.switchMode();
         },

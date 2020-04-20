@@ -133,21 +133,6 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget _header(String header){
-    return Container(
-      width: double.infinity,
-      height: 50,
-      //color: Colors.grey[300],
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(header, 
-            style:TextStyle(fontSize: 18.0, )))//fontWeight: FontWeight.w600),))
-      ),
-    );
-  }
-
   Widget _nonFunctional(String title){
     var url = 'https://github.com/bspencer30/humanaty';
     return ListTile(

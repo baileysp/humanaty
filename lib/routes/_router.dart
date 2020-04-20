@@ -6,7 +6,9 @@ export 'about/about.dart';
 export 'contact/contact.dart';
 export 'event/create_event.dart';
 export 'event/event_info.dart';
-export 'events/events.dart';
+export 'event/host_event_info.dart';
+export 'event/meal_edit.dart';
+export 'farm/farm_info.dart';
 export 'home/guest_home.dart';
 export 'home/host_home.dart';
 export 'login/login.dart';
@@ -20,6 +22,7 @@ export 'profile/email_edit.dart';
 export 'profile/image_edit.dart';
 export 'profile/image_options.dart';
 export 'profile/profile.dart';
+export 'profile/profile_display.dart';
 export 'register/register.dart';
 export 'settings/settings.dart';
 

@@ -57,7 +57,7 @@ class _AboutMeEditState extends State<AboutMeEdit> {
     return FlatButton(
         onPressed: () async {
           if (_formKey.currentState.validate()) {
-            database.updateAboutMe(_aboutMeController.text);
+            database.updateUserAboutMe(_aboutMeController.text);
             Navigator.pop(context);
           }
         },

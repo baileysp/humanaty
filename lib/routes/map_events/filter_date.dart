@@ -4,7 +4,7 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:humanaty/common/design.dart';
 
 class FilterDate extends StatefulWidget {
-  List<DateTime> selectedDates;
+  final List<DateTime> selectedDates;
   FilterDate({this.selectedDates});
   _FilterDateState createState() => _FilterDateState();
 }

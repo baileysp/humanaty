@@ -89,9 +89,9 @@ class _CreateEventState extends State<CreateEvent> {
             cursorColor: Pallete.humanGreen,
             decoration: eventInputDecoration,
             focusNode: _titleFocus,
-            onFieldSubmitted: (term) {_fieldFocusChange(context, _titleFocus, _descriptionFocus);},
+            //onFieldSubmitted: (term) {_fieldFocusChange(context, _titleFocus, _descriptionFocus);},
             textAlign: TextAlign.right,
-            textInputAction: TextInputAction.next,
+            //textInputAction: TextInputAction.next,
             validator: notEmpty,
           )),
       onTap: () => FocusScope.of(context).requestFocus(_titleFocus),
@@ -166,13 +166,15 @@ class _CreateEventState extends State<CreateEvent> {
     return ListTile(
       title: Text('Allergens present'),
       trailing: Icon(Icons.arrow_forward),
+      isThreeLine: _allergies.isNotEmpty,
+      subtitle: Text(Allergy().formattedStringFromList(_allergies)),
       onTap: () async {
-        List<String> selectedAllergies = await Navigator.of(context).pushNamed('/allergy_edit', 
+        var selectedAllergies = await Navigator.of(context).pushNamed('/allergy_edit', 
         arguments: {'allergyMap': Allergy().allergyMapFromList(_allergies),
                     'updateUserProfile': false});
         if (selectedAllergies != null) {
           setState(() {
-            _allergies = selectedAllergies;
+            _allergies = selectedAllergies as List<String>;
           });
         }
       },
@@ -190,9 +192,9 @@ class _CreateEventState extends State<CreateEvent> {
           decoration: eventInputDecoration,
           focusNode: _capacityFocus,
           keyboardType: TextInputType.number,
-          onFieldSubmitted: (term) {_fieldFocusChange(context, _capacityFocus, _pricePerGuestFocus);},      
+          //onFieldSubmitted: (term) {_fieldFocusChange(context, _capacityFocus, _pricePerGuestFocus);},      
           textAlign: TextAlign.right,
-          textInputAction: TextInputAction.next,
+          //textInputAction: TextInputAction.next,
           validator: notZero,
         ),
       ),

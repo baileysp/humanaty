@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_image_crop/simple_image_crop.dart';
 
-import 'package:humanaty/common/design.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/uploader.dart';
 

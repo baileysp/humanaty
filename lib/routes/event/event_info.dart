@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
 import 'package:humanaty/models/models.dart';
 import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/services/database.dart';
+import 'package:humanaty/util/logger.dart';
 import 'package:humanaty/util/size_config.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class EventInfo extends StatefulWidget {
   final String eventID;
@@ -18,11 +21,15 @@ class EventInfo extends StatefulWidget {
 class _EventInfoState extends State<EventInfo> {
   AuthService auth;
   DatabaseService database;
+  Logger log;
   int _seatsToPurchase;
+  bool _purchased;
 
   @override
   void initState() {
+    log = getLogger('EventInfo');
     _seatsToPurchase = 1;
+    _purchased = false;
     super.initState();
   }
 
@@ -30,14 +37,12 @@ class _EventInfoState extends State<EventInfo> {
   Widget build(BuildContext context) {
     auth = Provider.of<AuthService>(context);
     database = DatabaseService(uid: auth.user.uid);
-
     return StreamBuilder<HumanatyEvent>(
         stream: database.getEvent(widget.eventID),
         builder: (context, snapshot) {
-          print(snapshot.hasData);
           if (snapshot.hasData) {
             HumanatyEvent event = snapshot.data;
-            print(event.title);
+            _purchased = _isInList(snapshot.data.attendees);
             if (event.seatsAvailable > 0) {
               return _build(event);
             } else {
@@ -48,8 +53,9 @@ class _EventInfoState extends State<EventInfo> {
             return Scaffold(
                 appBar: HumanatyAppBar(
                     backgroundColor: Pallete.humanGreen, displayBackBtn: true),
-                body: Placeholder());
+                body: Loading());
           }
+          return Loading();
         });
   }
 
@@ -61,22 +67,27 @@ class _EventInfoState extends State<EventInfo> {
             displayBackBtn: true,
             title: '${event.title}',
             titleStyle: TextStyle(color: Colors.white)),
-        body: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          children: <Widget>[
-            _hostInfo(event),
-            SizedBox(height: SizeConfig.screenHeight * .025),
-            _description(
-                event.title, event.description, event.location, event.date),
-            SizedBox(height: SizeConfig.screenHeight * .05),
-            Divider(),
-            _menu(event.meal, event.allergies),
-            Divider(),
-            _additional(
-                event.additionalInfo, event.accessibilityAccommodations),
-            Divider(height: 20),
-            _pricing(event.seatsAvailable)
-          ],
+        body: Container(
+          height: SizeConfig.screenHeight,
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            children: <Widget>[
+              _hostInfo(event),
+              SizedBox(height: SizeConfig.screenHeight * .025),
+              _description(
+                  event.title, event.description, event.location, event.date),
+              SizedBox(height: SizeConfig.screenHeight * .05),
+              Divider(),
+              _menu(event.meal, event.allergies),
+              Divider(),
+              _additional(
+                  event.additionalInfo, event.accessibilityAccommodations),
+              Divider(height: 20),       
+              _purchased
+                ? _alreadyBought()
+                : _pricing(event.eventID, event.seatsAvailable, event.costPerSeat)
+            ],
+          ),
         ));
   }
 
@@ -138,20 +149,6 @@ class _EventInfoState extends State<EventInfo> {
     );
   }
 
-  Widget _date(DateTime date) {
-    DateFormat f = DateFormat.yMMMMd("en_US").add_jm();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Date and Time', style: TextStyle(fontSize: 17)),
-        Text(
-          '${f.format(date)}',
-          style: TextStyle(),
-        )
-      ],
-    );
-  }
-
   Widget _menu(String menu, List allergies) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,11 +194,10 @@ class _EventInfoState extends State<EventInfo> {
     );
   }
 
-  Widget _pricing(int seatsAvailable) {
+  Widget _pricing(String eventID, int seatsAvailable, double costPerSeat) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -212,7 +208,7 @@ class _EventInfoState extends State<EventInfo> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('$_seatsToPurchase Guest'),
+            Text('$_seatsToPurchase Guest x \$$costPerSeat per seat = \$${_seatsToPurchase * costPerSeat}'),
             Row(
               children: <Widget>[
                 Container(
@@ -251,12 +247,30 @@ class _EventInfoState extends State<EventInfo> {
           width: double.infinity,
           height: 50.0,
           child: RaisedButton(
-            onPressed: (){},
+            onPressed: (){
+              database.addEventAttendees(eventID, _seatsToPurchase, seatsAvailable);
+            },
             color: Pallete.humanGreen,
-            child: Text('Purchase $_seatsToPurchase Seats', style: TextStyle(color: Colors.white))
+            child: Text('Purchase $_seatsToPurchase Seats at \$${_seatsToPurchase * costPerSeat}', style: TextStyle(color: Colors.white))
           ),
         )
       ],
     );
+  }
+
+  Widget _alreadyBought(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('You have already purchased tickets to this event', style: TextStyle(fontWeight: FontWeight.bold),)
+      ],
+    );
+  }
+
+  bool _isInList(List<Attendee> attendees){
+    for(int i = 0; i < attendees.length; i++){
+      if(auth.user.uid == attendees[i].profile.userID) return true;
+    }
+    return false;
   }
 }

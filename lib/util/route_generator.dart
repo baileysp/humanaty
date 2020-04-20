@@ -15,7 +15,9 @@ class RouteGenerator {
       case '/allergy_edit':
         return MaterialPageRoute(builder: (_) => AllergyEdit(
           allergyMap: args['allergyMap'],
-          updateUserProfile: args['updateUserProfile'] ?? true,));
+          updateUserProfile: args['updateUserProfile'] ?? false,
+          updateEvent: args['updateEvent'] ?? false,
+          eventID: args['eventID'] ?? ''));
       case '/contact':
         return MaterialPageRoute(builder: (_) => Contact());
       case '/create_event':
@@ -24,8 +26,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => EmailEdit(email: args['email']));
       case '/event_info':
         return MaterialPageRoute(builder: (_) => EventInfo(eventID: args['eventID']));
+      case '/farm_info':
+        return MaterialPageRoute(builder: (_) => FarmInfo(farmID: args['farmID']));
       case '/guest_home':
         return MaterialPageRoute(builder: (_) => GuestRouter());
+      case '/host_event_info':
+        return MaterialPageRoute(builder: (_) => HostEventInfo(eventID: args['eventID']));
       case '/image_edit':
         return MaterialPageRoute(builder: (_) => ImageEdit(file: args['file']));
       case '/image_options':
@@ -36,8 +42,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MapEvents(displayBackBtn: args.isNotEmpty ? args['displayBackBtn'] : false));
       case '/map_farms':
         return MaterialPageRoute(builder: (_) => MapFarms());
+      case '/meal_edit':
+        return MaterialPageRoute(builder: (_) => MealEdit(eventID: args['eventID'], meal: args['meal'],));
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());  
+      case '/profile_display':
+        return MaterialPageRoute(builder: (_) => ProfileDisplay(
+          profile: args['profile'],
+          guests: args['guests'])); 
       case '/register':
         return MaterialPageRoute(builder: (_) => Register());
       case '/settings':

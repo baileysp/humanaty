@@ -3,62 +3,13 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:humanaty/common/design.dart';
 import 'package:humanaty/common/widgets.dart';
+import 'package:humanaty/models/humanaty_event.dart';
 import 'package:humanaty/models/user.dart';
 import 'package:humanaty/routes/_router.dart';
 import 'package:humanaty/services/auth.dart';
+import 'package:humanaty/services/database.dart';
+import 'package:humanaty/util/size_config.dart';
 import 'package:provider/provider.dart';
-
-/**
- * Current TODOs:
- * 1. Reuseable event card widget
- * 2. Reuseable list of events widget
- * 3. SearchBar functionality – what kind of key terms do users enter, what are results
- * 4. Event details page
- */
-
-//Screen/Widget that is displayed for the Home page is the 'Current' class
-
-List<HumanatyEvent2> testEvents = [
-  HumanatyEvent2(
-      eventName: "Test Title",
-      eventDate: "1/11/23",
-      eventDescription: "Description goes here"),
-  HumanatyEvent2(
-    eventName: "Indian Food",
-    eventDate: "1/14/23",
-    eventDescription: "Come enjoy cuisine of the east.",
-  ),
-  HumanatyEvent2(
-      eventName: "Chinese Cuisine",
-      eventDate: "1/11/23",
-      eventDescription: "Get lost in the szechuan sauce."),
-  HumanatyEvent2(
-      eventName: "Pizza Night at Johnny's",
-      eventDate: "1/11/23",
-      eventDescription: "Don't get lost in the tomato sauce."),
-  HumanatyEvent2(
-    eventName: "Delicious Dinner",
-    eventDate: "1/17/24",
-    eventDescription: "It's actually quite delicious",
-  ),
-  HumanatyEvent2(
-    eventName: "Not so Delicious Dinner",
-    eventDate: "1/17/24",
-    eventDescription: "Don't buy a seat here",
-  ),
-  HumanatyEvent2(
-    eventName: "Test huMANAty Event",
-    eventDate: "1/17/24",
-    eventDescription: "Testing for home display purposes.",
-  ),
-  HumanatyEvent2(
-    eventName: "Test huMANAty Event",
-    eventDate: "1/17/24",
-    eventDescription: "Testing for home display purposes.",
-  )
-];
-
-List<HumanatyEvent2> displayedEvents = testEvents;
 
 class GuestHome extends StatefulWidget {
   GuestHome({Key key}) : super(key: key);
@@ -67,29 +18,34 @@ class GuestHome extends StatefulWidget {
 }
 
 class _GuestHomeState extends State<GuestHome> {
+  AuthService auth;
+  DatabaseService database;
+  
   @override
   Widget build(BuildContext context) {
-    //final _auth = Provider.of<AuthService>(context);
+    auth = Provider.of<AuthService>(context);
+    database = DatabaseService(uid: auth.user.uid);
+    SizeConfig().init(context);
+
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-            child: Column(
-          children: <Widget>[
-            _title(),
-            searchBar(),
-            // HumanatyEventList(events: testEvents),
-            ListView.builder(
-              padding: EdgeInsets.all(0),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: testEvents.length,
-              controller: ScrollController(),
-              itemBuilder: (context, index) {
-                return testEvents[index];
-              },
-            )
-          ],
-        )));
+      resizeToAvoidBottomInset: false,
+      body: Column(
+      children: <Widget>[
+        _title(),
+        searchBar(),
+        StreamBuilder<List<HumanatyEvent>>(
+          stream: database.getEvents(),
+          builder:(context, snapshot){
+            if(snapshot.hasData){
+              List<HumanatyEvent> events = snapshot.data;
+              return _eventListTiles(events);
+            }
+            return Container(
+              height: SizeConfig.screenHeight * .6, 
+              child: Loading());
+          })
+      ],
+      ));
   }
 
   Widget _title(){
@@ -124,6 +80,20 @@ class _GuestHomeState extends State<GuestHome> {
                 Navigator.of(context).pushNamed('/map_events', arguments: {'displayBackBtn': true});          
               }               
             }));
+  }
+
+  Widget _eventListTiles(List<HumanatyEvent> events){
+    return Container(
+      height: SizeConfig.screenHeight * .6,
+      child:
+        ListView.builder(
+          itemCount: events.length,
+          itemBuilder: (context, index){
+            return HumanatyCard(
+              event: events[index]
+            );
+          }),
+      );
   }
 }
 

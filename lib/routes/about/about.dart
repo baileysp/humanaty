@@ -8,11 +8,10 @@ import 'package:humanaty/services/auth.dart';
 import 'package:humanaty/util/size_config.dart';
 
 class About extends StatelessWidget {
-  AuthService auth;
   
   @override
   Widget build(BuildContext context) {
-    auth = Provider.of<AuthService>(context);
+    AuthService auth = Provider.of<AuthService>(context);
     SizeConfig().init(context);
 
     return Scaffold(
@@ -32,7 +31,7 @@ class About extends StatelessWidget {
               children: <Widget>[
                 RaisedButton(
                   color: Pallete.humanGreen,
-                  onPressed:() => auth.isAnonUser() ? _btnAction(context) : null,
+                  onPressed:() => auth.isAnonUser() ? _btnAction(context, auth) : null,
                   child: Text('Join the huMANAty community today!',
                       style: TextStyle(color: Colors.white)),
                 ),
@@ -76,7 +75,7 @@ class About extends StatelessWidget {
     );
   }
 
-  void _btnAction(BuildContext context){
+  void _btnAction(BuildContext context, AuthService auth){
     auth.signOut();
     Navigator.pop(context);
   }

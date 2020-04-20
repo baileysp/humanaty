@@ -64,9 +64,7 @@ class _FarmMapsState extends State<FarmMaps>{
         icon: BitmapDescriptor.defaultMarkerWithHue(164),
         consumeTapEvents: true,
         onTap: () {
-          // Navigator.pop(context);
-          //Navigator.of(context).pushNamed('/event', arguments: {'event': event});
-          //Navigator.of(context).pushNamed('/event_info', arguments: {'eventID': event.eventID});
+          Navigator.of(context).pushNamed('/farm_info', arguments: {'farmID': farm.farmID});
         }
         ));
       _markers = markers;

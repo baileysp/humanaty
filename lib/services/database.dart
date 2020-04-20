@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:humanaty/models/models.dart';
 import 'package:humanaty/util/logger.dart';
@@ -19,7 +21,6 @@ class DatabaseService {
   Stream<List<HumanatyEvent>> get myEvents => eventCollection.where('hostID', isEqualTo: '$uid').snapshots().map(_eventsFromSnapshot);
   Stream<HumanatyEvent> getEvent(String eventID) => eventCollection.document(eventID).snapshots().map(_eventFromSnapshot);
   
-
   //parameters will need to be added for filtering
   Stream<List<HumanatyEvent>> getEvents(){
     return eventCollection
@@ -29,6 +30,8 @@ class DatabaseService {
   }
 
   Stream<List<HumanatyFarm>> getFarms() => farmCollection.where('farmID', isGreaterThan: '0').snapshots().map(_farmsFromSnapshot);
+  Stream<HumanatyFarm> getFarm(String farmID) => farmCollection.document(farmID).snapshots().map(_farmFromSnapshot);
+
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
@@ -57,9 +60,9 @@ class DatabaseService {
       //final List<String> hostEventHistory
       hostRating: snapshot.data['hostRating'].toDouble(),
       //final List<String> hostUpcomingEvents
-      photoUrl: snapshot.data['photoUrl']
+      photoUrl: snapshot.data['photoUrl'],
+      userID: snapshot.data['uid']
     );
-    print(_profile.displayName);
     return _profile;
   }
 
@@ -91,34 +94,23 @@ class DatabaseService {
         {'birthday': _birthday.substring(0, _birthday.indexOf(" "))});
   }
 
-  Future<void> updateAboutMe(String aboutMe) async {
+  Future<void> updateUserAboutMe(String aboutMe) async {
     await userCollection.document(uid).updateData({'aboutMe': aboutMe});
   }
 
-  Future<void> updateAccessibility(bool accessibility) async {
+  Future<void> updateUserAccess(bool accessibility) async {
     await userCollection
         .document(uid)
         .updateData({'accessibilityAccommodations': accessibility});
   }
 
-  Future<void> updateUserData(String aboutMe, bool accessibilityAccommodations,
-      DateTime birthday, String displayName) async {
-    String _birthday = birthday.toString();
-    return await userCollection.document(uid).updateData({
-      'aboutMe': aboutMe.trim(),
-      'accessibilityAccommodations': accessibilityAccommodations,
-      'birthday': _birthday.substring(0, _birthday.indexOf(" ")),
-      'displayName': displayName.trim(),
-    });
-  }
-
-  Future<void> updateAllergyData(Map<String, bool> userAllergies) async {
+  Future<void> updateUserAllergy(Map<String, bool> userAllergies) async {
     return await userCollection
         .document(uid)
         .updateData({'allergies': Allergy().allergyListFromMap(userAllergies)});
   }
 
-  Future<void> updateProfilePic(String url) async {
+  Future<void> updateUserPicture(String url) async {
     await userCollection.document(uid).updateData({'photoUrl': url});
   }
 
@@ -135,15 +127,8 @@ class DatabaseService {
     });
   }
 
-  Future<void> createEvent(
-      bool accessibilityAccommodations,
-      List eventAllergies,
-      double costPerSeat,
-      DateTime eventDate,
-      String description,
-      int eventCapacity,
-      HumanatyLocation eventLocation,
-      String eventMenu,
+  Future<void> createEvent(bool accessibilityAccommodations, List eventAllergies, double costPerSeat,
+      DateTime eventDate, String description, int eventCapacity, HumanatyLocation eventLocation, String eventMenu,
       String eventTitle) async {
     String _eventDate = eventDate.toString();
     DocumentReference _doc = eventCollection.document();
@@ -151,7 +136,7 @@ class DatabaseService {
       'accessibilityAccommodations': false,
       'additionalInfo': '',
       'allergies': eventAllergies,
-      'attendees': [],
+      'attendees': Map<dynamic, dynamic>(),
       'costPerSeat': costPerSeat,
       'date': _eventDate.substring(0, _eventDate.lastIndexOf(':')),
       'description': description,
@@ -173,30 +158,49 @@ class DatabaseService {
 
   HumanatyEvent _eventFromSnapshot(DocumentSnapshot snapshot) {
     HumanatyEvent event;
+    //print(snapshot.data['attendees']);
     try {
-      print('test');
       event = HumanatyEvent(
-          accessibilityAccommodations:
-              snapshot.data['accessibilityAccommodations'],
-          additionalInfo: snapshot.data['additionalInfo'],
-          allergies: snapshot.data['allergies'].cast<String>(),
-          //attendees: doc.data['attendees'],
-          costPerSeat: double.parse(snapshot.data['costPerSeat'].toString()),
-          date: DateTime.parse(snapshot.data['date']),
-          description: snapshot.data['description'],
-          eventID: snapshot.data['eventID'],
-          guestNum: snapshot.data['guestNum'],
-          hostID: snapshot.data['hostID'],
-          location: HumanatyLocation()
-              .humanantyLocationFromMap(snapshot.data['location']),
-          meal: snapshot.data['meal'],
-          //photoGallery: doc.data['photoGallery'],
-          seatsAvailable: snapshot.data['seatsAvailable'],
-          title: snapshot.data['title']);
+        accessibilityAccommodations:
+            snapshot.data['accessibilityAccommodations'],
+        additionalInfo: snapshot.data['additionalInfo'],
+        allergies: snapshot.data['allergies'].cast<String>(),
+        attendees: _attendeesFromMap(snapshot.data['attendees']),
+        costPerSeat: double.parse(snapshot.data['costPerSeat'].toString()),
+        date: DateTime.parse(snapshot.data['date']),
+        description: snapshot.data['description'],
+        eventID: snapshot.data['eventID'],
+        guestNum: snapshot.data['guestNum'],
+        hostID: snapshot.data['hostID'],
+        location: HumanatyLocation()
+            .humanantyLocationFromMap(snapshot.data['location']),
+        meal: snapshot.data['meal'],
+        //photoGallery: doc.data['photoGallery'],
+        seatsAvailable: snapshot.data['seatsAvailable'],
+        title: snapshot.data['title']);
     } catch (error) {
       print(error.toString());
     }
     return event;
+  }
+
+  List<Attendee> _attendeesFromMap(Map map){
+    List<Attendee> attendees = [];
+    map.forEach((key, value) async {
+      Profile profile;
+      Stream<Profile> stream = this.getProfile(key);
+      stream.listen((data) {
+        profile = data;
+        attendees.add(
+          Attendee(
+            profile: profile,
+            guests: value['guests']
+          )
+        );
+        
+      });
+    });    
+    return attendees;
   }
 
   List<HumanatyEvent> _eventsFromSnapshot(QuerySnapshot snapshot) {
@@ -204,23 +208,23 @@ class DatabaseService {
       HumanatyEvent event;
       try {
         event = HumanatyEvent(
-            accessibilityAccommodations:
-                doc.data['accessibilityAccommodations'],
-            additionalInfo: doc.data['additionalInfo'],
-            allergies: doc.data['allergies'],
-            //attendees: doc.data['attendees'],
-            costPerSeat: double.parse(doc.data['costPerSeat'].toString()),
-            date: DateTime.parse(doc.data['date']),
-            description: doc.data['description'],
-            eventID: doc.data['eventID'],
-            guestNum: doc.data['guestNum'],
-            hostID: doc.data['hostID'],
-            location: HumanatyLocation()
-                .humanantyLocationFromMap(doc.data['location']),
-            meal: doc.data['meal'],
-            //photoGallery: doc.data['photoGallery'],
-            seatsAvailable: doc.data['seatsAvailable'],
-            title: doc.data['title']);
+          accessibilityAccommodations:
+              doc.data['accessibilityAccommodations'],
+          additionalInfo: doc.data['additionalInfo'],
+          allergies: doc.data['allergies'],
+          attendees: _attendeesFromMap(doc.data['attendees']),
+          costPerSeat: double.parse(doc.data['costPerSeat'].toString()),
+          date: DateTime.parse(doc.data['date']),
+          description: doc.data['description'],
+          eventID: doc.data['eventID'],
+          guestNum: doc.data['guestNum'],
+          hostID: doc.data['hostID'],
+          location: HumanatyLocation()
+              .humanantyLocationFromMap(doc.data['location']),
+          meal: doc.data['meal'],
+          //photoGallery: doc.data['photoGallery'],
+          seatsAvailable: doc.data['seatsAvailable'],
+          title: doc.data['title']);
       } catch (e) {
         print(e.toString());
         print(doc.data['title']);
@@ -229,10 +233,51 @@ class DatabaseService {
     }).toList();
   }
 
+  Future<void> updateEventMeal(String eventID, String meal)async{
+    await eventCollection.document(eventID).updateData({'meal': meal});
+  }
+
+  Future<void> updateEventAllergens(String eventID, Map<String, bool> allergens)async{
+    await eventCollection.document(eventID).updateData({'allergies': Allergy().allergyListFromMap(allergens)});
+  }
+  
+  Future<void> addEventAttendees(String eventID, int guestNum, int seatsAvailable) async{  
+    DocumentReference eventRef = eventCollection.document(eventID);
+    await eventRef.setData({
+      'attendees':{
+        uid:{
+          'guests': guestNum
+        }
+      }
+    }, merge: true);
+
+    await eventRef.setData({
+      'seatsAvailable': (seatsAvailable - guestNum)
+    }, merge: true);
+  }
+
+  HumanatyFarm _farmFromSnapshot(DocumentSnapshot snapshot){
+    HumanatyFarm farm;
+    try{
+      farm = HumanatyFarm(
+        contact: snapshot?.data['contact'] ?? '',
+        farmID: snapshot.data['farmID'],
+        location: HumanatyLocation().humanantyLocationFromMap(snapshot.data['location']),
+        name: snapshot.data['name'],
+        telephone: snapshot.data['telephone'],
+        website: snapshot.data['website']
+      );
+    } catch(error){
+      log.e('Failed to retrieve farm \n ${error.toString()}');
+    }
+    return farm;
+  }
+
   List<HumanatyFarm> _farmsFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
       return HumanatyFarm(
         contact: doc.data['contact'],
+        farmID: doc.data['farmID'],
         location: HumanatyLocation().humanantyLocationFromMap(doc.data['location']),
         name: doc.data['name'],
         telephone: doc.data['telephone'],
