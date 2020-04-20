@@ -1,16 +1,31 @@
-# humanaty
+# huMANAty
 
-A new Flutter project.
+## Release Notes
+- New Software Features
 
-## Getting Started
+- Bug Fixes
 
-This project is a starting point for a Flutter application.
+- Known Bugs and Defects
 
-A few resources to get you started if this is your first Flutter project:
+## Install Guide
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Pre-requisites
+[Windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)
+- **Operating System:**  Windows 7 or later (64 bit)
+- **Disk Space:** 400 MB (does not include disk space for IDE/tools).
+
+[Mac](https://flutter.dev/docs/get-started/install/macos#system-requirements)
+
+- **Operating Systems:** macOS (64-bit)
+- **Disk Space:** 2.8 GB (does not include disk space for IDE/tools).
+### Dependecies
+- [Flutter SDK](https://flutter.dev/docs/get-started/install/macos#get-sdk)
+- [Android Studio](https://flutter.dev/docs/get-started/install/macos#install-android-studio)
+- [Visual Studio Code](https://code.visualstudio.com/)
+
+### Download Instructions
+### Build Instructions
+### Installation
+### Run Instructions
+### Troubleshooting
