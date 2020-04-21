@@ -51,4 +51,29 @@ Double click on the downloaded ZIP and extract entire 'humanaty-master' folder t
 After downloading the dependecies you are ready to build the application. Start Visual Studio Code and click 'File' -> 'Open Folder'. Open the unzipped directory 'humanaty-master'. 
 
 ### Run Instructions
+Once you have the project open in Visual Studio Code, you can run the code by hitting the run tab and clicking "run without debugging"
+<br/>
+<img src="readme_img/runButtonImg.png" width = 600/>
+<br/>
+A dropdown will appear and ask which device you would like to run the program on. If you have an android device connected to your computer, it should appear among these options. If no options are available, then you will have to use 'Android Studio' to download a virtual device to run the program on.
+
+**Instructions to download virtual device:**
+- Open 'Android Studio'
+- Open the humanaty project in it or any project just to get to this screen shown below
+<br/>
+<img src= "readme_img/openAVD.png" width = 500/>
+<br/>
+- Once there, hit the 'Open AVD Manager' button
+- Then hit the 'Create Virtual Device' button and follow the next steps
+<br/>
+<img src= "readme_img/createVD.png" width = 500/>
+<br/>
+- After this you should be able to run the program by following the above 'Run Instructions'
+
+
 ### Troubleshooting
+In general to avoid problems, when the application first loads, hit the refresh button in VS code to make sure it is using the most updated state that the code is in.
+There is a control panel that appears in the middle top of VS code where you can stop the program or refresh the program.
+Hit the refresh button as shown in the image below and then debug/use the application as desired.
+<br/>
+<img src = "readme_img/refresh.png" width = 500/>
