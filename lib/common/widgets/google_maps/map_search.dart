@@ -4,7 +4,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:humanaty/models/models.dart';
 
 class MapSearch extends SearchDelegate<String>{
-   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: 'AIzaSyDKNJ1TI_zJnzqBEmMzjlpw3tUBdoCK66g');
+   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: '');
   
   
   @override
